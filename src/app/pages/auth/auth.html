@@ -1,41 +1,44 @@
 <mat-card appearance="outlined">
-  <mat-card-header>
-    <mat-card-title>Login</mat-card-title>
-  </mat-card-header>
-  <form
-    (ngSubmit)="onSubmit()"
-  >
-    <mat-card-content class="credentials">
-      <mat-form-field>
-        <mat-label>Login</mat-label>
-        <input
-          matInput
-          placeholder="Login"
-          type="text"
-          [value]="formData().login"
-          (input)="inputHandler('login', $event)"
-          required
-          autofocus
-        >
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Password</mat-label>
-        <input
-          matInput
-          placeholder="Password"
-          type="password"
-          [value]="formData().password"
-          (input)="inputHandler('password', $event)"
-          required
-        >
-      </mat-form-field>
-      <mat-card-actions>
-        <button
-          [disabled]="!formData().password || !formData().login"
-          matButton
-        >Login
-        </button>
-      </mat-card-actions>
-    </mat-card-content>
-  </form>
+    <mat-card-header>
+        <mat-card-title>Login</mat-card-title>
+    </mat-card-header>
+    <form
+            (ngSubmit)="onSubmit()"
+    >
+        <mat-card-content class="credentials">
+            <mat-form-field>
+                <mat-label>Login</mat-label>
+                <input
+                        matInput
+                        placeholder="Login"
+                        type="text"
+                        [value]="formData().login"
+                        (input)="inputHandler('login', $event)"
+                        required
+                        autofocus
+                >
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input
+                        matInput
+                        placeholder="Password"
+                        type="password"
+                        [value]="formData().password"
+                        (input)="inputHandler('password', $event)"
+                        required
+                >
+            </mat-form-field>
+            @if (errorMessage()) {
+                <mat-error>{{ errorMessage() }}</mat-error>
+            }
+            <mat-card-actions>
+                <button
+                        [disabled]="!formData().password || !formData().login"
+                        matButton
+                >Login
+                </button>
+            </mat-card-actions>
+        </mat-card-content>
+    </form>
 </mat-card>
