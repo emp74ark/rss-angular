@@ -3,9 +3,11 @@ import {Home} from './pages/home/home';
 import {NotFound} from './pages/not-found/not-found';
 import {Subscriptions} from './pages/subscriptions/subscriptions';
 import {Tags} from './pages/tags/tags';
+import {Auth} from './pages/auth/auth';
 
 export const routes: Routes = [
   {path: '', component: Home, data: {title: 'Home'}},
+  {path: 'auth', component: Auth, data: {title: 'Authentication'}},
   {
     path: 'subscriptions',
     component: Subscriptions,
