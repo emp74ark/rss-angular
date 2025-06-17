@@ -1,0 +1,4 @@
+:root {
+  background: var(--mat-app-background-color);
+  font: var(--mat-app-text-color);
+}
