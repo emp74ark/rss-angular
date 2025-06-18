@@ -5,11 +5,10 @@ import {environment} from '../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class UserService {
   httpClient = inject(HttpClient);
 
-  login({login, password}: { login: string, password: string }) {
-    return this.httpClient.post(`${environment.api}/auth/login`,
-      {login, password}, {withCredentials: true});
+  getUser() {
+    return this.httpClient.get(`${environment.api}/user/self`);
   }
 }

@@ -1,5 +1,26 @@
-<mat-card>
-  <mat-card-content>
-    <h2>Home</h2>
-  </mat-card-content>
-</mat-card>
+@defer {
+  @for (a of articles(); track a._id) {
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>{{ a.title }}</mat-card-title>
+        <mat-card-subtitle>Published: {{ a.isoDate | date:'short' }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ a.contentSnippet }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <a
+          href="{{ a.link }}"
+          matButton
+          target="_blank"
+        >Open from source</a>
+      </mat-card-actions>
+      <mat-card-footer>
+      </mat-card-footer>
+    </mat-card>
+  } @empty {
+    <h2>No articles found</h2>
+  }
+} @loading (minimum 0.5s) {
+  <mat-progress-bar mode="query"/>
+}
