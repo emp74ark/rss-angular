@@ -9,20 +9,14 @@ export class FeedService {
   httpClient = inject(HttpClient)
 
   getAllSubscriptions() {
-    return this.httpClient.get(`${environment.api}/subscription`, {
-      withCredentials: true,
-    })
+    return this.httpClient.get(`${environment.api}/subscription`)
   }
 
   getAllArticles() {
-    return this.httpClient.get(`${environment.api}/article`, {
-      withCredentials: true,
-    })
+    return this.httpClient.get(`${environment.api}/article`)
   }
 
   getOneSubscription({ subscriptionId }: { subscriptionId: string }) {
-    return this.httpClient.get(`${environment.api}/subscription/${subscriptionId}`, {
-      withCredentials: true,
-    })
+    return this.httpClient.get(`${environment.api}/subscription/${subscriptionId}`)
   }
 }

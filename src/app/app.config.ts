@@ -6,13 +6,14 @@ import {
 import { provideRouter } from '@angular/router'
 
 import { routes } from './app.routes'
-import { provideHttpClient, withFetch } from '@angular/common/http'
+import { provideHttpClient, withInterceptors } from '@angular/common/http'
+import { authCookiesInterceptor } from './intercepters/auth-cookies-interceptor'
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authCookiesInterceptor])),
   ],
 }

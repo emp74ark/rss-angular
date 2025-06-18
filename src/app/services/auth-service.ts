@@ -27,7 +27,7 @@ export class AuthService {
         _id: string
         login: string
         role: string
-      }>(`${environment.api}/auth/login`, { login, password }, { withCredentials: true })
+      }>(`${environment.api}/auth/login`, { login, password })
       .pipe(
         switchMap((response) => {
           this.$$authStatus.next({ authenticated: true, user: response, error: null })
