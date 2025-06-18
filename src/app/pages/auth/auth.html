@@ -27,11 +27,18 @@
           required
         />
       </mat-form-field>
-      @if (errorMessage()) {
-      <mat-error>{{ errorMessage() }}</mat-error>
+
+      @let status = (authStatus | async);
+      @if (status?.error) {
+        <mat-error>{{ status?.error }}</mat-error>
       }
+
       <mat-card-actions>
-        <button [disabled]="!formData().password || !formData().login" matButton>Login</button>
+        <button
+          [disabled]="!formData().password || !formData().login"
+          matButton
+        >Login
+        </button>
       </mat-card-actions>
     </mat-card-content>
   </form>

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, model, signal } from '@angular/core'
+import { Component, DestroyRef, inject, model } from '@angular/core'
 import {
   MatCard,
   MatCardActions,
@@ -12,9 +12,8 @@ import { MatButton } from '@angular/material/button'
 import { FormsModule } from '@angular/forms'
 import { AuthService } from '../../services/auth-service'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { catchError, of } from 'rxjs'
-import { HttpErrorResponse } from '@angular/common/http'
 import { Router } from '@angular/router'
+import { AsyncPipe } from '@angular/common'
 
 @Component({
   selector: 'app-auth',
@@ -28,6 +27,7 @@ import { Router } from '@angular/router'
     MatButton,
     MatCardHeader,
     FormsModule,
+    AsyncPipe,
   ],
   templateUrl: './auth.html',
   styleUrl: './auth.css',
@@ -42,7 +42,7 @@ export class Auth {
     password: '',
   })
 
-  errorMessage = signal<string | null>(null)
+  authStatus = this.authService.$authStatus
 
   inputHandler(field: 'login' | 'password', event: Event) {
     const { value } = event.target as HTMLInputElement
@@ -57,16 +57,10 @@ export class Auth {
   onSubmit() {
     this.authService
       .login(this.formData())
-      .pipe(
-        catchError((e: HttpErrorResponse) => {
-          this.errorMessage.set(e.error.message)
-          return of(null)
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result) => {
         if (result) {
-          this.router.navigate(['/'])
+          this.router.navigate(['/home'])
         }
       })
   }
