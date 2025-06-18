@@ -1,15 +1,18 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../environments/environment';
+import { inject, Injectable } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
+import { environment } from '../../environments/environment'
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  httpClient = inject(HttpClient);
+  httpClient = inject(HttpClient)
 
-  login({login, password}: { login: string, password: string }) {
-    return this.httpClient.post(`${environment.api}/auth/login`,
-      {login, password}, {withCredentials: true});
+  login({ login, password }: { login: string; password: string }) {
+    return this.httpClient.post(
+      `${environment.api}/auth/login`,
+      { login, password },
+      { withCredentials: true },
+    )
   }
 }

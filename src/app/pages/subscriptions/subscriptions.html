@@ -1,13 +1,13 @@
 @for(f of feeds(); track f._id) {
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>{{ f.title }}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p>Link: {{f.link}}</p>
-      <p>Articles: {{f.articles.length}}</p>
-    </mat-card-content>
-  </mat-card>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ f.title }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>Link: {{f.link}}</p>
+    <p>Articles: {{f.articles.length}}</p>
+  </mat-card-content>
+</mat-card>
 } @empty {
-  <h2>No subscriptions found</h2>
+<h2>No subscriptions found</h2>
 }
