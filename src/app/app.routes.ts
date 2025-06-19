@@ -1,34 +1,47 @@
 import { Routes } from '@angular/router'
-import { Home } from './pages/home/home'
 import { NotFound } from './pages/not-found/not-found'
-import { Subscriptions } from './pages/subscriptions/subscriptions'
-import { Tags } from './pages/tags/tags'
 import { Auth } from './pages/auth/auth'
-import { Article } from './pages/article/article'
 import { authGuard } from './guards/auth-guard'
 import { Root } from './pages/root/root'
 
 export const routes: Routes = [
   { path: '', component: Root, data: { title: 'Start' } },
-  { path: 'home', component: Home, data: { title: 'Home' }, canMatch: [authGuard] },
   { path: 'auth', component: Auth, data: { title: 'Authentication' } },
   {
+    path: 'home',
+    loadComponent: async () => {
+      const c = await import('./pages/home/home')
+      return c.Home
+    },
+    data: { title: 'Home' },
+    canMatch: [authGuard],
+  },
+  {
     path: 'subscriptions',
-    component: Subscriptions,
+    loadComponent: async () => {
+      const c = await import('./pages/subscriptions/subscriptions')
+      return c.Subscriptions
+    },
     title: 'Subscriptions',
     data: { title: 'Subscriptions' },
     canMatch: [authGuard],
   },
   {
     path: 'subscriptions/:subscriptionId/article/:articleId',
-    component: Article,
+    loadComponent: async () => {
+      const c = await import('./pages/article/article')
+      return c.Article
+    },
     title: 'Article',
     data: { title: 'Article' },
     canMatch: [authGuard],
   },
   {
     path: 'tags',
-    component: Tags,
+    loadComponent: async () => {
+      const c = await import('./pages/tags/tags')
+      return c.Tags
+    },
     title: 'Tags',
     data: { title: 'Tags' },
     canMatch: [authGuard],
