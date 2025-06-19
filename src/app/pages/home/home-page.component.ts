@@ -11,8 +11,7 @@ import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle'
 import { MatIconModule } from '@angular/material/icon'
 import { RowSpacer } from '../../components/row-spacer/row-spacer'
-import { RouterLink } from '@angular/router'
-import { ArticlePage } from '../article-page/article-page.component'
+import { Router, RouterLink } from '@angular/router'
 import { Article } from '../../entities/article/article.types'
 
 @Component({
@@ -33,6 +32,7 @@ import { Article } from '../../entities/article/article.types'
 })
 export class HomePage implements OnInit {
   feedService = inject(FeedService)
+  router = inject(Router)
   destroyRef = inject(DestroyRef)
 
   articles = signal<Article[]>([])
@@ -58,5 +58,9 @@ export class HomePage implements OnInit {
 
   toggleDisplay(display: 'title' | 'short') {
     this.display.set(display)
+  }
+
+  async onArticleClick(article: Article) {
+    await this.router.navigate(['subscription', article.subscriptionId, 'article', article._id])
   }
 }

@@ -9,7 +9,11 @@
 </mat-toolbar>
 @defer {
   @for (a of articles(); track a._id) {
-    <mat-card appearance="outlined">
+    <mat-card
+      class="card"
+      appearance="outlined"
+      (click)="onArticleClick(a)"
+    >
       <mat-card-header>
         <mat-card-title>{{ a.title }}</mat-card-title>
         <mat-card-subtitle>Published: {{ a.isoDate | date:'short' }}</mat-card-subtitle>

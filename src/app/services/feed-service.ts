@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { environment } from '../../environments/environment'
 import { Feed, FeedDTO } from '../entities/feed/feed.types'
-import { Article } from '../entities/article/article.types'
+import { Article, ArticleDTO } from '../entities/article/article.types'
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +24,10 @@ export class FeedService {
 
   getOneArticle({ articleId }: { articleId: string }) {
     return this.httpClient.get<Article>(`${environment.api}/article/${articleId}`)
+  }
+
+  changeOneArticle({ article, articleId }: { article: ArticleDTO; articleId?: string }) {
+    return this.httpClient.patch<Article>(`${environment.api}/article/${articleId}`, article)
   }
 
   addOneSubscription({ subscription }: { subscription: FeedDTO }) {

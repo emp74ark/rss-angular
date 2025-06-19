@@ -3,3 +3,13 @@
   flex-direction: column;
   gap: 1rem;
 }
+
+.card {
+  cursor: pointer;
+}
+
+.card:hover {
+  box-shadow: 0 0 0.2rem var(--mat-sys-primary);
+  transform: scale(1.01);
+  transition: transform 0.2s ease-in-out;
+}
