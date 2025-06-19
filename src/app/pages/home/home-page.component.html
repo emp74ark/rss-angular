@@ -1,0 +1,44 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <app-row-spacer/>
+    <mat-button-toggle>
+      <mat-icon (click)="toggleDisplay('title')">view_day</mat-icon>
+      <mat-icon (click)="toggleDisplay('short')">view_agenda</mat-icon>
+    </mat-button-toggle>
+  </mat-toolbar-row>
+</mat-toolbar>
+@defer {
+  @for (a of articles(); track a._id) {
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>{{ a.title }}</mat-card-title>
+        <mat-card-subtitle>Published: {{ a.isoDate | date:'short' }}</mat-card-subtitle>
+      </mat-card-header>
+      @if (display() !== 'title') {
+        <mat-card-content>
+          <p>{{ a.contentSnippet }}</p>
+        </mat-card-content>
+      }
+      <mat-card-actions>
+        <a
+          href="{{ a.link }}"
+          matIconButton
+          target="_blank"
+        >
+          <mat-icon>link</mat-icon>
+        </a>
+        <a
+          routerLink="/subscription/{{a.subscriptionId}}/article/{{ a._id }}"
+          matIconButton
+        >
+          <mat-icon>open_in_new</mat-icon>
+        </a>
+      </mat-card-actions>
+      <mat-card-footer></mat-card-footer>
+    </mat-card>
+  } @empty {
+    <h2>No articles found</h2>
+  }
+} @loading (minimum 0.5s) {
+  <mat-progress-bar mode="query"/>
+}

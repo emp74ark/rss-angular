@@ -6,7 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatIconModule } from '@angular/material/icon'
-import { MatButton, MatIconButton } from '@angular/material/button'
+import { MatIconButton } from '@angular/material/button'
 import { RowSpacer } from '../../components/row-spacer/row-spacer'
 import { MatDialog, MatDialogModule } from '@angular/material/dialog'
 import { SubscriptionAddForm } from '../../components/subscription-add-form/subscription-add-form'
@@ -20,12 +20,11 @@ import { SubscriptionAddForm } from '../../components/subscription-add-form/subs
     MatIconButton,
     RowSpacer,
     MatDialogModule,
-    MatButton,
   ],
-  templateUrl: './subscriptions.html',
-  styleUrl: './subscriptions.css',
+  templateUrl: './subscriptions-page.component.html',
+  styleUrl: './subscriptions-page.component.css',
 })
-export class Subscriptions implements OnInit {
+export class SubscriptionsPage implements OnInit {
   feedService = inject(FeedService)
   readonly dialog = inject(MatDialog)
   destroyRef = inject(DestroyRef)

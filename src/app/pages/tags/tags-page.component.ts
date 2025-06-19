@@ -5,7 +5,7 @@ import { MatList, MatListItem } from '@angular/material/list'
 @Component({
   selector: 'app-tags',
   imports: [MatCard, MatCardContent, MatList, MatListItem],
-  templateUrl: './tags.html',
-  styleUrl: './tags.css',
+  templateUrl: './tags-page.component.html',
+  styleUrl: './tags-page.component.css',
 })
-export class Tags {}
+export class TagsPage {}

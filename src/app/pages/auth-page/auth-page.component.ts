@@ -29,10 +29,10 @@ import { AsyncPipe } from '@angular/common'
     FormsModule,
     AsyncPipe,
   ],
-  templateUrl: './auth.html',
-  styleUrl: './auth.css',
+  templateUrl: './auth-page.component.html',
+  styleUrl: './auth-page.component.css',
 })
-export class Auth {
+export class AuthPage {
   authService = inject(AuthService)
   router = inject(Router)
   destroyRef = inject(DestroyRef)

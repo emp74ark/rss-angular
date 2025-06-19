@@ -1,17 +1,17 @@
 import { Routes } from '@angular/router'
-import { NotFound } from './pages/not-found/not-found'
-import { Auth } from './pages/auth/auth'
+import { NotFoundPage } from './pages/not-found/not-found-page.component'
 import { authGuard } from './guards/auth-guard'
-import { Root } from './pages/root/root'
+import { RootPage } from './pages/root/root-page.component'
+import { AuthPage } from './pages/auth-page/auth-page.component'
 
 export const routes: Routes = [
-  { path: '', component: Root, data: { title: 'Start' } },
-  { path: 'auth', component: Auth, data: { title: 'Authentication' } },
+  { path: '', component: RootPage, data: { title: 'Start' } },
+  { path: 'auth', component: AuthPage, data: { title: 'Authentication' } },
   {
     path: 'home',
     loadComponent: async () => {
-      const c = await import('./pages/home/home')
-      return c.Home
+      const c = await import('./pages/home/home-page.component')
+      return c.HomePage
     },
     data: { title: 'Home' },
     canMatch: [authGuard],
@@ -19,18 +19,18 @@ export const routes: Routes = [
   {
     path: 'subscriptions',
     loadComponent: async () => {
-      const c = await import('./pages/subscriptions/subscriptions')
-      return c.Subscriptions
+      const c = await import('./pages/subscriptions/subscriptions-page.component')
+      return c.SubscriptionsPage
     },
     title: 'Subscriptions',
     data: { title: 'Subscriptions' },
     canMatch: [authGuard],
   },
   {
-    path: 'subscriptions/:subscriptionId/article/:articleId',
+    path: 'subscription/:subscriptionId/article/:articleId',
     loadComponent: async () => {
-      const c = await import('./pages/article/article')
-      return c.Article
+      const c = await import('./pages/article-page/article-page.component')
+      return c.ArticlePage
     },
     title: 'Article',
     data: { title: 'Article' },
@@ -39,8 +39,8 @@ export const routes: Routes = [
   {
     path: 'tags',
     loadComponent: async () => {
-      const c = await import('./pages/tags/tags')
-      return c.Tags
+      const c = await import('./pages/tags/tags-page.component')
+      return c.TagsPage
     },
     title: 'Tags',
     data: { title: 'Tags' },
@@ -48,7 +48,7 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    component: NotFound,
+    component: NotFoundPage,
     title: 'Not Found',
     data: { title: 'Not Found' },
   },
