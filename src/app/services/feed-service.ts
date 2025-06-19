@@ -19,4 +19,12 @@ export class FeedService {
   getOneSubscription({ subscriptionId }: { subscriptionId: string }) {
     return this.httpClient.get(`${environment.api}/subscription/${subscriptionId}`)
   }
+
+  addOneSubscription({ subscription }: { subscription: any }) {
+    return this.httpClient.post(`${environment.api}/subscription`, subscription)
+  }
+
+  deleteOneSubscription({ subscriptionId }: { subscriptionId: string }) {
+    return this.httpClient.delete(`${environment.api}/subscription/${subscriptionId}`)
+  }
 }
