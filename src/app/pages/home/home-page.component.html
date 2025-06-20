@@ -45,6 +45,13 @@
         >
           <mat-icon>open_in_new</mat-icon>
         </a>
+        <button
+          matIconButton
+          [class]="a.read ? 'bookmarked' : undefined"
+          (click)="onAddToBookmarks(a, $event)"
+        >
+          <mat-icon>bookmark</mat-icon>
+        </button>
       </mat-card-actions>
       <mat-card-footer></mat-card-footer>
     </mat-card>

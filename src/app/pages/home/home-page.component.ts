@@ -78,6 +78,37 @@ export class HomePage implements OnInit {
     await this.router.navigate(['subscription', article.subscriptionId, 'article', article._id])
   }
 
+  onAddToBookmarks(article: Article, event: MouseEvent) {
+    event.stopPropagation()
+    if (article) {
+      this.feedService
+        .changeOneArticle({
+          articleId: article._id,
+          article: {
+            read: !article.read,
+          },
+        })
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          catchError((error: HttpErrorResponse) => {
+            console.log(error)
+            return of(null)
+          }),
+        )
+        .subscribe((result) => {
+          if (result === null) {
+            return
+          }
+          this.articles.update((prev) => {
+            if (prev !== null) {
+              return prev.map((a) => (a._id === result._id ? { ...a, read: !a.read } : a))
+            }
+            return prev
+          })
+        })
+    }
+  }
+
   paginationHandler(event: PageEvent) {
     this.currentPage.set(event.pageIndex + 1)
     this.pageSize.set(event.pageSize)
