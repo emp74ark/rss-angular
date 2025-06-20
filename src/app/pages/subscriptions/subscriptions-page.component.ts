@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core'
+import { Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core'
 import { MatCardModule } from '@angular/material/card'
 import { FeedService } from '../../services/feed-service'
 import { catchError, of } from 'rxjs'
@@ -10,6 +10,9 @@ import { MatIconButton } from '@angular/material/button'
 import { RowSpacer } from '../../components/row-spacer/row-spacer'
 import { MatDialog, MatDialogModule } from '@angular/material/dialog'
 import { SubscriptionAddForm } from '../../components/subscription-add-form/subscription-add-form'
+import { Feed } from '../../entities/feed/feed.types'
+import { MatProgressBar } from '@angular/material/progress-bar'
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 
 @Component({
   selector: 'app-subscriptions',
@@ -20,6 +23,8 @@ import { SubscriptionAddForm } from '../../components/subscription-add-form/subs
     MatIconButton,
     RowSpacer,
     MatDialogModule,
+    MatProgressBar,
+    MatPaginatorModule,
   ],
   templateUrl: './subscriptions-page.component.html',
   styleUrl: './subscriptions-page.component.css',
@@ -29,15 +34,23 @@ export class SubscriptionsPage implements OnInit {
   readonly dialog = inject(MatDialog)
   destroyRef = inject(DestroyRef)
 
-  feeds = signal<any[]>([])
+  feeds = signal<Feed[]>([])
+  currentPage = signal<number>(1)
+  pageSize = signal<number>(10)
+  totalResults = signal<number>(0)
 
   ngOnInit() {
-    this.getAll()
+    this.getData()
   }
 
-  getAll() {
+  getData() {
     this.feedService
-      .getAllSubscriptions()
+      .getAllSubscriptions({
+        pagination: {
+          perPage: this.pageSize(),
+          pageNumber: this.currentPage(),
+        },
+      })
       .pipe(
         catchError((error: HttpErrorResponse) => {
           console.log(error)
@@ -47,8 +60,9 @@ export class SubscriptionsPage implements OnInit {
       )
       .subscribe((result) => {
         if (result) {
-          console.log(result)
-          this.feeds.set(result as any[])
+          this.currentPage.set(1)
+          this.feeds.set(result.result)
+          this.totalResults.set(result.total)
         }
       })
   }
@@ -58,10 +72,12 @@ export class SubscriptionsPage implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.getAll()
+        this.getData()
       }
     })
   }
+
+  paginator = viewChild(MatPaginator)
 
   onRemove(id: string) {
     this.feedService
@@ -74,8 +90,14 @@ export class SubscriptionsPage implements OnInit {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((result) => {
-        console.log('DELETE_SUBSCRIPTION', result)
-        this.getAll()
+        this.getData()
+        this.paginator()?.firstPage()
       })
+  }
+
+  paginationHandler(event: PageEvent) {
+    this.currentPage.set(event.pageIndex + 1)
+    this.pageSize.set(event.pageSize)
+    this.getData()
   }
 }

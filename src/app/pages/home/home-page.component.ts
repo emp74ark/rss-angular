@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { RowSpacer } from '../../components/row-spacer/row-spacer'
 import { Router, RouterLink } from '@angular/router'
 import { Article } from '../../entities/article/article.types'
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 
 @Component({
   selector: 'app-home',
@@ -26,6 +27,7 @@ import { Article } from '../../entities/article/article.types'
     RowSpacer,
     MatIconButton,
     RouterLink,
+    MatPaginatorModule,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
@@ -37,10 +39,22 @@ export class HomePage implements OnInit {
 
   articles = signal<Article[]>([])
   display = signal<'title' | 'short'>('title')
+  currentPage = signal<number>(1)
+  pageSize = signal<number>(10)
+  totalResults = signal<number>(0)
 
   ngOnInit() {
+    this.getData()
+  }
+
+  getData() {
     this.feedService
-      .getAllArticles()
+      .getAllArticles({
+        pagination: {
+          perPage: this.pageSize(),
+          pageNumber: this.currentPage(),
+        },
+      })
       .pipe(
         catchError((error: HttpErrorResponse) => {
           console.log(error)
@@ -50,8 +64,8 @@ export class HomePage implements OnInit {
       )
       .subscribe((result) => {
         if (result) {
-          console.log(result)
-          this.articles.set(result)
+          this.articles.set(result.result)
+          this.totalResults.set(result.total)
         }
       })
   }
@@ -62,5 +76,11 @@ export class HomePage implements OnInit {
 
   async onArticleClick(article: Article) {
     await this.router.navigate(['subscription', article.subscriptionId, 'article', article._id])
+  }
+
+  paginationHandler(event: PageEvent) {
+    this.currentPage.set(event.pageIndex + 1)
+    this.pageSize.set(event.pageSize)
+    this.getData()
   }
 }
