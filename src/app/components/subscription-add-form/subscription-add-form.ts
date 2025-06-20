@@ -44,8 +44,6 @@ export class SubscriptionAddForm {
 
   onSubmit() {
     this.isLoading.set(true)
-    console.log(this.form.getRawValue())
-    // this.dialogRef.close('Success')
     this.form.disable()
     this.feedService
       .addOneSubscription({ subscription: this.form.getRawValue() })
@@ -59,8 +57,9 @@ export class SubscriptionAddForm {
       )
       .subscribe((result) => {
         this.isLoading.set(false)
-        console.log('NEW_SUBSCRIPTION', result)
-        this.dialogRef.close(true)
+        if (result) {
+          this.dialogRef.close({ result })
+        }
       })
   }
 }

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http'
 import { environment } from '../../environments/environment'
 import { Feed, FeedDTO } from '../entities/feed/feed.types'
 import { Article, ArticleDTO } from '../entities/article/article.types'
+import { Paginated, Pagination } from '../entities/base/base.types'
 
 @Injectable({
   providedIn: 'root',
@@ -10,12 +11,16 @@ import { Article, ArticleDTO } from '../entities/article/article.types'
 export class FeedService {
   httpClient = inject(HttpClient)
 
-  getAllSubscriptions() {
-    return this.httpClient.get<Feed[]>(`${environment.api}/subscription`)
+  getAllSubscriptions({ pagination }: { pagination?: Partial<Pagination> }) {
+    return this.httpClient.get<Paginated<Feed>>(`${environment.api}/subscription`, {
+      params: pagination,
+    })
   }
 
-  getAllArticles() {
-    return this.httpClient.get<Article[]>(`${environment.api}/article`)
+  getAllArticles({ pagination }: { pagination?: Partial<Pagination> }) {
+    return this.httpClient.get<Paginated<Article>>(`${environment.api}/article`, {
+      params: pagination,
+    })
   }
 
   getOneSubscription({ subscriptionId }: { subscriptionId: string }) {
