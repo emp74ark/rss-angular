@@ -1,13 +1,20 @@
 <mat-toolbar>
   <mat-toolbar-row>
-    <h2>Subscriptions</h2>
-    <app-row-spacer/>
     <button
       matIconButton
       (click)="onAdd()"
     >
       <mat-icon>add</mat-icon>
     </button>
+    <app-row-spacer/>
+    @if (feeds().length > 0) {
+      <mat-paginator
+        [length]="totalResults()"
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 20]"
+        (page)="paginationHandler( $event)"
+      />
+    }
   </mat-toolbar-row>
 </mat-toolbar>
 @defer {
@@ -30,16 +37,6 @@
     </mat-card>
   } @empty {
     <h2>No subscriptions found</h2>
-  }
-
-  @if (feeds().length > 0) {
-    <mat-paginator
-      #paginator
-      [length]="totalResults()"
-      [pageSize]="10"
-      [pageSizeOptions]="[5, 10, 20]"
-      (page)="paginationHandler( $event)"
-    />
   }
 } @loading (minimum 0.5s) {
   <mat-progress-bar mode="query"/>

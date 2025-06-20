@@ -1,10 +1,18 @@
 <mat-toolbar>
   <mat-toolbar-row>
-    <app-row-spacer/>
     <mat-button-toggle>
       <mat-icon (click)="toggleDisplay('title')">view_day</mat-icon>
       <mat-icon (click)="toggleDisplay('short')">view_agenda</mat-icon>
     </mat-button-toggle>
+    <app-row-spacer/>
+    @if (articles().length > 0) {
+      <mat-paginator
+        [length]="totalResults()"
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 20]"
+        (page)="paginationHandler( $event)"
+      />
+    }
   </mat-toolbar-row>
 </mat-toolbar>
 @defer {
@@ -42,15 +50,6 @@
     </mat-card>
   } @empty {
     <h2>No articles found</h2>
-  }
-
-  @if (articles().length > 0) {
-    <mat-paginator
-      [length]="totalResults()"
-      [pageSize]="10"
-      [pageSizeOptions]="[5, 10, 20]"
-      (page)="paginationHandler( $event)"
-    />
   }
 } @loading (minimum 0.5s) {
   <mat-progress-bar mode="query"/>
