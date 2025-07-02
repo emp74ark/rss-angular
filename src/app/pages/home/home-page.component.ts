@@ -14,6 +14,7 @@ import { RowSpacer } from '../../components/row-spacer/row-spacer'
 import { Router, RouterLink } from '@angular/router'
 import { Article } from '../../entities/article/article.types'
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator'
+import { TagService } from '../../services/tag-service'
 
 @Component({
   selector: 'app-home',
@@ -36,6 +37,7 @@ export class HomePage implements OnInit {
   feedService = inject(FeedService)
   router = inject(Router)
   destroyRef = inject(DestroyRef)
+  tagService = inject(TagService)
 
   articles = signal<Article[]>([])
   display = signal<'title' | 'short'>('title')
@@ -43,8 +45,13 @@ export class HomePage implements OnInit {
   pageSize = signal<number>(10)
   totalResults = signal<number>(0)
 
+  favTagId = signal<string>('')
+
   ngOnInit() {
     this.getData()
+    this.tagService.$defaultTags.subscribe((tags) => {
+      this.favTagId.set(tags.find((t) => t.name === 'fav')?._id || '')
+    })
   }
 
   getData() {
@@ -78,7 +85,7 @@ export class HomePage implements OnInit {
     await this.router.navigate(['subscription', article.subscriptionId, 'article', article._id])
   }
 
-  onAddToBookmarks(article: Article, event: MouseEvent) {
+  markAsRead(article: Article, event: MouseEvent) {
     event.stopPropagation()
     if (article) {
       this.feedService
@@ -102,6 +109,40 @@ export class HomePage implements OnInit {
           this.articles.update((prev) => {
             if (prev !== null) {
               return prev.map((a) => (a._id === result._id ? { ...a, read: !a.read } : a))
+            }
+            return prev
+          })
+        })
+    }
+  }
+
+  onAddToBookmarks(article: Article, event: MouseEvent) {
+    const existingTag = article.tags.find((t) => t === this.favTagId())
+    const tags = existingTag
+      ? [...article.tags].filter((t) => t !== this.favTagId())
+      : [...article.tags, this.favTagId()]
+
+    event.stopPropagation()
+    if (article) {
+      this.feedService
+        .changeOneArticle({
+          articleId: article._id,
+          article: { tags },
+        })
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          catchError((error: HttpErrorResponse) => {
+            console.log(error)
+            return of(null)
+          }),
+        )
+        .subscribe((result) => {
+          if (result === null) {
+            return
+          }
+          this.articles.update((prev) => {
+            if (prev !== null) {
+              return prev.map((a) => (a._id === result._id ? { ...a, tags } : a))
             }
             return prev
           })

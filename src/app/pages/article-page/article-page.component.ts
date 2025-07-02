@@ -13,6 +13,7 @@ import { MatIconButton } from '@angular/material/button'
 import { MatDivider } from '@angular/material/divider'
 import { DatePipe } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
+import { TagService } from '../../services/tag-service'
 
 @Component({
   selector: 'app-article',
@@ -32,12 +33,15 @@ import { HttpErrorResponse } from '@angular/common/http'
 })
 export class ArticlePage implements OnInit {
   feedService = inject(FeedService)
+  tagService = inject(TagService)
   route = inject(ActivatedRoute)
   destroyRef = inject(DestroyRef)
 
   article = signal<Article | null>(null)
 
-  bookmarked = computed<boolean>(() => {
+  favTagId = signal<string>('')
+
+  readStatus = computed<boolean>(() => {
     return !!this.article()?.read
   })
 
@@ -61,9 +65,13 @@ export class ArticlePage implements OnInit {
         this.article.set(result)
         console.log(result)
       })
+
+    this.tagService.$defaultTags.subscribe((tags) => {
+      this.favTagId.set(tags.find((t) => t.name === 'fav')?._id || '')
+    })
   }
 
-  onAddToBookmarks() {
+  onMarkAsRead() {
     if (this.article() !== null) {
       this.feedService
         .changeOneArticle({
@@ -83,6 +91,36 @@ export class ArticlePage implements OnInit {
           this.article.update((prev) => {
             if (prev !== null) {
               return { ...prev, read: !prev.read }
+            }
+            return prev
+          })
+        })
+    }
+  }
+
+  onAddToBookmarks() {
+    const existingTag = this.article()?.tags.find((t) => t === this.favTagId())
+    const tags = existingTag
+      ? [...(this.article()?.tags || [])].filter((t) => t !== this.favTagId())
+      : [...(this.article()?.tags || []), this.favTagId()]
+
+    if (this.article()) {
+      this.feedService
+        .changeOneArticle({
+          articleId: this.article()?._id,
+          article: { tags },
+        })
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          catchError((error: HttpErrorResponse) => {
+            console.log(error)
+            return of(null)
+          }),
+        )
+        .subscribe(() => {
+          this.article.update((prev) => {
+            if (prev !== null) {
+              return { ...prev, tags: tags }
             }
             return prev
           })

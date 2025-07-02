@@ -47,7 +47,13 @@
         </a>
         <button
           matIconButton
-          [class]="a.read ? 'bookmarked' : undefined"
+          (click)="markAsRead(a, $event)"
+        >
+          <mat-icon>{{ a.read ? 'mark_email_read' : 'mark_email_unread' }}</mat-icon>
+        </button>
+        <button
+          matIconButton
+          [class]="a.tags.includes(favTagId()) ? 'bookmarked' : undefined"
           (click)="onAddToBookmarks(a, $event)"
         >
           <mat-icon>bookmark</mat-icon>
