@@ -2,7 +2,7 @@ import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angula
 import { FeedService } from '../../services/feed-service'
 import { ActivatedRoute } from '@angular/router'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { catchError, of, switchMap } from 'rxjs'
+import { catchError, exhaustMap, of } from 'rxjs'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { Article } from '../../entities/article/article.types'
 import { MatProgressBarModule } from '@angular/material/progress-bar'
@@ -48,12 +48,22 @@ export class ArticlePage implements OnInit {
   ngOnInit() {
     this.route.params
       .pipe(
-        switchMap((params) => {
-          console.log(params)
+        exhaustMap((params) => {
           if (!params['articleId']) {
             return of(null)
           }
           return this.feedService.getOneArticle({ articleId: params['articleId'] })
+        }),
+        exhaustMap((params) => {
+          if (!params) {
+            return of(null)
+          }
+          return this.feedService.changeOneArticle({
+            articleId: params._id,
+            article: {
+              read: true,
+            },
+          })
         }),
         takeUntilDestroyed(this.destroyRef),
         catchError((error: HttpErrorResponse) => {
@@ -63,7 +73,6 @@ export class ArticlePage implements OnInit {
       )
       .subscribe((result) => {
         this.article.set(result)
-        console.log(result)
       })
 
     this.tagService.$defaultTags.subscribe((tags) => {

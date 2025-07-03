@@ -13,6 +13,19 @@
         (page)="paginationHandler( $event)"
       />
     }
+    <app-row-spacer/>
+    <mat-button-toggle>
+      <mat-icon
+        [class]="readFilter() ? 'highlighted' : undefined"
+        (click)="filterHandler('read')"
+      >{{ readFilter() ? 'mark_email_unread' : 'mark_email_read' }}
+      </mat-icon>
+      <mat-icon
+        [class]="favFilter() ? 'highlighted' : undefined"
+        (click)="filterHandler('fav')"
+      >bookmark
+      </mat-icon>
+    </mat-button-toggle>
   </mat-toolbar-row>
 </mat-toolbar>
 @defer {
@@ -53,7 +66,7 @@
         </button>
         <button
           matIconButton
-          [class]="a.tags.includes(favTagId()) ? 'bookmarked' : undefined"
+          [class]="a.tags.includes(favTagId()) ? 'highlighted' : undefined"
           (click)="onAddToBookmarks(a, $event)"
         >
           <mat-icon>bookmark</mat-icon>

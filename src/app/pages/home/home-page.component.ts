@@ -41,9 +41,13 @@ export class HomePage implements OnInit {
 
   articles = signal<Article[]>([])
   display = signal<'title' | 'short'>('title')
+
   currentPage = signal<number>(1)
   pageSize = signal<number>(10)
   totalResults = signal<number>(0)
+
+  readFilter = signal<boolean>(true)
+  favFilter = signal<boolean>(false)
 
   favTagId = signal<string>('')
 
@@ -55,12 +59,23 @@ export class HomePage implements OnInit {
   }
 
   getData() {
+    const filters: Record<string, string | boolean> = {}
+
+    if (this.readFilter()) {
+      filters['read'] = false
+    }
+
+    if (this.favFilter()) {
+      filters['tags'] = this.favTagId()
+    }
+
     this.feedService
       .getAllArticles({
         pagination: {
           perPage: this.pageSize(),
           pageNumber: this.currentPage(),
         },
+        filters,
       })
       .pipe(
         catchError((error: HttpErrorResponse) => {
@@ -153,6 +168,15 @@ export class HomePage implements OnInit {
   paginationHandler(event: PageEvent) {
     this.currentPage.set(event.pageIndex + 1)
     this.pageSize.set(event.pageSize)
+    this.getData()
+  }
+
+  filterHandler(filter: 'read' | 'fav') {
+    if (filter === 'read') {
+      this.readFilter.update((prev) => !prev)
+    } else {
+      this.favFilter.update((prev) => !prev)
+    }
     this.getData()
   }
 }

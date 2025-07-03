@@ -27,6 +27,6 @@
   transition: transform 0.2s ease-in-out;
 }
 
-.bookmarked {
+.highlighted {
   color: var(--mat-sys-primary);
 }
