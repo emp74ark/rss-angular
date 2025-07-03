@@ -14,7 +14,7 @@
         <button
           matIconButton
           (click)="onAddToBookmarks()"
-          [class]="(article()?.tags || []).includes(favTagId()) ? 'bookmarked' : undefined"
+          [class]="(article()?.tags || []).includes(favTagId()) ? 'highlighted' : undefined"
         >
           <mat-icon>bookmark</mat-icon>
         </button>

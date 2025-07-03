@@ -15,6 +15,8 @@ import { Router, RouterLink } from '@angular/router'
 import { Article } from '../../entities/article/article.types'
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { TagService } from '../../services/tag-service'
+import { Tag } from '../../entities/tag/tag.types'
+import { MatChipOption } from '@angular/material/chips'
 
 @Component({
   selector: 'app-home',
@@ -29,6 +31,7 @@ import { TagService } from '../../services/tag-service'
     MatIconButton,
     RouterLink,
     MatPaginatorModule,
+    MatChipOption,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
@@ -50,12 +53,35 @@ export class HomePage implements OnInit {
   favFilter = signal<boolean>(false)
 
   favTagId = signal<string>('')
+  userTags = signal<Tag[]>([])
 
   ngOnInit() {
     this.getData()
-    this.tagService.$defaultTags.subscribe((tags) => {
-      this.favTagId.set(tags.find((t) => t.name === 'fav')?._id || '')
-    })
+    this.tagService.$defaultTags
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((error: HttpErrorResponse) => {
+          console.log(error)
+          return of(null)
+        }),
+      )
+      .subscribe((tags) => {
+        this.favTagId.set(tags?.find((t) => t.name === 'fav')?._id || '')
+      })
+    this.tagService
+      .getAllTags({})
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((error: HttpErrorResponse) => {
+          console.log(error)
+          return of(null)
+        }),
+      )
+      .subscribe((tags) => {
+        if (tags?.result) {
+          this.userTags.set(tags.result.filter((t) => t.userId !== 'all'))
+        }
+      })
   }
 
   getData() {
@@ -178,5 +204,39 @@ export class HomePage implements OnInit {
       this.favFilter.update((prev) => !prev)
     }
     this.getData()
+  }
+
+  tagHandler(article: Article, tag: Tag, event: MouseEvent) {
+    const existingTag = article.tags.find((t) => t === tag._id)
+    const tags = existingTag
+      ? [...article.tags].filter((t) => t !== tag._id)
+      : [...article.tags, tag._id]
+
+    event.stopPropagation()
+    if (article) {
+      this.feedService
+        .changeOneArticle({
+          articleId: article._id,
+          article: { tags },
+        })
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          catchError((error: HttpErrorResponse) => {
+            console.log(error)
+            return of(null)
+          }),
+        )
+        .subscribe((result) => {
+          if (result === null) {
+            return
+          }
+          this.articles.update((prev) => {
+            if (prev !== null) {
+              return prev.map((a) => (a._id === result._id ? { ...a, tags } : a))
+            }
+            return prev
+          })
+        })
+    }
   }
 }

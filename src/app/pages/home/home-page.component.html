@@ -71,6 +71,14 @@
         >
           <mat-icon>bookmark</mat-icon>
         </button>
+        <app-row-spacer/>
+        @for (t of userTags(); track t._id) {
+          <mat-chip-option
+            [selected]="a.tags.includes(t._id)"
+            (click)="tagHandler(a, t, $event)"
+          >{{ t.name }}
+          </mat-chip-option>
+        }
       </mat-card-actions>
       <mat-card-footer></mat-card-footer>
     </mat-card>
