@@ -1,20 +1,19 @@
-<mat-toolbar class="sticky">
+<mat-toolbar>
   <mat-toolbar-row>
-    <mat-button-toggle>
+    <mat-button-toggle id="displayToggle">
       <mat-icon (click)="toggleDisplay('title')">view_day</mat-icon>
       <mat-icon (click)="toggleDisplay('short')">view_agenda</mat-icon>
     </mat-button-toggle>
-    <app-row-spacer/>
     @if (articles().length > 0) {
       <mat-paginator
+        id="paginator"
         [length]="totalResults()"
         [pageSize]="10"
         [pageSizeOptions]="[5, 10, 20]"
         (page)="paginationHandler( $event)"
       />
     }
-    <app-row-spacer/>
-    <mat-button-toggle>
+    <mat-button-toggle id="filterToggle">
       <mat-icon
         [class]="readFilter() ? 'highlighted' : undefined"
         (click)="filterHandler('read')"
