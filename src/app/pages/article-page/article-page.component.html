@@ -7,8 +7,14 @@
         <app-row-spacer/>
         <button
           matIconButton
+          (click)="onMarkAsRead()"
+        >
+          <mat-icon>{{ readStatus() ? 'mark_email_read' : 'mark_email_unread' }}</mat-icon>
+        </button>
+        <button
+          matIconButton
           (click)="onAddToBookmarks()"
-          [class]="bookmarked() ? 'bookmarked' : undefined"
+          [class]="(article()?.tags || []).includes(favTagId()) ? 'highlighted' : undefined"
         >
           <mat-icon>bookmark</mat-icon>
         </button>

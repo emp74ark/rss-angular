@@ -1,18 +1,30 @@
 <mat-toolbar>
   <mat-toolbar-row>
-    <mat-button-toggle>
+    <mat-button-toggle id="displayToggle">
       <mat-icon (click)="toggleDisplay('title')">view_day</mat-icon>
       <mat-icon (click)="toggleDisplay('short')">view_agenda</mat-icon>
     </mat-button-toggle>
-    <app-row-spacer/>
     @if (articles().length > 0) {
       <mat-paginator
+        id="paginator"
         [length]="totalResults()"
         [pageSize]="10"
         [pageSizeOptions]="[5, 10, 20]"
         (page)="paginationHandler( $event)"
       />
     }
+    <mat-button-toggle id="filterToggle">
+      <mat-icon
+        [class]="readFilter() ? 'highlighted' : undefined"
+        (click)="filterHandler('read')"
+      >{{ readFilter() ? 'mark_email_unread' : 'mark_email_read' }}
+      </mat-icon>
+      <mat-icon
+        [class]="favFilter() ? 'highlighted' : undefined"
+        (click)="filterHandler('fav')"
+      >bookmark
+      </mat-icon>
+    </mat-button-toggle>
   </mat-toolbar-row>
 </mat-toolbar>
 @defer {
@@ -45,6 +57,27 @@
         >
           <mat-icon>open_in_new</mat-icon>
         </a>
+        <button
+          matIconButton
+          (click)="markAsRead(a, $event)"
+        >
+          <mat-icon>{{ a.read ? 'mark_email_read' : 'mark_email_unread' }}</mat-icon>
+        </button>
+        <button
+          matIconButton
+          [class]="a.tags.includes(favTagId()) ? 'highlighted' : undefined"
+          (click)="onAddToBookmarks(a, $event)"
+        >
+          <mat-icon>bookmark</mat-icon>
+        </button>
+        <app-row-spacer/>
+        @for (t of userTags(); track t._id) {
+          <mat-chip-option
+            [selected]="a.tags.includes(t._id)"
+            (click)="tagHandler(a, t, $event)"
+          >{{ t.name }}
+          </mat-chip-option>
+        }
       </mat-card-actions>
       <mat-card-footer></mat-card-footer>
     </mat-card>

@@ -3,3 +3,16 @@
   flex-direction: column;
   gap: 1rem;
 }
+
+:host .mat-toolbar {
+  position: sticky;
+  top: 0.5rem;
+  z-index: 1;
+  background: transparent;
+  backdrop-filter: blur(1rem);
+  border-radius: 1ch;
+}
+
+:host .mat-mdc-paginator {
+  background: transparent;
+}

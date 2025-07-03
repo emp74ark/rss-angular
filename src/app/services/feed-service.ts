@@ -4,12 +4,14 @@ import { environment } from '../../environments/environment'
 import { Feed, FeedDTO } from '../entities/feed/feed.types'
 import { Article, ArticleDTO } from '../entities/article/article.types'
 import { Paginated, Pagination } from '../entities/base/base.types'
+import { TagService } from './tag-service'
 
 @Injectable({
   providedIn: 'root',
 })
 export class FeedService {
   httpClient = inject(HttpClient)
+  tagService = inject(TagService)
 
   getAllSubscriptions({ pagination }: { pagination?: Partial<Pagination> }) {
     return this.httpClient.get<Paginated<Feed>>(`${environment.api}/subscription`, {
@@ -17,9 +19,16 @@ export class FeedService {
     })
   }
 
-  getAllArticles({ pagination }: { pagination?: Partial<Pagination> }) {
+  getAllArticles({
+    pagination,
+    filters,
+  }: {
+    pagination?: Partial<Pagination>
+    filters?: { tags?: string; read?: boolean }
+  }) {
+    this.tagService.getDefaultTags()
     return this.httpClient.get<Paginated<Article>>(`${environment.api}/article`, {
-      params: pagination,
+      params: { ...pagination, ...filters },
     })
   }
 
@@ -31,7 +40,7 @@ export class FeedService {
     return this.httpClient.get<Article>(`${environment.api}/article/${articleId}`)
   }
 
-  changeOneArticle({ article, articleId }: { article: ArticleDTO; articleId?: string }) {
+  changeOneArticle({ article, articleId }: { article: Partial<ArticleDTO>; articleId?: string }) {
     return this.httpClient.patch<Article>(`${environment.api}/article/${articleId}`, article)
   }
 
