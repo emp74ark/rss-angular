@@ -1,11 +1,10 @@
 import { Routes } from '@angular/router'
 import { NotFoundPage } from './pages/not-found/not-found-page.component'
 import { authGuard } from './guards/auth-guard'
-import { RootPage } from './pages/root/root-page.component'
 import { AuthPage } from './pages/auth-page/auth-page.component'
 
 export const routes: Routes = [
-  { path: '', component: RootPage, data: { title: 'Start' } },
+  { path: '', redirectTo: 'auth', pathMatch: 'full' },
   { path: 'auth', component: AuthPage, data: { title: 'Authentication' } },
   {
     path: 'home',
