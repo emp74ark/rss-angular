@@ -18,20 +18,16 @@
   </mat-toolbar-row>
 </mat-toolbar>
 @defer {
-  @for (t of tags(); track t._id) {
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>{{ t.name }}</mat-card-title>
-        <app-row-spacer/>
+  <mat-chip-set>
+    @for (t of tags(); track t._id) {
+      <mat-chip-row (removed)="onRemove(t)">
+        {{ t.name }}
         @if (t.userId !== 'all') {
-          <button
-            matIconButton
-            (click)="onRemove(t)"
-          >
-            <mat-icon>delete</mat-icon>
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
           </button>
         }
-      </mat-card-header>
-    </mat-card>
-  }
+      </mat-chip-row>
+    }
+  </mat-chip-set>
 }

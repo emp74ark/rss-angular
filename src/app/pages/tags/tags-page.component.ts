@@ -12,10 +12,21 @@ import { MatIconModule } from '@angular/material/icon'
 import { RowSpacer } from '../../components/row-spacer/row-spacer'
 import { MatDialog } from '@angular/material/dialog'
 import { TagAddForm } from '../../components/tag-add-form/tag-add-form'
+import { MatChipRemove, MatChipRow, MatChipSet } from '@angular/material/chips'
 
 @Component({
   selector: 'app-tags',
-  imports: [MatCardModule, MatToolbarModule, MatIconButton, MatIconModule, RowSpacer, MatPaginator],
+  imports: [
+    MatCardModule,
+    MatToolbarModule,
+    MatIconButton,
+    MatIconModule,
+    RowSpacer,
+    MatPaginator,
+    MatChipRow,
+    MatChipRemove,
+    MatChipSet,
+  ],
   templateUrl: './tags-page.component.html',
   styleUrl: './tags-page.component.css',
 })
