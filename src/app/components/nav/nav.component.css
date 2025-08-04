@@ -13,6 +13,14 @@
 
 .label {
   background: var(--mat-sys-primary-container);
+  display: flex;
+  gap: 1rem;
+}
+
+.label h1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mat-toolbar.mat-primary {

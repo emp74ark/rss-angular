@@ -1,7 +1,6 @@
 @defer {
   @if (article()) {
     <mat-toolbar>
-      <h2>{{ article()?.title }}</h2>
       <mat-toolbar-row>
         <span>Published: {{ article()?.isoDate | date:'short' }}</span>
         <app-row-spacer/>
@@ -27,6 +26,7 @@
         </a>
       </mat-toolbar-row>
     </mat-toolbar>
+    <h2>{{ article()?.title }}</h2>
     <p>
       {{ article()?.contentSnippet }}
     </p>

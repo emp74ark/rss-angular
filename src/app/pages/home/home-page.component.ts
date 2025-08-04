@@ -17,6 +17,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { TagService } from '../../services/tag-service'
 import { Tag } from '../../entities/tag/tag.types'
 import { MatChipOption } from '@angular/material/chips'
+import { TitleService } from '../../services/title-service'
 
 @Component({
   selector: 'app-home',
@@ -41,6 +42,7 @@ export class HomePage implements OnInit {
   router = inject(Router)
   destroyRef = inject(DestroyRef)
   tagService = inject(TagService)
+  titleService = inject(TitleService)
 
   articles = signal<Article[]>([])
   display = signal<'title' | 'short'>('title')
@@ -114,6 +116,9 @@ export class HomePage implements OnInit {
         if (result) {
           this.articles.set(result.result)
           this.totalResults.set(result.total)
+          this.titleService.setTitle(`News: ${result.total} articles`)
+        } else {
+          this.titleService.setTitle('News')
         }
       })
   }

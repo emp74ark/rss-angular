@@ -9,20 +9,42 @@
   >
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="/home">Home</a>
-      <a mat-list-item routerLink="/subscriptions">Subscriptions</a>
-      <a mat-list-item routerLink="/tags">Tags</a>
+      <a
+        mat-list-item
+        routerLink="/home"
+      >Home</a>
+      <a
+        mat-list-item
+        routerLink="/subscriptions"
+      >Subscriptions</a>
+      <a
+        mat-list-item
+        routerLink="/tags"
+      >Tags</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar class="label">
       @if (isHandset$ | async) {
-        <button type="button" aria-label="Toggle sidenav" matIconButton (click)="drawer.toggle()">
+        <button
+          type="button"
+          aria-label="Toggle sidenav"
+          matIconButton
+          (click)="drawer.toggle()"
+        >
           <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
         </button>
       }
-      <h1>{{ pageTitle() }}</h1>
+      @if (!topLevelRoute()) {
+        <button
+          matButton
+          (click)="navigateBack()"
+        >
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      }
+      <h1>{{ currentTitle() }}</h1>
     </mat-toolbar>
-    <ng-content select="router-outlet" />
+    <ng-content select="router-outlet"/>
   </mat-sidenav-content>
 </mat-sidenav-container>

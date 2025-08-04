@@ -12,7 +12,6 @@ export const routes: Routes = [
       const c = await import('./pages/home/home-page.component')
       return c.HomePage
     },
-    data: { title: 'Home' },
     canMatch: [authGuard],
   },
   {
@@ -21,7 +20,6 @@ export const routes: Routes = [
       const c = await import('./pages/subscriptions/subscriptions-page.component')
       return c.SubscriptionsPage
     },
-    title: 'Subscriptions',
     data: { title: 'Subscriptions' },
     canMatch: [authGuard],
   },
@@ -31,7 +29,6 @@ export const routes: Routes = [
       const c = await import('./pages/article-page/article-page.component')
       return c.ArticlePage
     },
-    title: 'Article',
     data: { title: 'Article' },
     canMatch: [authGuard],
   },
@@ -41,14 +38,12 @@ export const routes: Routes = [
       const c = await import('./pages/tags/tags-page.component')
       return c.TagsPage
     },
-    title: 'Tags',
     data: { title: 'Tags' },
     canMatch: [authGuard],
   },
   {
     path: '**',
     component: NotFoundPage,
-    title: 'Not Found',
     data: { title: 'Not Found' },
   },
 ]

@@ -14,6 +14,7 @@ import { MatDivider } from '@angular/material/divider'
 import { DatePipe } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { TagService } from '../../services/tag-service'
+import { TitleService } from '../../services/title-service'
 
 @Component({
   selector: 'app-article',
@@ -35,6 +36,7 @@ export class ArticlePage implements OnInit {
   feedService = inject(FeedService)
   tagService = inject(TagService)
   route = inject(ActivatedRoute)
+  titleService = inject(TitleService)
   destroyRef = inject(DestroyRef)
 
   article = signal<Article | null>(null)
@@ -73,6 +75,7 @@ export class ArticlePage implements OnInit {
       )
       .subscribe((result) => {
         this.article.set(result)
+        this.titleService.setTitle(result?.title || '')
       })
 
     this.tagService.$defaultTags.subscribe((tags) => {

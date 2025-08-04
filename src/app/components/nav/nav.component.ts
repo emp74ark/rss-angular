@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
-import { AsyncPipe } from '@angular/common'
+import { AsyncPipe, Location } from '@angular/common'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonModule } from '@angular/material/button'
 import { MatSidenavModule } from '@angular/material/sidenav'
@@ -8,7 +8,9 @@ import { MatListModule } from '@angular/material/list'
 import { MatIconModule } from '@angular/material/icon'
 import { Observable } from 'rxjs'
 import { map, shareReplay } from 'rxjs/operators'
-import { ActivatedRouteSnapshot, EventType, Router, RouterLink } from '@angular/router'
+import { EventType, Router, RouterLink } from '@angular/router'
+import { TitleService } from '../../services/title-service'
+import { toSignal } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-nav',
@@ -26,21 +28,30 @@ import { ActivatedRouteSnapshot, EventType, Router, RouterLink } from '@angular/
 })
 export class NavComponent implements OnInit {
   private breakpointObserver = inject(BreakpointObserver)
+  private titleService = inject(TitleService)
+
+  currentTitle = toSignal(this.titleService.$currentTitle)
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map((result) => result.matches),
     shareReplay(),
   )
 
-  pageTitle = signal<string>('Home')
+  private router = inject(Router)
+  private location = inject(Location)
 
-  router = inject(Router)
+  topLevelRoute = signal<boolean>(true)
+
+  navigateBack() {
+    this.location.back()
+  }
 
   ngOnInit() {
     this.router.events.subscribe((event) => {
       if (event.type === EventType.ActivationStart) {
         const title: string = event.snapshot.data?.['title']
-        this.pageTitle.set(title)
+        this.titleService.setTitle(title)
+        this.topLevelRoute.set(event.snapshot.url.length === 1)
       }
     })
   }
