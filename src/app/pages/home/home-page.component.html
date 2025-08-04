@@ -1,19 +1,10 @@
 <mat-toolbar>
-  <mat-toolbar-row>
-    <mat-button-toggle id="displayToggle">
+  <mat-toolbar-row id="view-toggle">
+    <mat-button-toggle>
       <mat-icon (click)="toggleDisplay('title')">view_day</mat-icon>
       <mat-icon (click)="toggleDisplay('short')">view_agenda</mat-icon>
     </mat-button-toggle>
-    @if (articles().length > 0) {
-      <mat-paginator
-        id="paginator"
-        [length]="totalResults()"
-        [pageSize]="10"
-        [pageSizeOptions]="[5, 10, 20]"
-        (page)="paginationHandler( $event)"
-      />
-    }
-    <mat-button-toggle id="filterToggle">
+    <mat-button-toggle>
       <mat-icon
         [class]="readFilter() ? 'highlighted' : undefined"
         (click)="filterHandler('read')"
@@ -87,3 +78,16 @@
 } @loading (minimum 0.5s) {
   <mat-progress-bar mode="query"/>
 }
+<mat-toolbar>
+  <mat-toolbar-row id="paginator">
+    @if (articles().length > 0) {
+      <mat-paginator
+        id="paginator"
+        [length]="totalResults()"
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 20]"
+        (page)="paginationHandler( $event)"
+      />
+    }
+  </mat-toolbar-row>
+</mat-toolbar>

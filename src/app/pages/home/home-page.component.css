@@ -5,51 +5,16 @@
   padding: 0.5rem;
 }
 
-:host .mat-toolbar {
-  position: sticky;
-  top: 0.5rem;
-  z-index: 1;
-  background: transparent;
-  backdrop-filter: blur(1rem);
-  border-radius: 1ch;
-  container-name: toolbar;
-  container-type: inline-size;
-}
-
-:host .mat-mdc-paginator {
-  background: transparent;
-}
-
-#displayToggle {
-  grid-area: displayToggle;
+#view-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 #paginator {
-  grid-area: paginator;
-}
-
-#filterToggle {
-  grid-area: filterToggle;
-}
-
-mat-toolbar-row {
-  display: grid;
-  grid-template-areas:
-    'displayToggle paginator filterToggle';
-  grid-template-columns: auto auto auto;
-  gap: 1rem;
-  place-content: center;
-  place-items: center;
-}
-
-@container (max-width: 48rem) {
-  mat-toolbar-row {
-    grid-template-areas:
-    'displayToggle paginator'
-    'filterToggle paginator';
-    grid-template-columns: auto auto;
-    grid-template-rows: auto auto;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card {
