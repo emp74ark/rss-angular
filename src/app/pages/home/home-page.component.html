@@ -1,8 +1,16 @@
 <mat-toolbar>
   <mat-toolbar-row id="view-toggle">
     <mat-button-toggle>
-      <mat-icon (click)="toggleDisplay('title')">view_day</mat-icon>
-      <mat-icon (click)="toggleDisplay('short')">view_agenda</mat-icon>
+      <mat-icon
+        [class]="display() === 'title' ? 'highlighted' : undefined"
+        (click)="toggleDisplay('title')"
+      >view_day
+      </mat-icon>
+      <mat-icon
+        [class]="display() === 'short' ? 'highlighted' : undefined"
+        (click)="toggleDisplay('short')"
+      >view_agenda
+      </mat-icon>
     </mat-button-toggle>
     <mat-button-toggle>
       <mat-icon
@@ -69,13 +77,13 @@
         </button>
         <app-row-spacer/>
         <mat-chip-set>
-        @for (t of userTags(); track t._id) {
+          @for (t of userTags(); track t._id) {
             <mat-chip-option
               [selected]="a.tags.includes(t._id)"
               (click)="tagHandler(a, t, $event)"
             >{{ t.name }}
             </mat-chip-option>
-        }
+          }
         </mat-chip-set>
       </mat-card-actions>
     </mat-card>
