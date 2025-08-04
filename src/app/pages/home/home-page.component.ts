@@ -16,7 +16,7 @@ import { Article } from '../../entities/article/article.types'
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { TagService } from '../../services/tag-service'
 import { Tag } from '../../entities/tag/tag.types'
-import { MatChipOption } from '@angular/material/chips'
+import { MatChipOption, MatChipSet } from '@angular/material/chips'
 import { TitleService } from '../../services/title-service'
 
 @Component({
@@ -33,6 +33,7 @@ import { TitleService } from '../../services/title-service'
     RouterLink,
     MatPaginatorModule,
     MatChipOption,
+    MatChipSet,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',

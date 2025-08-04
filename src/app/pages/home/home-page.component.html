@@ -8,11 +8,13 @@
       <mat-icon
         [class]="readFilter() ? 'highlighted' : undefined"
         (click)="filterHandler('read')"
+        [title]="readFilter() ? 'Show read' : 'Show unread'"
       >{{ readFilter() ? 'mark_email_unread' : 'mark_email_read' }}
       </mat-icon>
       <mat-icon
         [class]="favFilter() ? 'highlighted' : undefined"
         (click)="filterHandler('fav')"
+        [title]="favFilter() ? 'Show favorites' : 'Show all'"
       >bookmark
       </mat-icon>
     </mat-button-toggle>
@@ -39,18 +41,21 @@
           href="{{ a.link }}"
           matIconButton
           target="_blank"
+          title="Open the source URL"
         >
           <mat-icon>link</mat-icon>
         </a>
         <a
           routerLink="/subscription/{{a.subscriptionId}}/article/{{ a._id }}"
           matIconButton
+          title="Open the article"
         >
           <mat-icon>open_in_new</mat-icon>
         </a>
         <button
           matIconButton
           (click)="markAsRead(a, $event)"
+          title="Mark as read"
         >
           <mat-icon>{{ a.read ? 'mark_email_read' : 'mark_email_unread' }}</mat-icon>
         </button>
@@ -58,19 +63,21 @@
           matIconButton
           [class]="a.tags.includes(favTagId()) ? 'highlighted' : undefined"
           (click)="onAddToBookmarks(a, $event)"
+          title="Add to bookmarks"
         >
           <mat-icon>bookmark</mat-icon>
         </button>
         <app-row-spacer/>
+        <mat-chip-set>
         @for (t of userTags(); track t._id) {
-          <mat-chip-option
-            [selected]="a.tags.includes(t._id)"
-            (click)="tagHandler(a, t, $event)"
-          >{{ t.name }}
-          </mat-chip-option>
+            <mat-chip-option
+              [selected]="a.tags.includes(t._id)"
+              (click)="tagHandler(a, t, $event)"
+            >{{ t.name }}
+            </mat-chip-option>
         }
+        </mat-chip-set>
       </mat-card-actions>
-      <mat-card-footer></mat-card-footer>
     </mat-card>
   } @empty {
     <h2>No articles found</h2>
