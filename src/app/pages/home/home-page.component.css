@@ -23,8 +23,7 @@
 
 .card:hover {
   box-shadow: 0 0 0.2rem var(--mat-sys-primary);
-  transform: scale(1.01);
-  transition: transform 0.2s ease-in-out;
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 .highlighted {
