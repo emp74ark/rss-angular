@@ -1,4 +1,10 @@
-:root {
-  background: var(--mat-app-background-color);
-  font: var(--mat-app-text-color);
+.private {
+  padding: 1rem 2rem;
+}
+
+.public {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }

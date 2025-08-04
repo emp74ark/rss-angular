@@ -1,6 +1,8 @@
-import { Component } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
 import { NavComponent } from './components/nav/nav.component'
+import { AuthService } from './services/auth-service'
+import { toSignal } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-root',
@@ -8,4 +10,7 @@ import { NavComponent } from './components/nav/nav.component'
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App {}
+export class App {
+  private readonly authService = inject(AuthService)
+  protected readonly authStatus = toSignal(this.authService.$authStatus)
+}
