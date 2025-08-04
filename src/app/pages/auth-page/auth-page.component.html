@@ -10,6 +10,7 @@
           matInput
           placeholder="Login"
           type="text"
+          autocomplete="username"
           [value]="formData().login"
           (input)="inputHandler('login', $event)"
           required
@@ -22,6 +23,7 @@
           matInput
           placeholder="Password"
           type="password"
+          autocomplete="password"
           [value]="formData().password"
           (input)="inputHandler('password', $event)"
           required
