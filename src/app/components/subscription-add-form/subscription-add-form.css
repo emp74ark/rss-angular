@@ -2,6 +2,6 @@ form {
   display: flex;
   flex-direction: column;
   gap: 1ch;
-  min-width: 50vw;
+  min-width: 30vw;
   overflow: hidden;
 }
