@@ -11,10 +11,12 @@
   justify-content: space-between;
 }
 
-#paginator {
+#paginator,
+#actions {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
 }
 
 .card {

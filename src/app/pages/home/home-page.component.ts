@@ -1,11 +1,11 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core'
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core'
 import { MatCardModule } from '@angular/material/card'
 import { FeedService } from '../../services/feed-service'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { HttpErrorResponse } from '@angular/common/http'
 import { catchError, of } from 'rxjs'
 import { DatePipe } from '@angular/common'
-import { MatIconButton } from '@angular/material/button'
+import { MatButton, MatIconButton } from '@angular/material/button'
 import { MatProgressBar } from '@angular/material/progress-bar'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle'
@@ -34,6 +34,7 @@ import { TitleService } from '../../services/title-service'
     MatPaginatorModule,
     MatChipOption,
     MatChipSet,
+    MatButton,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
@@ -46,6 +47,7 @@ export class HomePage implements OnInit {
   titleService = inject(TitleService)
 
   articles = signal<Article[]>([])
+  articleIds = computed(() => this.articles().map(({ _id }) => _id))
   display = signal<'title' | 'short'>('title')
 
   currentPage = signal<number>(1)
@@ -161,6 +163,33 @@ export class HomePage implements OnInit {
           })
         })
     }
+  }
+
+  markManyAsRead({
+    articleIds,
+    read,
+    all,
+  }: {
+    articleIds?: string[]
+    read: boolean
+    all?: boolean
+  }) {
+    this.feedService
+      .changeManyArticles({
+        ids: articleIds,
+        article: { read },
+        all,
+      })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((error: HttpErrorResponse) => {
+          console.log(error)
+          return of(null)
+        }),
+      )
+      .subscribe(() => {
+        this.getData()
+      })
   }
 
   onAddToBookmarks(article: Article, event: MouseEvent) {

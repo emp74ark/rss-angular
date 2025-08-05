@@ -44,6 +44,25 @@ export class FeedService {
     return this.httpClient.patch<Article>(`${environment.api}/article/${articleId}`, article)
   }
 
+  changeManyArticles({
+    ids = [],
+    article,
+    all = false,
+  }: {
+    ids?: string[]
+    article: Partial<ArticleDTO>
+    all?: boolean
+  }) {
+    return this.httpClient.patch<{
+      acknowledged: boolean
+      modifiedCount: number
+      matchedCount: number
+    }>(`${environment.api}/article?all=${all}`, {
+      ids,
+      ...article,
+    })
+  }
+
   addOneSubscription({ subscription }: { subscription: FeedDTO }) {
     return this.httpClient.post<FeedDTO>(`${environment.api}/subscription`, subscription)
   }
