@@ -12,3 +12,11 @@ body {
   background: var(--mat-sys-background);
   color: var(--mat-sys-on-background);
 }
+
+.mat-mdc-paginator-container {
+  justify-content: space-around !important;
+}
+
+mat-toolbar-row {
+  height: auto !important;
+}
