@@ -15,6 +15,7 @@ import { DatePipe } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { TagService } from '../../services/tag-service'
 import { TitleService } from '../../services/title-service'
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
 
 @Component({
   selector: 'app-article',
@@ -38,6 +39,7 @@ export class ArticlePage implements OnInit {
   route = inject(ActivatedRoute)
   titleService = inject(TitleService)
   destroyRef = inject(DestroyRef)
+  domSanitizer = inject(DomSanitizer)
 
   article = signal<Article | null>(null)
 
@@ -46,6 +48,13 @@ export class ArticlePage implements OnInit {
   readStatus = computed<boolean>(() => {
     return !!this.article()?.read
   })
+
+  safeHtml(html?: string): SafeHtml | undefined {
+    if (!html) {
+      return
+    }
+    return this.domSanitizer.bypassSecurityTrustHtml(html)
+  }
 
   ngOnInit() {
     this.route.params

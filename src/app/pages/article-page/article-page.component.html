@@ -27,8 +27,7 @@
       </mat-toolbar-row>
     </mat-toolbar>
     <h2>{{ article()?.title }}</h2>
-    <p>
-      {{ article()?.contentSnippet }}
+    <p [innerHtml]="safeHtml(article()?.content)">
     </p>
     <mat-divider/>
     @if (article()?.categories?.length) {

@@ -18,6 +18,7 @@ import { TagService } from '../../services/tag-service'
 import { Tag } from '../../entities/tag/tag.types'
 import { MatChipOption, MatChipSet } from '@angular/material/chips'
 import { TitleService } from '../../services/title-service'
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
 
 @Component({
   selector: 'app-home',
@@ -45,6 +46,7 @@ export class HomePage implements OnInit {
   destroyRef = inject(DestroyRef)
   tagService = inject(TagService)
   titleService = inject(TitleService)
+  htmlSanitizer = inject(DomSanitizer)
 
   articles = signal<Article[]>([])
   articleIds = computed(() => this.articles().map(({ _id }) => _id))
@@ -128,6 +130,10 @@ export class HomePage implements OnInit {
 
   toggleDisplay(display: 'title' | 'short') {
     this.display.set(display)
+  }
+
+  safeHtml(html: string): SafeHtml {
+    return this.htmlSanitizer.bypassSecurityTrustHtml(html)
   }
 
   async onArticleClick(article: Article) {
