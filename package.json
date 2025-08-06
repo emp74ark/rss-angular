@@ -1,6 +1,13 @@
 {
-  "name": "rss-angular",
-  "version": "0.0.0",
+  "name": "@emp74ark/rss-angular",
+  "version": "0.0.1",
+  "description": "Frontend for RSS Feeds client",
+  "author": "emp74ark",
+  "private": true,
+  "license": "ISC",
+  "publishConfig": {
+    "@emp74ark:registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,7 +15,6 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
-  "private": true,
   "dependencies": {
     "@angular/cdk": "~20.0.3",
     "@angular/common": "^20.0.0",
