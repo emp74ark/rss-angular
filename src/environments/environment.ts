@@ -1,5 +1,5 @@
 import { Environment } from './environment.types'
 
 export const environment: Environment = {
-  api: 'http://localhost:3600',
+  api: 'http://rss-nest:3600/api',
 }
