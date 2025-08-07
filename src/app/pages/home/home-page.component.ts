@@ -242,6 +242,7 @@ export class HomePage implements OnInit {
     if (filter === 'read') {
       this.readFilter.update((prev) => !prev)
     } else {
+      this.currentPage.set(1)
       this.favFilter.update((prev) => !prev)
     }
     this.getData()
