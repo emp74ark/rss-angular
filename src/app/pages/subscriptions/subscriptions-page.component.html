@@ -6,6 +6,13 @@
     >
       <mat-icon>add</mat-icon>
     </button>
+    <button
+      matIconButton
+      (click)="onRefreshAll()"
+      [disabled]="isRefreshingAll()"
+    >
+      <mat-icon>refresh</mat-icon>
+    </button>
     <app-row-spacer/>
     @if (feeds().length > 0) {
       <mat-paginator
@@ -31,8 +38,8 @@
         </button>
         <button
           matIconButton
-          (click)="onRefresh(f._id)"
-          [disabled]="isRefreshing()[f._id]"
+          (click)="onRefreshOne(f._id)"
+          [disabled]="isRefreshing()[f._id] || isRefreshingAll()"
         >
           <mat-icon>refresh</mat-icon>
         </button>

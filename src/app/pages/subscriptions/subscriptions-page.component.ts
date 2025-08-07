@@ -40,6 +40,7 @@ export class SubscriptionsPage implements OnInit {
   totalResults = signal<number>(0)
 
   isRefreshing = signal<Record<string, boolean>>({})
+  isRefreshingAll = signal<boolean>(false)
 
   ngOnInit() {
     this.getData()
@@ -79,8 +80,9 @@ export class SubscriptionsPage implements OnInit {
     })
   }
 
-  onRefresh(subscriptionId: string) {
+  onRefreshOne(subscriptionId: string) {
     this.isRefreshing.update((prev) => ({
+      ...prev,
       [subscriptionId]: true,
     }))
     this.feedService
@@ -89,16 +91,35 @@ export class SubscriptionsPage implements OnInit {
         takeUntilDestroyed(this.destroyRef),
         catchError((e) => {
           this.isRefreshing.update((prev) => ({
+            ...prev,
             [subscriptionId]: false,
           }))
           console.error(e)
           return of(null)
         }),
       )
-      .subscribe((result) => {
+      .subscribe(() => {
         this.isRefreshing.update((prev) => ({
+          ...prev,
           [subscriptionId]: false,
         }))
+      })
+  }
+
+  onRefreshAll() {
+    this.isRefreshingAll.set(true)
+    this.feedService
+      .refreshAllSubscriptions()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((e) => {
+          this.isRefreshingAll.set(false)
+          console.error(e)
+          return of(null)
+        }),
+      )
+      .subscribe(() => {
+        this.isRefreshingAll.set(false)
       })
   }
 

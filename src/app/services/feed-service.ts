@@ -71,7 +71,11 @@ export class FeedService {
     return this.httpClient.delete<Feed>(`${environment.api}/subscription/${subscriptionId}`)
   }
 
-  refreshOneSubscription({subscriptionId}:{subscriptionId: string}) {
+  refreshAllSubscriptions() {
+    return this.httpClient.get<Feed[]>(`${environment.api}/subscription/refresh`)
+  }
+
+  refreshOneSubscription({ subscriptionId }: { subscriptionId: string }) {
     return this.httpClient.get<Feed[]>(`${environment.api}/subscription/${subscriptionId}/refresh`)
   }
 }
