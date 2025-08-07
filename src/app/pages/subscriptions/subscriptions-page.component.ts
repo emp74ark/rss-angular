@@ -39,6 +39,8 @@ export class SubscriptionsPage implements OnInit {
   pageSize = signal<number>(10)
   totalResults = signal<number>(0)
 
+  isRefreshing = signal<Record<string, boolean>>({})
+
   ngOnInit() {
     this.getData()
   }
@@ -75,6 +77,29 @@ export class SubscriptionsPage implements OnInit {
         this.getData()
       }
     })
+  }
+
+  onRefresh(subscriptionId: string) {
+    this.isRefreshing.update((prev) => ({
+      [subscriptionId]: true,
+    }))
+    this.feedService
+      .refreshOneSubscription({ subscriptionId })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((e) => {
+          this.isRefreshing.update((prev) => ({
+            [subscriptionId]: false,
+          }))
+          console.error(e)
+          return of(null)
+        }),
+      )
+      .subscribe((result) => {
+        this.isRefreshing.update((prev) => ({
+          [subscriptionId]: false,
+        }))
+      })
   }
 
   paginator = viewChild(MatPaginator)
