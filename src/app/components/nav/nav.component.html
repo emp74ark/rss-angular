@@ -35,14 +35,6 @@
           <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
         </button>
       }
-      @if (!topLevelRoute()) {
-        <button
-          matButton
-          (click)="navigateBack()"
-        >
-          <mat-icon>arrow_back</mat-icon>
-        </button>
-      }
       <h1>{{ currentTitle() }}</h1>
     </mat-toolbar>
     <div>
