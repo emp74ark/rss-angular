@@ -17,17 +17,20 @@
     }
   </mat-toolbar-row>
 </mat-toolbar>
-@defer {
-  <mat-chip-set>
-    @for (t of tags(); track t._id) {
-      <mat-chip-row (removed)="onRemove(t)">
-        {{ t.name }}
-        @if (t.userId !== 'all') {
-          <button matChipRemove>
-            <mat-icon>cancel</mat-icon>
-          </button>
-        }
-      </mat-chip-row>
-    }
-  </mat-chip-set>
-}
+
+<section class="content_layout">
+  @defer {
+    <mat-chip-set>
+      @for (t of tags(); track t._id) {
+        <mat-chip-row (removed)="onRemove(t)">
+          {{ t.name }}
+          @if (t.userId !== 'all') {
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          }
+        </mat-chip-row>
+      }
+    </mat-chip-set>
+  }
+</section>
