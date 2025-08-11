@@ -9,7 +9,6 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatIconButton } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
-import { RowSpacer } from '../../components/row-spacer/row-spacer'
 import { MatDialog } from '@angular/material/dialog'
 import { TagAddForm } from '../../components/tag-add-form/tag-add-form'
 import { MatChipRemove, MatChipRow, MatChipSet } from '@angular/material/chips'
@@ -21,7 +20,6 @@ import { MatChipRemove, MatChipRow, MatChipSet } from '@angular/material/chips'
     MatToolbarModule,
     MatIconButton,
     MatIconModule,
-    RowSpacer,
     MatPaginator,
     MatChipRow,
     MatChipRemove,

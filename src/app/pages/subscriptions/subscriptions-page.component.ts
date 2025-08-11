@@ -13,6 +13,7 @@ import { SubscriptionAddForm } from '../../components/subscription-add-form/subs
 import { Feed } from '../../entities/feed/feed.types'
 import { MatProgressBar } from '@angular/material/progress-bar'
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
+import { LinkTrimPipe } from '../../pipes/link-trim-pipe'
 
 @Component({
   selector: 'app-subscriptions',
@@ -25,6 +26,7 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
     MatDialogModule,
     MatProgressBar,
     MatPaginatorModule,
+    LinkTrimPipe,
   ],
   templateUrl: './subscriptions-page.component.html',
   styleUrl: './subscriptions-page.component.css',
