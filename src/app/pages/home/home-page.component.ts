@@ -62,6 +62,8 @@ export class HomePage implements OnInit {
   favTagId = signal<string>('')
   userTags = signal<Tag[]>([])
 
+  isRefreshingAll = signal<boolean>(false)
+
   ngOnInit() {
     this.getData()
     this.tagService.$defaultTags
@@ -280,5 +282,22 @@ export class HomePage implements OnInit {
           })
         })
     }
+  }
+
+  onRefreshAll() {
+    this.isRefreshingAll.set(true)
+    this.feedService
+    .refreshAllSubscriptions()
+    .pipe(
+      takeUntilDestroyed(this.destroyRef),
+      catchError((e) => {
+        this.isRefreshingAll.set(false)
+        console.error(e)
+        return of(null)
+      }),
+    )
+    .subscribe(() => {
+      this.isRefreshingAll.set(false)
+    })
   }
 }

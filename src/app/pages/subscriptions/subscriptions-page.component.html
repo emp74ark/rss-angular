@@ -18,36 +18,40 @@
 </mat-toolbar>
 
 <section class="content_layout">
-  @defer {
-    @for (f of feeds(); track f._id) {
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>{{ f.title }}</mat-card-title>
-          <app-row-spacer/>
-          <button
-            matIconButton
-            (click)="onRemove(f._id)"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-          <button
-            matIconButton
-            (click)="onRefreshOne(f._id)"
-            [disabled]="isRefreshing()[f._id] || isRefreshingAll()"
-          >
-            <mat-icon>refresh</mat-icon>
-          </button>
-        </mat-card-header>
-        <mat-card-content>
-          <p [title]="f.link">Link: {{ f.link | linkTrim:15 }}</p>
-          <p>Articles: {{ f.articles.length }}</p>
-        </mat-card-content>
-      </mat-card>
-    } @empty {
-      <h2>No subscriptions found</h2>
-    }
-  } @loading (minimum 0.5s) {
+  @if (isRefreshingAll()) {
     <mat-progress-bar mode="query"/>
+  } @else {
+    @defer {
+      @for (f of feeds(); track f._id) {
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{ f.title }}</mat-card-title>
+            <app-row-spacer/>
+            <button
+              matIconButton
+              (click)="onRemove(f._id)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button
+              matIconButton
+              (click)="onRefreshOne(f._id)"
+              [disabled]="isRefreshing()[f._id]"
+            >
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </mat-card-header>
+          <mat-card-content>
+            <p [title]="f.link">Link: {{ f.link | linkTrim:15 }}</p>
+            <p>Articles: {{ f.articles.length }}</p>
+          </mat-card-content>
+        </mat-card>
+      } @empty {
+        <h2>No subscriptions found</h2>
+      }
+    } @loading (minimum 0.5s) {
+      <mat-progress-bar mode="query"/>
+    }
   }
 </section>
 
