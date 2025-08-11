@@ -297,6 +297,7 @@ export class HomePage implements OnInit {
       }),
     )
     .subscribe(() => {
+      this.getData()
       this.isRefreshingAll.set(false)
     })
   }
