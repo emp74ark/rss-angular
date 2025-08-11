@@ -1,6 +1,7 @@
 :host {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   gap: 1rem;
   padding: 1rem 0.5rem;
+  height: calc(100% - 2rem);
 }

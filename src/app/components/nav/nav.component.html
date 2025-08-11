@@ -45,6 +45,8 @@
       }
       <h1>{{ currentTitle() }}</h1>
     </mat-toolbar>
-    <ng-content select="router-outlet"/>
+    <div>
+      <ng-content select="router-outlet"/>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
