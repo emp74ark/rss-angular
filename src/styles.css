@@ -20,3 +20,8 @@ body {
 mat-toolbar-row {
   height: auto !important;
 }
+
+.external {
+  display: flex;
+  flex-direction: column;
+}
