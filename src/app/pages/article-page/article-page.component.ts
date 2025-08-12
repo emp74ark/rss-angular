@@ -11,7 +11,6 @@ import { MatChip, MatChipSet } from '@angular/material/chips'
 import { MatIconModule } from '@angular/material/icon'
 import { MatIconButton } from '@angular/material/button'
 import { MatDivider } from '@angular/material/divider'
-import { DatePipe } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { TagService } from '../../services/tag-service'
 import { TitleService } from '../../services/title-service'
@@ -28,7 +27,6 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
     MatIconModule,
     MatIconButton,
     MatDivider,
-    DatePipe,
   ],
   templateUrl: './article-page.component.html',
   styleUrl: './article-page.component.css',
@@ -43,11 +41,15 @@ export class ArticlePage implements OnInit {
 
   article = signal<Article | null>(null)
 
+  fullText = signal<SafeHtml | undefined>(undefined)
+
   favTagId = signal<string>('')
 
   readStatus = computed<boolean>(() => {
     return !!this.article()?.read
   })
+
+  isLoading = signal<boolean>(false)
 
   safeHtml(html?: string): SafeHtml | undefined {
     if (!html) {
@@ -84,6 +86,10 @@ export class ArticlePage implements OnInit {
       )
       .subscribe((result) => {
         this.article.set(result)
+        if (result?.fullText) {
+          const parsed = this.safeHtml(result.fullText || '')
+          this.fullText.set(parsed)
+        }
         this.titleService.setTitle(result?.title || '')
       })
 
@@ -147,5 +153,28 @@ export class ArticlePage implements OnInit {
           })
         })
     }
+  }
+
+  getFullText() {
+    const articleId = this.article()?._id
+    if (!articleId) {
+      return
+    }
+    this.isLoading.set(true)
+    this.feedService
+      .getFullText({ articleId })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((e) => {
+          console.error(e)
+          this.isLoading.set(false)
+          return of(null)
+        }),
+      )
+      .subscribe((result) => {
+        const parsed = this.safeHtml(result?.fullText || '')
+        this.fullText.set(parsed)
+        this.isLoading.set(false)
+      })
   }
 }

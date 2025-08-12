@@ -24,14 +24,36 @@
           >
             <mat-icon>link</mat-icon>
           </a>
+          <button
+            matIconButton
+            (click)="getFullText()"
+            [disabled]="isLoading()"
+            [class]="fullText() ? 'highlighted' : undefined"
+          >
+            <mat-icon>arrow_circle_down</mat-icon>
+          </button>
         </mat-toolbar-row>
       </mat-toolbar>
       <h2>{{ article()?.title }}</h2>
-      <p
-        [innerHtml]="safeHtml(article()?.content)"
-        class="external"
-      >
-      </p>
+
+      @if (isLoading()) {
+        <mat-progress-bar mode="query"/>
+      }
+
+      @if (fullText()) {
+        <p
+          [innerHtml]="fullText()"
+          class="external"
+        >
+        </p>
+      } @else {
+        <p
+          [innerHtml]="safeHtml(article()?.content)"
+          class="external"
+        >
+        </p>
+      }
+
       <mat-divider/>
       @if (article()?.categories?.length) {
         <h3>Categories</h3>

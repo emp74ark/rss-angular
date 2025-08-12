@@ -78,4 +78,8 @@ export class FeedService {
   refreshOneSubscription({ subscriptionId }: { subscriptionId: string }) {
     return this.httpClient.get<Feed[]>(`${environment.api}/subscription/${subscriptionId}/refresh`)
   }
+
+  getFullText({ articleId }: { articleId: string }) {
+    return this.httpClient.get<{ fullText: string }>(`${environment.api}/article/${articleId}/full`)
+  }
 }
