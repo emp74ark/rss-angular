@@ -28,4 +28,9 @@ mat-sidenav-content {
   display: grid;
   grid-template-rows: auto 1fr auto;
   height: calc(100cqh - 2rem);
+  scroll-behavior: smooth;
+}
+
+.page-content {
+  overflow: auto;
 }
