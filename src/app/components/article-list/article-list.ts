@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, input, linkedSignal } from '@angular/core'
+import { Component, DestroyRef, effect, inject, input, linkedSignal } from '@angular/core'
 import { DatePipe } from '@angular/common'
 import {
   MatCard,
@@ -45,6 +45,15 @@ import { Tag } from '../../entities/tag/tag.types'
   styleUrl: './article-list.css',
 })
 export class ArticleList {
+  constructor() {
+    effect(() => {
+      if (!this.displayedArticles().length) {
+        return
+      }
+      const page = document.querySelector('.page-content')
+      page?.scroll({ top: 0, behavior: 'smooth' })
+    })
+  }
   router = inject(Router)
   feedService = inject(FeedService)
   destroyRef = inject(DestroyRef)
