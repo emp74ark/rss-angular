@@ -38,80 +38,13 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<section class="content_layout">
-  @if (isRefreshingAll()) {
-    <mat-progress-bar mode="query"/>
-  } @else {
-    @defer {
-      @for (a of articles(); track a._id) {
-        <mat-card
-          class="card"
-          appearance="outlined"
-          (click)="onArticleClick(a)"
-        >
-          <mat-card-header>
-            <mat-card-title>{{ a.title }}</mat-card-title>
-            <mat-card-subtitle>Published: {{ a.isoDate | date: 'short' }}</mat-card-subtitle>
-          </mat-card-header>
-          @if (display() !== 'title') {
-            <mat-card-content>
-              <p
-                [innerHtml]="a.content | safeHtml"
-                class="external"
-              ></p>
-            </mat-card-content>
-          }
-          <mat-card-actions>
-            <a
-              href="{{ a.link }}"
-              matIconButton
-              target="_blank"
-              title="Open the source URL"
-            >
-              <mat-icon>link</mat-icon>
-            </a>
-            <a
-              routerLink="/subscription/{{ a.subscriptionId }}/article/{{ a._id }}"
-              matIconButton
-              title="Open the article"
-            >
-              <mat-icon>open_in_new</mat-icon>
-            </a>
-            <button
-              matIconButton
-              (click)="markAsRead(a, $event)"
-              title="Mark as read"
-            >
-              <mat-icon>{{ a.read ? 'mark_email_read' : 'mark_email_unread' }}</mat-icon>
-            </button>
-            <button
-              matIconButton
-              [class]="a.tags.includes(favTagId()) ? 'highlighted' : undefined"
-              (click)="onAddToBookmarks(a, $event)"
-              title="Add to bookmarks"
-            >
-              <mat-icon>bookmark</mat-icon>
-            </button>
-            <app-row-spacer/>
-            <mat-chip-set>
-              @for (t of userTags(); track t._id) {
-                <mat-chip-option
-                  [selected]="a.tags.includes(t._id)"
-                  (click)="tagHandler(a, t, $event)"
-                >{{ t.name }}
-                </mat-chip-option>
-              }
-            </mat-chip-set>
-          </mat-card-actions>
-        </mat-card>
-      } @empty {
-        <h2>No articles found</h2>
-      }
-    } @loading (minimum 0.5s) {
-      <mat-progress-bar mode="query"/>
-    }
-  }
-</section>
+<app-article-list
+  [articles]="articles()"
+  [isRefreshing]="isRefreshingAll()"
+  [display]="display()"
+  [favTagId]="favTagId()"
+  [userTags]="userTags()"
+/>
 
 <mat-toolbar>
   @if (articles().length) {

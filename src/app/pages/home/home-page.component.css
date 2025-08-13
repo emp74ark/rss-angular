@@ -28,7 +28,3 @@
   box-shadow: 0 0 0.2rem var(--mat-sys-primary);
   transition: box-shadow 0.3s ease-in-out;
 }
-
-.highlighted {
-  color: var(--mat-sys-primary);
-}
