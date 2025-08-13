@@ -57,7 +57,6 @@ export class HomePage implements OnInit {
   isRefreshingAll = signal<boolean>(false)
 
   ngOnInit() {
-    this.getData()
     this.tagService.$defaultTags
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -69,6 +68,7 @@ export class HomePage implements OnInit {
       .subscribe((tags) => {
         this.favTagId.set(tags?.find((t) => t.name === 'fav')?._id || '')
       })
+
     this.tagService
       .getAllTags({})
       .pipe(
@@ -83,6 +83,8 @@ export class HomePage implements OnInit {
           this.userTags.set(tags.result.filter((t) => t.userId !== 'all'))
         }
       })
+
+    this.getData()
   }
 
   getData() {

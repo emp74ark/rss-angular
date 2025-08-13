@@ -51,7 +51,7 @@ export class ArticleList {
 
   articles = input.required<Article[]>()
   displayedArticles = linkedSignal(this.articles)
-  isRefreshing = input.required<boolean>()
+  isRefreshing = input<boolean>(false)
   display = input.required<'title' | 'short'>()
   favTagId = input.required<string>()
   userTags = input.required<Tag[]>()

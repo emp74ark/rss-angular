@@ -1,0 +1,39 @@
+<mat-toolbar>
+  <mat-toolbar-row id="view-toggle">
+    <mat-button-toggle>
+      <mat-icon
+        [class]="display() === 'title' ? 'highlighted' : undefined"
+        (click)="toggleDisplay('title')"
+      >view_day
+      </mat-icon>
+      <mat-icon
+        [class]="display() === 'short' ? 'highlighted' : undefined"
+        (click)="toggleDisplay('short')"
+      >view_agenda
+      </mat-icon>
+    </mat-button-toggle>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<app-article-list
+  [articles]="articles()"
+  [display]="display()"
+  [favTagId]="favTagId()"
+  [userTags]="userTags()"
+/>
+
+<mat-toolbar>
+  @if (articles().length) {
+    <mat-toolbar-row id="paginator">
+      @if (articles().length > 0) {
+        <mat-paginator
+          id="paginator"
+          [length]="totalResults()"
+          [pageSize]="10"
+          [pageSizeOptions]="[5, 10, 20]"
+          (page)="paginationHandler($event)"
+        />
+      }
+    </mat-toolbar-row>
+  }
+</mat-toolbar>
