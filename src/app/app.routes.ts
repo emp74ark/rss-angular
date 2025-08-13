@@ -15,6 +15,14 @@ export const routes: Routes = [
     canMatch: [authGuard],
   },
   {
+    path: 'bookmarks',
+    loadComponent: async () => {
+      const c = await import('./pages/bookmarks/bookmarks')
+      return c.Bookmarks
+    },
+    canMatch: [authGuard],
+  },
+  {
     path: 'subscriptions',
     loadComponent: async () => {
       const c = await import('./pages/subscriptions/subscriptions-page.component')
