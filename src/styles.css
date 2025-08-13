@@ -1,3 +1,6 @@
+@import "@angular/material/prebuilt-themes/cyan-orange.css" (prefers-color-scheme: dark);
+@import "@angular/material/prebuilt-themes/azure-blue.css" (prefers-color-scheme: light);
+
 html,
 body {
   height: 100%;
