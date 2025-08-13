@@ -18,7 +18,7 @@ import { TagService } from '../../services/tag-service'
 import { Tag } from '../../entities/tag/tag.types'
 import { MatChipOption, MatChipSet } from '@angular/material/chips'
 import { TitleService } from '../../services/title-service'
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
+import { SafeHtmlPipe } from '../../pipes/safe-html-pipe'
 
 @Component({
   selector: 'app-home',
@@ -36,6 +36,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
     MatChipOption,
     MatChipSet,
     MatButton,
+    SafeHtmlPipe,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
@@ -46,7 +47,6 @@ export class HomePage implements OnInit {
   destroyRef = inject(DestroyRef)
   tagService = inject(TagService)
   titleService = inject(TitleService)
-  htmlSanitizer = inject(DomSanitizer)
 
   articles = signal<Article[]>([])
   articleIds = computed(() => this.articles().map(({ _id }) => _id))
@@ -132,10 +132,6 @@ export class HomePage implements OnInit {
 
   toggleDisplay(display: 'title' | 'short') {
     this.display.set(display)
-  }
-
-  safeHtml(html: string): SafeHtml {
-    return this.htmlSanitizer.bypassSecurityTrustHtml(html)
   }
 
   async onArticleClick(article: Article) {
@@ -287,18 +283,18 @@ export class HomePage implements OnInit {
   onRefreshAll() {
     this.isRefreshingAll.set(true)
     this.feedService
-    .refreshAllSubscriptions()
-    .pipe(
-      takeUntilDestroyed(this.destroyRef),
-      catchError((e) => {
+      .refreshAllSubscriptions()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((e) => {
+          this.isRefreshingAll.set(false)
+          console.error(e)
+          return of(null)
+        }),
+      )
+      .subscribe(() => {
+        this.getData()
         this.isRefreshingAll.set(false)
-        console.error(e)
-        return of(null)
-      }),
-    )
-    .subscribe(() => {
-      this.getData()
-      this.isRefreshingAll.set(false)
-    })
+      })
   }
 }

@@ -56,7 +56,7 @@
           @if (display() !== 'title') {
             <mat-card-content>
               <p
-                [innerHtml]="safeHtml(a.content)"
+                [innerHtml]="a.content | safeHtml"
                 class="external"
               ></p>
             </mat-card-content>
