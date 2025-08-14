@@ -47,7 +47,7 @@ import { Tag } from '../../entities/tag/tag.types'
 export class ArticleList {
   constructor() {
     effect(() => {
-      if (!this.displayedArticles().length) {
+      if (!this.articles().length) {
         return
       }
       const page = document.querySelector('.page-content')
