@@ -1,9 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core'
+import { Component, inject, OnInit, viewChild } from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { AsyncPipe } from '@angular/common'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonModule } from '@angular/material/button'
-import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav'
 import { MatListModule } from '@angular/material/list'
 import { MatIconModule } from '@angular/material/icon'
 import { Observable } from 'rxjs'
@@ -29,6 +29,7 @@ import { toSignal } from '@angular/core/rxjs-interop'
 export class NavComponent implements OnInit {
   private breakpointObserver = inject(BreakpointObserver)
   private titleService = inject(TitleService)
+  private sideNav = viewChild<MatSidenav>('drawer')
 
   currentTitle = toSignal(this.titleService.$currentTitle)
 
@@ -38,6 +39,17 @@ export class NavComponent implements OnInit {
   )
 
   private router = inject(Router)
+
+  menuItems: { title: string; icon?: string; url: string }[] = [
+    { title: 'Articles', url: '/home' },
+    { title: 'Bookmarks', url: '/bookmarks' },
+    { title: 'Subscriptions', url: '/subscriptions' },
+    { title: 'Tags', url: '/Tags' },
+  ]
+
+  onMenuItemClick() {
+    this.sideNav()?.close()
+  }
 
   ngOnInit() {
     this.router.events.subscribe((event) => {
