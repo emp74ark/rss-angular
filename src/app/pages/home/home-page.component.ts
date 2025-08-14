@@ -16,6 +16,7 @@ import { TagService } from '../../services/tag-service'
 import { Tag } from '../../entities/tag/tag.types'
 import { TitleService } from '../../services/title-service'
 import { ArticleList } from '../../components/article-list/article-list'
+import { Paginator } from '../../components/paginator/paginator'
 
 @Component({
   selector: 'app-home',
@@ -29,6 +30,7 @@ import { ArticleList } from '../../components/article-list/article-list'
     MatPaginatorModule,
     MatButton,
     ArticleList,
+    Paginator,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',

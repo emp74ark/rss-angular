@@ -14,6 +14,7 @@ import { Feed } from '../../entities/feed/feed.types'
 import { MatProgressBar } from '@angular/material/progress-bar'
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { LinkTrimPipe } from '../../pipes/link-trim-pipe'
+import { Paginator } from '../../components/paginator/paginator'
 
 @Component({
   selector: 'app-subscriptions',
@@ -27,6 +28,7 @@ import { LinkTrimPipe } from '../../pipes/link-trim-pipe'
     MatProgressBar,
     MatPaginatorModule,
     LinkTrimPipe,
+    Paginator,
   ],
   templateUrl: './subscriptions-page.component.html',
   styleUrl: './subscriptions-page.component.css',

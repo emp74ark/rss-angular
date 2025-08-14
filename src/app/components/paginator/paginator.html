@@ -1,0 +1,9 @@
+<mat-toolbar-row id="paginator">
+  <mat-paginator
+    [length]="totalResults()"
+    [pageSize]="10"
+    [pageSizeOptions]="[5, 10, 20, 50]"
+    (page)="onPageChange($event)"
+    [showFirstLastButtons]="true"
+  />
+</mat-toolbar-row>

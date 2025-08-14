@@ -48,17 +48,10 @@
 
 <mat-toolbar>
   @if (articles().length) {
-    <mat-toolbar-row id="paginator">
-      @if (articles().length > 0) {
-        <mat-paginator
-          id="paginator"
-          [length]="totalResults()"
-          [pageSize]="10"
-          [pageSizeOptions]="[5, 10, 20]"
-          (page)="paginationHandler($event)"
-        />
-      }
-    </mat-toolbar-row>
+    <app-paginator
+      [totalResults]="totalResults()"
+      (pageChange)="paginationHandler($event)"
+    />
 
     <mat-toolbar-row id="actions">
       <button

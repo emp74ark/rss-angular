@@ -12,10 +12,19 @@ import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar'
 import { MatIcon } from '@angular/material/icon'
 import { MatButtonToggle } from '@angular/material/button-toggle'
 import { MatPaginator, PageEvent } from '@angular/material/paginator'
+import { Paginator } from '../../components/paginator/paginator'
 
 @Component({
   selector: 'app-bookmarks',
-  imports: [ArticleList, MatButtonToggle, MatIcon, MatToolbar, MatToolbarRow, MatPaginator],
+  imports: [
+    ArticleList,
+    MatButtonToggle,
+    MatIcon,
+    MatToolbar,
+    MatToolbarRow,
+    MatPaginator,
+    Paginator,
+  ],
   templateUrl: './bookmarks.html',
   styleUrl: './bookmarks.css',
 })
@@ -88,7 +97,7 @@ export class Bookmarks implements OnInit {
         if (result) {
           this.articles.set(result.result)
           this.totalResults.set(result.total)
-          this.titleService.setTitle(`Bookmarks: ${result.total} articles`)
+          this.titleService.setTitle(`Bookmarks: ${result.total}`)
         } else {
           this.titleService.setTitle('Bookmarks')
         }

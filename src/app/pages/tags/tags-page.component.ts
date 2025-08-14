@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatDialog } from '@angular/material/dialog'
 import { TagAddForm } from '../../components/tag-add-form/tag-add-form'
 import { MatChipRemove, MatChipRow, MatChipSet } from '@angular/material/chips'
+import { Paginator } from '../../components/paginator/paginator'
 
 @Component({
   selector: 'app-tags',
@@ -24,6 +25,7 @@ import { MatChipRemove, MatChipRow, MatChipSet } from '@angular/material/chips'
     MatChipRow,
     MatChipRemove,
     MatChipSet,
+    Paginator,
   ],
   templateUrl: './tags-page.component.html',
   styleUrl: './tags-page.component.css',
