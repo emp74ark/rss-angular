@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { RowSpacer } from '../../components/row-spacer/row-spacer'
 import { Router } from '@angular/router'
 import { Article } from '../../entities/article/article.types'
-import { MatPaginatorModule } from '@angular/material/paginator'
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { TagService } from '../../services/tag-service'
 import { Tag } from '../../entities/tag/tag.types'
 import { TitleService } from '../../services/title-service'
@@ -155,7 +155,7 @@ export class HomePage implements OnInit {
       })
   }
 
-  paginationHandler() {
+  paginationHandler(event: PageEvent) {
     this.getData()
   }
 

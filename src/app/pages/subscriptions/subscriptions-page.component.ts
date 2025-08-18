@@ -142,7 +142,7 @@ export class SubscriptionsPage implements OnInit {
       })
   }
 
-  paginationHandler() {
+  paginationHandler(event: PageEvent) {
     this.getData()
   }
 }

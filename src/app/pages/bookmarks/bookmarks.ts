@@ -99,8 +99,6 @@ export class Bookmarks implements OnInit {
   }
 
   paginationHandler(event: PageEvent) {
-    this.paginationService.setCurrentPage(event.pageIndex + 1)
-    this.paginationService.setPageSize(event.pageSize)
     this.getData()
   }
 }

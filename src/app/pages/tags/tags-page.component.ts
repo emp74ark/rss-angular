@@ -94,7 +94,7 @@ export class TagsPage implements OnInit {
       })
   }
 
-  paginatorHandler() {
+  paginatorHandler(event: PageEvent) {
     this.getDate()
   }
 }
