@@ -44,7 +44,7 @@ export class NavComponent implements OnInit {
     { title: 'Articles', url: '/home' },
     { title: 'Bookmarks', url: '/bookmarks' },
     { title: 'Subscriptions', url: '/subscriptions' },
-    { title: 'Tags', url: '/Tags' },
+    { title: 'Tags', url: '/tags' },
   ]
 
   onMenuItemClick() {
