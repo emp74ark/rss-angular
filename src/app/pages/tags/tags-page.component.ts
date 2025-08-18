@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog'
 import { TagAddForm } from '../../components/tag-add-form/tag-add-form'
 import { MatChipRemove, MatChipRow, MatChipSet } from '@angular/material/chips'
 import { Paginator } from '../../components/paginator/paginator'
+import { PaginationService } from '../../services/pagination-service'
 
 @Component({
   selector: 'app-tags',
@@ -21,7 +22,6 @@ import { Paginator } from '../../components/paginator/paginator'
     MatToolbarModule,
     MatIconButton,
     MatIconModule,
-    MatPaginator,
     MatChipRow,
     MatChipRemove,
     MatChipSet,
@@ -32,20 +32,18 @@ import { Paginator } from '../../components/paginator/paginator'
 })
 export class TagsPage implements OnInit {
   tagsService = inject(TagService)
+  paginationService = inject(PaginationService)
   destroyRef = inject(DestroyRef)
   readonly dialog = inject(MatDialog)
 
   tags = signal<Tag[]>([])
-  currentPage = signal<number>(1)
-  pageSize = signal<number>(10)
-  totalResults = signal<number>(0)
 
   getDate() {
     this.tagsService
       .getAllTags({
         pagination: {
-          perPage: this.pageSize(),
-          pageNumber: this.currentPage(),
+          perPage: this.paginationService.pageSize(),
+          pageNumber: this.paginationService.currentPage(),
         },
       })
       .pipe(
@@ -57,9 +55,9 @@ export class TagsPage implements OnInit {
       )
       .subscribe((result) => {
         if (result) {
-          this.currentPage.set(1)
+          this.paginationService.setCurrentPage(1)
+          this.paginationService.setTotalResults(result.total)
           this.tags.set(result.result)
-          this.totalResults.set(result.total)
         }
       })
   }
@@ -96,9 +94,7 @@ export class TagsPage implements OnInit {
       })
   }
 
-  paginatorHandler(event: PageEvent) {
-    this.currentPage.set(event.pageIndex + 1)
-    this.pageSize.set(event.pageSize)
+  paginatorHandler() {
     this.getDate()
   }
 }

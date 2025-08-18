@@ -11,20 +11,13 @@ import { ArticleList } from '../../components/article-list/article-list'
 import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar'
 import { MatIcon } from '@angular/material/icon'
 import { MatButtonToggle } from '@angular/material/button-toggle'
-import { MatPaginator, PageEvent } from '@angular/material/paginator'
+import { PageEvent } from '@angular/material/paginator'
 import { Paginator } from '../../components/paginator/paginator'
+import { PaginationService } from '../../services/pagination-service'
 
 @Component({
   selector: 'app-bookmarks',
-  imports: [
-    ArticleList,
-    MatButtonToggle,
-    MatIcon,
-    MatToolbar,
-    MatToolbarRow,
-    MatPaginator,
-    Paginator,
-  ],
+  imports: [ArticleList, MatButtonToggle, MatIcon, MatToolbar, MatToolbarRow, Paginator],
   templateUrl: './bookmarks.html',
   styleUrl: './bookmarks.css',
 })
@@ -32,14 +25,11 @@ export class Bookmarks implements OnInit {
   feedService = inject(FeedService)
   destroyRef = inject(DestroyRef)
   tagService = inject(TagService)
+  paginationService = inject(PaginationService)
   titleService = inject(TitleService)
 
   articles = signal<Article[]>([])
   display = signal<'title' | 'short'>('title')
-
-  currentPage = signal<number>(1)
-  pageSize = signal<number>(10)
-  totalResults = signal<number>(0)
 
   favTagId = signal<string>('')
   userTags = signal<Tag[]>([])
@@ -81,8 +71,8 @@ export class Bookmarks implements OnInit {
     this.feedService
       .getAllArticles({
         pagination: {
-          perPage: this.pageSize(),
-          pageNumber: this.currentPage(),
+          perPage: this.paginationService.pageSize(),
+          pageNumber: this.paginationService.currentPage(),
         },
         filters,
       })
@@ -96,7 +86,7 @@ export class Bookmarks implements OnInit {
       .subscribe((result) => {
         if (result) {
           this.articles.set(result.result)
-          this.totalResults.set(result.total)
+          this.paginationService.setTotalResults(result.total)
           this.titleService.setTitle(`Bookmarks: ${result.total}`)
         } else {
           this.titleService.setTitle('Bookmarks')
@@ -109,8 +99,8 @@ export class Bookmarks implements OnInit {
   }
 
   paginationHandler(event: PageEvent) {
-    this.currentPage.set(event.pageIndex + 1)
-    this.pageSize.set(event.pageSize)
+    this.paginationService.setCurrentPage(event.pageIndex + 1)
+    this.paginationService.setPageSize(event.pageSize)
     this.getData()
   }
 }

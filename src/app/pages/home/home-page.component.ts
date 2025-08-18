@@ -11,12 +11,13 @@ import { MatIconModule } from '@angular/material/icon'
 import { RowSpacer } from '../../components/row-spacer/row-spacer'
 import { Router } from '@angular/router'
 import { Article } from '../../entities/article/article.types'
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator'
+import { MatPaginatorModule } from '@angular/material/paginator'
 import { TagService } from '../../services/tag-service'
 import { Tag } from '../../entities/tag/tag.types'
 import { TitleService } from '../../services/title-service'
 import { ArticleList } from '../../components/article-list/article-list'
 import { Paginator } from '../../components/paginator/paginator'
+import { PaginationService } from '../../services/pagination-service'
 
 @Component({
   selector: 'app-home',
@@ -41,14 +42,11 @@ export class HomePage implements OnInit {
   destroyRef = inject(DestroyRef)
   tagService = inject(TagService)
   titleService = inject(TitleService)
+  paginationService = inject(PaginationService)
 
   articles = signal<Article[]>([])
   articleIds = computed(() => this.articles().map(({ _id }) => _id))
   display = signal<'title' | 'short'>('title')
-
-  currentPage = signal<number>(1)
-  pageSize = signal<number>(10)
-  totalResults = signal<number>(0)
 
   readFilter = signal<boolean>(true)
   favFilter = signal<boolean>(false)
@@ -103,8 +101,8 @@ export class HomePage implements OnInit {
     this.feedService
       .getAllArticles({
         pagination: {
-          perPage: this.pageSize(),
-          pageNumber: this.currentPage(),
+          perPage: this.paginationService.pageSize(),
+          pageNumber: this.paginationService.currentPage(),
         },
         filters,
       })
@@ -118,7 +116,7 @@ export class HomePage implements OnInit {
       .subscribe((result) => {
         if (result) {
           this.articles.set(result.result)
-          this.totalResults.set(result.total)
+          this.paginationService.setTotalResults(result.total)
           this.titleService.setTitle(`News: ${result.total} articles`)
         } else {
           this.titleService.setTitle('News')
@@ -157,9 +155,7 @@ export class HomePage implements OnInit {
       })
   }
 
-  paginationHandler(event: PageEvent) {
-    this.currentPage.set(event.pageIndex + 1)
-    this.pageSize.set(event.pageSize)
+  paginationHandler() {
     this.getData()
   }
 
@@ -167,7 +163,7 @@ export class HomePage implements OnInit {
     if (filter === 'read') {
       this.readFilter.update((prev) => !prev)
     } else {
-      this.currentPage.set(1)
+      this.paginationService.setCurrentPage(1)
       this.favFilter.update((prev) => !prev)
     }
     this.getData()

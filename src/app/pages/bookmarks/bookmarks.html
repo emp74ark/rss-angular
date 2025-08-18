@@ -25,7 +25,6 @@
 <mat-toolbar>
   @if (articles().length) {
     <app-paginator
-      [totalResults]="totalResults()"
       (pageChange)="paginationHandler($event)"
     />
   }
