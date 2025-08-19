@@ -14,6 +14,7 @@ import { TagAddForm } from '../../components/tag-add-form/tag-add-form'
 import { MatChipRemove, MatChipRow, MatChipSet } from '@angular/material/chips'
 import { Paginator } from '../../components/paginator/paginator'
 import { PaginationService } from '../../services/pagination-service'
+import { TitleService } from '../../services/title-service'
 
 @Component({
   selector: 'app-tags',
@@ -35,6 +36,7 @@ export class TagsPage implements OnInit {
   paginationService = inject(PaginationService)
   destroyRef = inject(DestroyRef)
   readonly dialog = inject(MatDialog)
+  titleService = inject(TitleService)
 
   tags = signal<Tag[]>([])
 
@@ -58,6 +60,7 @@ export class TagsPage implements OnInit {
           this.paginationService.setCurrentPage(1)
           this.paginationService.setTotalResults(result.total)
           this.tags.set(result.result)
+          this.titleService.setTitle('Tags')
         }
       })
   }

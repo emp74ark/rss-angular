@@ -16,6 +16,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { LinkTrimPipe } from '../../pipes/link-trim-pipe'
 import { Paginator } from '../../components/paginator/paginator'
 import { PaginationService } from '../../services/pagination-service'
+import { TitleService } from '../../services/title-service'
 
 @Component({
   selector: 'app-subscriptions',
@@ -39,6 +40,7 @@ export class SubscriptionsPage implements OnInit {
   paginationService = inject(PaginationService)
   readonly dialog = inject(MatDialog)
   destroyRef = inject(DestroyRef)
+  titleService = inject(TitleService)
 
   feeds = signal<Feed[]>([])
 
@@ -70,6 +72,7 @@ export class SubscriptionsPage implements OnInit {
           this.paginationService.setTotalResults(result.total)
           this.feeds.set(result.result)
         }
+        this.titleService.setTitle('Subscriptions')
       })
   }
 

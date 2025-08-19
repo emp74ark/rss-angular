@@ -25,6 +25,7 @@ export class AuthService {
   login({ login, password }: UserDTO) {
     return this.httpClient.post<User>(`${environment.api}/auth/login`, { login, password }).pipe(
       switchMap((response) => {
+        localStorage.setItem('user', response._id)
         this.$$authStatus.next({ authenticated: true, user: response, error: null })
         return of(response)
       }),
@@ -33,5 +34,10 @@ export class AuthService {
         return of(null)
       }),
     )
+  }
+
+  updateAuth(user: User) {
+    this.$$authStatus.next({ authenticated: true, user, error: null })
+    localStorage.setItem('user', user._id)
   }
 }

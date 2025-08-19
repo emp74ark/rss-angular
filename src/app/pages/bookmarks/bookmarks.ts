@@ -35,7 +35,8 @@ export class Bookmarks implements OnInit {
   userTags = signal<Tag[]>([])
 
   ngOnInit() {
-    this.tagService.$defaultTags
+    this.tagService
+      .getDefaultTags()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError((error: HttpErrorResponse) => {
@@ -44,7 +45,9 @@ export class Bookmarks implements OnInit {
         }),
       )
       .subscribe((tags) => {
-        this.favTagId.set(tags?.find((t) => t.name === 'fav')?._id || '')
+        const favTag = tags?.find((t) => t.name === 'fav')?._id || ''
+        this.favTagId.set(favTag)
+        this.getData()
       })
 
     this.tagService
@@ -61,8 +64,6 @@ export class Bookmarks implements OnInit {
           this.userTags.set(tags.result.filter((t) => t.userId !== 'all'))
         }
       })
-
-    this.getData()
   }
 
   getData() {
