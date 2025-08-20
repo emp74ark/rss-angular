@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, viewChild } from '@angular/core'
+import { Component, inject, OnInit, signal, viewChild } from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { AsyncPipe } from '@angular/common'
 import { MatToolbarModule } from '@angular/material/toolbar'
@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav'
 import { MatListModule } from '@angular/material/list'
 import { MatIconModule } from '@angular/material/icon'
-import { Observable } from 'rxjs'
+import { Observable, tap } from 'rxjs'
 import { map, shareReplay } from 'rxjs/operators'
 import { EventType, Router, RouterLink } from '@angular/router'
 import { TitleService } from '../../services/title-service'
@@ -33,7 +33,10 @@ export class NavComponent implements OnInit {
 
   currentTitle = toSignal(this.titleService.$currentTitle)
 
+  isHandset = signal<boolean>(false)
+
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+    tap(result => this.isHandset.set(result.matches)),
     map((result) => result.matches),
     shareReplay(),
   )
@@ -48,7 +51,9 @@ export class NavComponent implements OnInit {
   ]
 
   onMenuItemClick() {
-    this.sideNav()?.close()
+    if (this.isHandset()) {
+      this.sideNav()?.close()
+    }
   }
 
   ngOnInit() {
