@@ -43,3 +43,7 @@ mat-toolbar-row {
 .content_layout a {
   color: inherit;
 }
+
+.highlighted {
+  color: var(--mat-sys-primary) !important;
+}
