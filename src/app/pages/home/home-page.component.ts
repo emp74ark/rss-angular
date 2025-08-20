@@ -17,7 +17,7 @@ import { Tag } from '../../entities/tag/tag.types'
 import { TitleService } from '../../services/title-service'
 import { ArticleList } from '../../components/article-list/article-list'
 import { Paginator } from '../../components/paginator/paginator'
-import { PaginationService } from '../../services/pagination-service'
+import { PageService } from '../../services/page-service'
 
 @Component({
   selector: 'app-home',
@@ -42,7 +42,7 @@ export class HomePage implements OnInit {
   destroyRef = inject(DestroyRef)
   tagService = inject(TagService)
   titleService = inject(TitleService)
-  paginationService = inject(PaginationService)
+  pageService = inject(PageService)
 
   articles = signal<Article[]>([])
   articleIds = computed(() => this.articles().map(({ _id }) => _id))
@@ -101,8 +101,8 @@ export class HomePage implements OnInit {
     this.feedService
       .getAllArticles({
         pagination: {
-          perPage: this.paginationService.pageSize(),
-          pageNumber: this.paginationService.currentPage(),
+          perPage: this.pageService.pageSize(),
+          pageNumber: this.pageService.currentPage(),
         },
         filters,
       })
@@ -116,7 +116,7 @@ export class HomePage implements OnInit {
       .subscribe((result) => {
         if (result) {
           this.articles.set(result.result)
-          this.paginationService.setTotalResults(result.total)
+          this.pageService.setTotalResults(result.total)
           this.titleService.setTitle(`News: ${result.total} articles`)
         } else {
           this.titleService.setTitle('News')
@@ -163,7 +163,7 @@ export class HomePage implements OnInit {
     if (filter === 'read') {
       this.readFilter.update((prev) => !prev)
     } else {
-      this.paginationService.setCurrentPage(1)
+      this.pageService.setCurrentPage(1)
       this.favFilter.update((prev) => !prev)
     }
     this.getData()

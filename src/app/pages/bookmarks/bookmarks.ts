@@ -13,7 +13,7 @@ import { MatIcon } from '@angular/material/icon'
 import { MatButtonToggle } from '@angular/material/button-toggle'
 import { PageEvent } from '@angular/material/paginator'
 import { Paginator } from '../../components/paginator/paginator'
-import { PaginationService } from '../../services/pagination-service'
+import { PageService } from '../../services/page-service'
 
 @Component({
   selector: 'app-bookmarks',
@@ -25,7 +25,7 @@ export class Bookmarks implements OnInit {
   feedService = inject(FeedService)
   destroyRef = inject(DestroyRef)
   tagService = inject(TagService)
-  paginationService = inject(PaginationService)
+  pageService = inject(PageService)
   titleService = inject(TitleService)
 
   articles = signal<Article[]>([])
@@ -72,8 +72,8 @@ export class Bookmarks implements OnInit {
     this.feedService
       .getAllArticles({
         pagination: {
-          perPage: this.paginationService.pageSize(),
-          pageNumber: this.paginationService.currentPage(),
+          perPage: this.pageService.pageSize(),
+          pageNumber: this.pageService.currentPage(),
         },
         filters,
       })
@@ -87,7 +87,7 @@ export class Bookmarks implements OnInit {
       .subscribe((result) => {
         if (result) {
           this.articles.set(result.result)
-          this.paginationService.setTotalResults(result.total)
+          this.pageService.setTotalResults(result.total)
           this.titleService.setTitle(`Bookmarks: ${result.total}`)
         } else {
           this.titleService.setTitle('Bookmarks')

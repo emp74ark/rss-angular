@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core'
 @Injectable({
   providedIn: 'any',
 })
-export class PaginationService {
+export class PageService {
   constructor() {}
 
   #currentPage = signal<number>(1)

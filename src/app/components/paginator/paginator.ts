@@ -1,7 +1,7 @@
 import { Component, inject, input, output } from '@angular/core'
 import { MatToolbarRow } from '@angular/material/toolbar'
 import { MatPaginator, PageEvent } from '@angular/material/paginator'
-import { PaginationService } from '../../services/pagination-service'
+import { PageService } from '../../services/page-service'
 
 @Component({
   selector: 'app-paginator',
@@ -10,14 +10,14 @@ import { PaginationService } from '../../services/pagination-service'
   styleUrl: './paginator.css',
 })
 export class Paginator {
-  paginationService = inject(PaginationService, { skipSelf: true })
-  totalResults = this.paginationService.totalResults
+  pageService = inject(PageService, { skipSelf: true })
+  totalResults = this.pageService.totalResults
   pageChange = output<PageEvent>()
   hidden = input<boolean>(false)
 
   onPageChange(event: PageEvent) {
     this.pageChange.emit(event)
-    this.paginationService.setCurrentPage(event.pageIndex + 1)
-    this.paginationService.setPageSize(event.pageSize)
+    this.pageService.setCurrentPage(event.pageIndex + 1)
+    this.pageService.setPageSize(event.pageSize)
   }
 }

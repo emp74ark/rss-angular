@@ -15,7 +15,7 @@ import { MatProgressBar } from '@angular/material/progress-bar'
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { LinkTrimPipe } from '../../pipes/link-trim-pipe'
 import { Paginator } from '../../components/paginator/paginator'
-import { PaginationService } from '../../services/pagination-service'
+import { PageService } from '../../services/page-service'
 import { TitleService } from '../../services/title-service'
 
 @Component({
@@ -37,7 +37,7 @@ import { TitleService } from '../../services/title-service'
 })
 export class SubscriptionsPage implements OnInit {
   feedService = inject(FeedService)
-  paginationService = inject(PaginationService)
+  pageService = inject(PageService)
   readonly dialog = inject(MatDialog)
   destroyRef = inject(DestroyRef)
   titleService = inject(TitleService)
@@ -55,8 +55,8 @@ export class SubscriptionsPage implements OnInit {
     this.feedService
       .getAllSubscriptions({
         pagination: {
-          perPage: this.paginationService.pageSize(),
-          pageNumber: this.paginationService.currentPage(),
+          perPage: this.pageService.pageSize(),
+          pageNumber: this.pageService.currentPage(),
         },
       })
       .pipe(
@@ -68,8 +68,8 @@ export class SubscriptionsPage implements OnInit {
       )
       .subscribe((result) => {
         if (result) {
-          this.paginationService.setCurrentPage(1)
-          this.paginationService.setTotalResults(result.total)
+          this.pageService.setCurrentPage(1)
+          this.pageService.setTotalResults(result.total)
           this.feeds.set(result.result)
         }
         this.titleService.setTitle('Subscriptions')
@@ -141,7 +141,7 @@ export class SubscriptionsPage implements OnInit {
       )
       .subscribe(() => {
         this.getData()
-        this.paginationService.setCurrentPage(1)
+        this.pageService.setCurrentPage(1)
       })
   }
 

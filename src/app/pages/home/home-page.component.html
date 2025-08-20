@@ -46,7 +46,7 @@
 
 <app-paginator
   (pageChange)="paginationHandler($event)"
-  [hidden]="!!articles().length"
+  [hidden]="!articles().length"
 />
 
 @if (articles().length) {
