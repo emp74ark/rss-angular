@@ -26,10 +26,6 @@
   }
 </section>
 
-<mat-toolbar>
-  <mat-toolbar-row>
-    <app-paginator
-      (pageChange)="paginatorHandler($event)"
-    />
-  </mat-toolbar-row>
-</mat-toolbar>
+<app-paginator
+  (pageChange)="paginatorHandler($event)"
+/>
