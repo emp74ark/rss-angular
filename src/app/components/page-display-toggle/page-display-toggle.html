@@ -1,0 +1,12 @@
+<mat-button-toggle>
+  <mat-icon
+    [class]="pageService.display() === PageDisplay.Title ? 'highlighted' : undefined"
+    (click)="toggleDisplay(PageDisplay.Title)"
+  >view_day
+  </mat-icon>
+  <mat-icon
+    [class]="pageService.display() === PageDisplay.Short ? 'highlighted' : undefined"
+    (click)="toggleDisplay(PageDisplay.Short)"
+  >view_agenda
+  </mat-icon>
+</mat-button-toggle>

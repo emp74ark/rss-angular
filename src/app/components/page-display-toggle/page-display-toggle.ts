@@ -1,0 +1,20 @@
+import { Component, inject } from '@angular/core'
+import { PageService } from '../../services/page-service'
+import { MatButtonToggle } from '@angular/material/button-toggle'
+import { MatIcon } from '@angular/material/icon'
+import { PageDisplay } from '../../entities/page/page.enums'
+
+@Component({
+  selector: 'app-page-display-toggle',
+  imports: [MatButtonToggle, MatIcon, MatButtonToggle, MatIcon],
+  templateUrl: './page-display-toggle.html',
+  styleUrl: './page-display-toggle.css',
+})
+export class PageDisplayToggle {
+  pageService = inject(PageService, { skipSelf: true })
+  protected readonly PageDisplay = PageDisplay
+
+  toggleDisplay(display: PageDisplay) {
+    this.pageService.setDisplay(display)
+  }
+}

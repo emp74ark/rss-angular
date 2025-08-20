@@ -18,6 +18,7 @@ import { TitleService } from '../../services/title-service'
 import { ArticleList } from '../../components/article-list/article-list'
 import { Paginator } from '../../components/paginator/paginator'
 import { PageService } from '../../services/page-service'
+import { PageDisplayToggle } from '../../components/page-display-toggle/page-display-toggle'
 
 @Component({
   selector: 'app-home',
@@ -32,6 +33,7 @@ import { PageService } from '../../services/page-service'
     MatButton,
     ArticleList,
     Paginator,
+    PageDisplayToggle,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
@@ -46,7 +48,6 @@ export class HomePage implements OnInit {
 
   articles = signal<Article[]>([])
   articleIds = computed(() => this.articles().map(({ _id }) => _id))
-  display = signal<'title' | 'short'>('title')
 
   readFilter = signal<boolean>(true)
   favFilter = signal<boolean>(false)
@@ -122,10 +123,6 @@ export class HomePage implements OnInit {
           this.titleService.setTitle('News')
         }
       })
-  }
-
-  toggleDisplay(display: 'title' | 'short') {
-    this.display.set(display)
   }
 
   markManyAsRead({

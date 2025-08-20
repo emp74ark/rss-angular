@@ -8,16 +8,15 @@ import { Tag } from '../../entities/tag/tag.types'
 import { TagService } from '../../services/tag-service'
 import { TitleService } from '../../services/title-service'
 import { ArticleList } from '../../components/article-list/article-list'
-import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar'
-import { MatIcon } from '@angular/material/icon'
-import { MatButtonToggle } from '@angular/material/button-toggle'
+import { MatToolbarRow } from '@angular/material/toolbar'
 import { PageEvent } from '@angular/material/paginator'
 import { Paginator } from '../../components/paginator/paginator'
 import { PageService } from '../../services/page-service'
+import { PageDisplayToggle } from '../../components/page-display-toggle/page-display-toggle'
 
 @Component({
   selector: 'app-bookmarks',
-  imports: [ArticleList, MatButtonToggle, MatIcon, MatToolbar, MatToolbarRow, Paginator],
+  imports: [ArticleList, MatToolbarRow, Paginator, PageDisplayToggle],
   templateUrl: './bookmarks.html',
   styleUrl: './bookmarks.css',
 })
@@ -29,7 +28,6 @@ export class Bookmarks implements OnInit {
   titleService = inject(TitleService)
 
   articles = signal<Article[]>([])
-  display = signal<'title' | 'short'>('title')
 
   favTagId = signal<string>('')
   userTags = signal<Tag[]>([])
@@ -93,10 +91,6 @@ export class Bookmarks implements OnInit {
           this.titleService.setTitle('Bookmarks')
         }
       })
-  }
-
-  toggleDisplay(display: 'title' | 'short') {
-    this.display.set(display)
   }
 
   paginationHandler(event: PageEvent) {
