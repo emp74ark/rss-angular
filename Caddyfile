@@ -1,5 +1,7 @@
 {$DOMAIN:feedz.buzz} {
-  handle /api/* {
+  @api path /api/*
+  handle @api {
+    uri strip_prefix /api
     reverse_proxy http://rss-nest:3600
   }
 
