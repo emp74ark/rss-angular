@@ -6,8 +6,6 @@ COPY . .
 RUN npm run build
 
 FROM caddy:2-alpine
-ENV DOMAIN=feedz.buzz
-ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build /app/dist/rss-angular/browser /app
 COPY Caddyfile /etc/caddy
