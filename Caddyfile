@@ -1,8 +1,7 @@
 {$DOMAIN:feedz.buzz} {
   encode zstd gzip
 
-  @api path /api/*
-  handle @api {
+  handle /api/* {
     reverse_proxy http://rss-nest:3600
   }
 
