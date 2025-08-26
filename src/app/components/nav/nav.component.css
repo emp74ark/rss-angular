@@ -34,3 +34,8 @@ mat-sidenav-content {
 .page-content {
   overflow: auto;
 }
+
+.health {
+  position: absolute;
+  inset: auto 2rem 0 auto;
+}

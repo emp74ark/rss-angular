@@ -11,6 +11,7 @@ import { map, shareReplay } from 'rxjs/operators'
 import { EventType, Router, RouterLink } from '@angular/router'
 import { TitleService } from '../../services/title-service'
 import { toSignal } from '@angular/core/rxjs-interop'
+import { HealthStatus } from '../health-status/health-status'
 
 @Component({
   selector: 'app-nav',
@@ -24,6 +25,7 @@ import { toSignal } from '@angular/core/rxjs-interop'
     MatIconModule,
     AsyncPipe,
     RouterLink,
+    HealthStatus,
   ],
 })
 export class NavComponent implements OnInit {
@@ -36,7 +38,7 @@ export class NavComponent implements OnInit {
   isHandset = signal<boolean>(false)
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    tap(result => this.isHandset.set(result.matches)),
+    tap((result) => this.isHandset.set(result.matches)),
     map((result) => result.matches),
     shareReplay(),
   )
