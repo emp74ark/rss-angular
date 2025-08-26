@@ -23,17 +23,22 @@ export class AuthService {
   $authStatus = this.$$authStatus.asObservable()
 
   login({ login, password }: UserDTO) {
-    return this.httpClient.post<User>(`${environment.api}/auth/login`, { login, password }).pipe(
-      switchMap((response) => {
-        localStorage.setItem('user', response._id)
-        this.$$authStatus.next({ authenticated: true, user: response, error: null })
-        return of(response)
-      }),
-      catchError((error: HttpErrorResponse) => {
-        this.$$authStatus.next({ authenticated: false, user: null, error: error.error.message })
-        return of(null)
-      }),
-    )
+    return this.httpClient
+      .post<User>(`${environment.api}/auth/login`, {
+        login: login.trim(),
+        password: password.trim(),
+      })
+      .pipe(
+        switchMap((response) => {
+          localStorage.setItem('user', response._id)
+          this.$$authStatus.next({ authenticated: true, user: response, error: null })
+          return of(response)
+        }),
+        catchError((error: HttpErrorResponse) => {
+          this.$$authStatus.next({ authenticated: false, user: null, error: error.error.message })
+          return of(null)
+        }),
+      )
   }
 
   updateAuth(user: User) {
