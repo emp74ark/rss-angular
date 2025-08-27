@@ -2,6 +2,7 @@ import { Routes } from '@angular/router'
 import { NotFoundPage } from './pages/not-found/not-found-page.component'
 import { authGuard } from './guards/auth-guard'
 import { AuthPage } from './pages/auth-page/auth-page.component'
+import { StatusPage } from './pages/status-page/status-page'
 
 export const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
@@ -48,6 +49,11 @@ export const routes: Routes = [
     },
     data: { title: 'Tags' },
     canMatch: [authGuard],
+  },
+  {
+    path: 'status',
+    component: StatusPage,
+    data: { title: 'Status' },
   },
   {
     path: '**',
