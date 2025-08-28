@@ -13,7 +13,7 @@
             <mat-card-title>{{ a.title }}</mat-card-title>
             <mat-card-subtitle>Published: {{ a.isoDate | date: 'short' }}</mat-card-subtitle>
           </mat-card-header>
-          @if (display() !== 'title') {
+          @if (($display | async) !== 'title') {
             <mat-card-content>
               <p
                 [innerHtml]="a.content | safeHtml"

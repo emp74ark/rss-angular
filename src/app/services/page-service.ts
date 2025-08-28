@@ -1,34 +1,36 @@
-import { Injectable, signal } from '@angular/core'
+import { Injectable } from '@angular/core'
 import { PageDisplay } from '../entities/page/page.enums'
+import { BehaviorSubject } from 'rxjs'
 
 @Injectable({
   providedIn: 'any',
 })
 export class PageService {
-  constructor() {}
+  private $$pageSize = new BehaviorSubject<number>(10)
+  $pageSize = this.$$pageSize.asObservable()
 
-  #currentPage = signal<number>(1)
-  currentPage = this.#currentPage.asReadonly()
-  #pageSize = signal<number>(10)
-  pageSize = this.#pageSize.asReadonly()
-  #totalResults = signal<number>(0)
-  totalResults = this.#totalResults.asReadonly()
-  #display = signal<PageDisplay>(PageDisplay.Title)
-  display = this.#display.asReadonly()
+  private $$currentPage = new BehaviorSubject<number>(1)
+  $currentPage = this.$$currentPage.asObservable()
+
+  private $$totalResults = new BehaviorSubject<number>(0)
+  $totalResults = this.$$totalResults.asObservable()
+
+  private $$display = new BehaviorSubject<PageDisplay>(PageDisplay.Title)
+  $display = this.$$display.asObservable()
 
   setCurrentPage(currentPage: number) {
-    this.#currentPage.set(currentPage)
+    this.$$currentPage.next(currentPage)
   }
 
   setPageSize(pageSize: number) {
-    this.#pageSize.set(pageSize)
+    this.$$pageSize.next(pageSize)
   }
 
   setTotalResults(totalResults: number) {
-    this.#totalResults.set(totalResults)
+    this.$$totalResults.next(totalResults)
   }
 
   setDisplay(display: PageDisplay) {
-    this.#display.set(display)
+    this.$$display.next(display)
   }
 }

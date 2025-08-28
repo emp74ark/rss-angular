@@ -1,11 +1,10 @@
-import { Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core'
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core'
 import { MatCardModule } from '@angular/material/card'
 import { TagService } from '../../services/tag-service'
 import { Tag } from '../../entities/tag/tag.types'
 import { HttpErrorResponse } from '@angular/common/http'
-import { catchError, of } from 'rxjs'
+import { catchError, combineLatest, of, switchMap } from 'rxjs'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { MatPaginator, PageEvent } from '@angular/material/paginator'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatIconButton } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
@@ -40,24 +39,21 @@ export class TagsPage implements OnInit {
 
   tags = signal<Tag[]>([])
 
-  getDate() {
-    this.tagsService
-      .getAllTags({
-        pagination: {
-          perPage: this.pageService.pageSize(),
-          pageNumber: this.pageService.currentPage(),
-        },
-      })
+  ngOnInit() {
+    combineLatest([this.pageService.$pageSize, this.pageService.$currentPage])
       .pipe(
-        catchError((error: HttpErrorResponse) => {
-          console.error(error)
-          return of(null)
-        }),
         takeUntilDestroyed(this.destroyRef),
+        switchMap(([perPage, pageNumber]) => {
+          return this.tagsService.getAllTags({
+            pagination: {
+              perPage,
+              pageNumber,
+            },
+          })
+        }),
       )
       .subscribe((result) => {
         if (result) {
-          this.pageService.setCurrentPage(1)
           this.pageService.setTotalResults(result.total)
           this.tags.set(result.result)
           this.titleService.setTitle('Tags')
@@ -65,19 +61,11 @@ export class TagsPage implements OnInit {
       })
   }
 
-  ngOnInit() {
-    this.getDate()
-  }
-
-  paginator = viewChild(MatPaginator)
-
   onAdd() {
     const dialogRef = this.dialog.open(TagAddForm)
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.getDate()
-      }
+      console.log('The dialog was closed', result)
     })
   }
 
@@ -91,13 +79,10 @@ export class TagsPage implements OnInit {
         }),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(() => {
-        this.getDate()
-        this.paginator()?.firstPage()
+      .subscribe((res) => {
+        if (res) {
+          this.pageService.setCurrentPage(1)
+        }
       })
-  }
-
-  paginatorHandler(event: PageEvent) {
-    this.getDate()
   }
 }

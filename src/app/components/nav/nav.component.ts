@@ -11,7 +11,6 @@ import { map, shareReplay } from 'rxjs/operators'
 import { EventType, Router, RouterLink } from '@angular/router'
 import { TitleService } from '../../services/title-service'
 import { toSignal } from '@angular/core/rxjs-interop'
-import { HealthStatus } from '../health-status/health-status'
 
 @Component({
   selector: 'app-nav',

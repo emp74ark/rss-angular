@@ -1,5 +1,5 @@
 import { Component, DestroyRef, effect, inject, input, linkedSignal } from '@angular/core'
-import { DatePipe } from '@angular/common'
+import { AsyncPipe, DatePipe } from '@angular/common'
 import {
   MatCard,
   MatCardActions,
@@ -21,6 +21,7 @@ import { catchError, of } from 'rxjs'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FeedService } from '../../services/feed-service'
 import { Tag } from '../../entities/tag/tag.types'
+import { PageService } from '../../services/page-service'
 
 @Component({
   selector: 'app-article-list',
@@ -40,6 +41,7 @@ import { Tag } from '../../entities/tag/tag.types'
     RouterLink,
     RowSpacer,
     SafeHtmlPipe,
+    AsyncPipe,
   ],
   templateUrl: './article-list.html',
   styleUrl: './article-list.css',
@@ -57,13 +59,15 @@ export class ArticleList {
   router = inject(Router)
   feedService = inject(FeedService)
   destroyRef = inject(DestroyRef)
+  pageService = inject(PageService, { skipSelf: true })
 
   articles = input.required<Article[]>()
   displayedArticles = linkedSignal(this.articles)
   isRefreshing = input<boolean>(false)
-  display = input.required<'title' | 'short'>()
   favTagId = input.required<string>()
   userTags = input.required<Tag[]>()
+
+  $display = this.pageService.$display
 
   async onArticleClick(article: Article) {
     await this.router.navigate(['subscription', article.subscriptionId, 'article', article._id])

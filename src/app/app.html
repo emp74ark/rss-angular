@@ -1,11 +1,11 @@
-@if(authStatus()?.authenticated) {
+@if (authStatus()?.authenticated) {
   <main class="private">
     <app-nav>
-      <router-outlet />
+      <router-outlet/>
     </app-nav>
   </main>
 } @else {
   <main class="public">
-    <router-outlet />
+    <router-outlet/>
   </main>
 }

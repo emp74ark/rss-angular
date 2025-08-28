@@ -2,6 +2,7 @@
   --background: var(--mat-sys-primary-container);
   --border: 0;
 }
+
 mat-toolbar {
   background: var(--background);
   border-radius: var(--border);

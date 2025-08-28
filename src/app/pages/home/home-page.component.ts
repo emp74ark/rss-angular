@@ -3,7 +3,7 @@ import { MatCardModule } from '@angular/material/card'
 import { FeedService } from '../../services/feed-service'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { HttpErrorResponse } from '@angular/common/http'
-import { catchError, of } from 'rxjs'
+import { BehaviorSubject, catchError, combineLatest, of, switchMap } from 'rxjs'
 import { MatButton, MatIconButton } from '@angular/material/button'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle'
@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { RowSpacer } from '../../components/row-spacer/row-spacer'
 import { Router } from '@angular/router'
 import { Article } from '../../entities/article/article.types'
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator'
+import { MatPaginatorModule } from '@angular/material/paginator'
 import { TagService } from '../../services/tag-service'
 import { Tag } from '../../entities/tag/tag.types'
 import { TitleService } from '../../services/title-service'
@@ -19,6 +19,7 @@ import { ArticleList } from '../../components/article-list/article-list'
 import { Paginator } from '../../components/paginator/paginator'
 import { PageService } from '../../services/page-service'
 import { PageDisplayToggle } from '../../components/page-display-toggle/page-display-toggle'
+import { AsyncPipe } from '@angular/common'
 
 @Component({
   selector: 'app-home',
@@ -34,6 +35,7 @@ import { PageDisplayToggle } from '../../components/page-display-toggle/page-dis
     ArticleList,
     Paginator,
     PageDisplayToggle,
+    AsyncPipe,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
@@ -49,8 +51,8 @@ export class HomePage implements OnInit {
   articles = signal<Article[]>([])
   articleIds = computed(() => this.articles().map(({ _id }) => _id))
 
-  readFilter = signal<boolean>(true)
-  favFilter = signal<boolean>(false)
+  $readFilter = new BehaviorSubject(true)
+  $favFilter = new BehaviorSubject(false)
 
   favTagId = signal<string>('')
   userTags = signal<Tag[]>([])
@@ -85,34 +87,33 @@ export class HomePage implements OnInit {
         }
       })
 
-    this.getData()
-  }
-
-  getData() {
-    const filters: Record<string, string | boolean> = {}
-
-    if (this.readFilter()) {
-      filters['read'] = false
-    }
-
-    if (this.favFilter()) {
-      filters['tags'] = this.favTagId()
-    }
-
-    this.feedService
-      .getAllArticles({
-        pagination: {
-          perPage: this.pageService.pageSize(),
-          pageNumber: this.pageService.currentPage(),
-        },
-        filters,
-      })
+    combineLatest([
+      this.pageService.$pageSize,
+      this.pageService.$currentPage,
+      this.$favFilter,
+      this.$readFilter,
+    ])
       .pipe(
-        catchError((error: HttpErrorResponse) => {
-          console.log(error)
-          return of(null)
-        }),
         takeUntilDestroyed(this.destroyRef),
+        switchMap(([perPage, pageNumber, fav, read]) => {
+          const filters: Record<string, string | boolean> = {}
+
+          if (read) {
+            filters['read'] = false
+          }
+
+          if (fav) {
+            filters['tags'] = this.favTagId()
+          }
+
+          return this.feedService.getAllArticles({
+            pagination: {
+              perPage,
+              pageNumber,
+            },
+            filters,
+          })
+        }),
       )
       .subscribe((result) => {
         if (result) {
@@ -147,23 +148,16 @@ export class HomePage implements OnInit {
           return of(null)
         }),
       )
-      .subscribe(() => {
-        this.getData()
-      })
-  }
-
-  paginationHandler(event: PageEvent) {
-    this.getData()
+      .subscribe()
   }
 
   filterHandler(filter: 'read' | 'fav') {
     if (filter === 'read') {
-      this.readFilter.update((prev) => !prev)
+      this.$readFilter.next(!this.$readFilter.value)
     } else {
       this.pageService.setCurrentPage(1)
-      this.favFilter.update((prev) => !prev)
+      this.$favFilter.next(!this.$favFilter.value)
     }
-    this.getData()
   }
 
   onRefreshAll() {
@@ -179,7 +173,6 @@ export class HomePage implements OnInit {
         }),
       )
       .subscribe(() => {
-        this.getData()
         this.isRefreshingAll.set(false)
       })
   }

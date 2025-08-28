@@ -4,12 +4,8 @@
 
 <app-article-list
   [articles]="articles()"
-  [display]="pageService.display()"
   [favTagId]="favTagId()"
   [userTags]="userTags()"
 />
 
-<app-paginator
-  (pageChange)="paginationHandler($event)"
-  [hidden]="!articles().length"
-/>
+<app-paginator [hidden]="!articles().length"/>

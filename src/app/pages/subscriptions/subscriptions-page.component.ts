@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core'
 import { MatCardModule } from '@angular/material/card'
 import { FeedService } from '../../services/feed-service'
-import { catchError, of } from 'rxjs'
+import { catchError, combineLatest, of, switchMap } from 'rxjs'
 import { HttpErrorResponse } from '@angular/common/http'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { MatToolbarModule } from '@angular/material/toolbar'
@@ -12,7 +12,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog'
 import { SubscriptionAddForm } from '../../components/subscription-add-form/subscription-add-form'
 import { Feed } from '../../entities/feed/feed.types'
 import { MatProgressBar } from '@angular/material/progress-bar'
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator'
+import { MatPaginatorModule } from '@angular/material/paginator'
 import { LinkTrimPipe } from '../../pipes/link-trim-pipe'
 import { Paginator } from '../../components/paginator/paginator'
 import { PageService } from '../../services/page-service'
@@ -48,27 +48,21 @@ export class SubscriptionsPage implements OnInit {
   isRefreshingAll = signal<boolean>(false)
 
   ngOnInit() {
-    this.getData()
-  }
-
-  getData() {
-    this.feedService
-      .getAllSubscriptions({
-        pagination: {
-          perPage: this.pageService.pageSize(),
-          pageNumber: this.pageService.currentPage(),
-        },
-      })
+    combineLatest([this.pageService.$pageSize, this.pageService.$currentPage])
       .pipe(
-        catchError((error: HttpErrorResponse) => {
-          console.log(error)
-          return of(null)
-        }),
         takeUntilDestroyed(this.destroyRef),
+        switchMap(([perPage, pageNumber]) => {
+          return this.feedService.getAllSubscriptions({
+            pagination: {
+              perPage,
+              pageNumber,
+            },
+          })
+        }),
       )
       .subscribe((result) => {
         if (result) {
-          this.pageService.setCurrentPage(1)
+          // this.pageService.setCurrentPage(1)
           this.pageService.setTotalResults(result.total)
           this.feeds.set(result.result)
         }
@@ -80,9 +74,7 @@ export class SubscriptionsPage implements OnInit {
     const dialogRef = this.dialog.open(SubscriptionAddForm)
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.getData()
-      }
+      console.log('The dialog was closed', result)
     })
   }
 
@@ -140,12 +132,7 @@ export class SubscriptionsPage implements OnInit {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(() => {
-        this.getData()
         this.pageService.setCurrentPage(1)
       })
-  }
-
-  paginationHandler(event: PageEvent) {
-    this.getData()
   }
 }
