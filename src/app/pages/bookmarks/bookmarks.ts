@@ -42,7 +42,6 @@ export class Bookmarks implements OnInit {
             return of(null)
           }
           return combineLatest([this.pageService.$pageSize, this.pageService.$currentPage]).pipe(
-            takeUntilDestroyed(this.destroyRef),
             switchMap(([perPage, pageNumber]) => {
               this.favTagId.set(favTag)
               const filters = { tags: favTag }

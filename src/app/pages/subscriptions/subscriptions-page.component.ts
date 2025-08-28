@@ -62,7 +62,6 @@ export class SubscriptionsPage implements OnInit {
       )
       .subscribe((result) => {
         if (result) {
-          // this.pageService.setCurrentPage(1)
           this.pageService.setTotalResults(result.total)
           this.feeds.set(result.result)
         }

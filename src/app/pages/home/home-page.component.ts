@@ -60,18 +60,6 @@ export class HomePage implements OnInit {
   isRefreshingAll = signal<boolean>(false)
 
   ngOnInit() {
-    this.tagService.$defaultTags
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        catchError((error: HttpErrorResponse) => {
-          console.log(error)
-          return of(null)
-        }),
-      )
-      .subscribe((tags) => {
-        this.favTagId.set(tags?.find((t) => t.name === 'fav')?._id || '')
-      })
-
     this.tagService
       .getAllTags({})
       .pipe(
@@ -87,32 +75,43 @@ export class HomePage implements OnInit {
         }
       })
 
-    combineLatest([
-      this.pageService.$pageSize,
-      this.pageService.$currentPage,
-      this.$favFilter,
-      this.$readFilter,
-    ])
+    this.tagService
+      .getDefaultTags()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        switchMap(([perPage, pageNumber, fav, read]) => {
-          const filters: Record<string, string | boolean> = {}
-
-          if (read) {
-            filters['read'] = false
+        switchMap((tags) => {
+          const favTag = tags?.find((t) => t.name === 'fav')?._id
+          if (!favTag) {
+            return of(null)
           }
+          this.favTagId.set(favTag)
 
-          if (fav) {
-            filters['tags'] = this.favTagId()
-          }
+          return combineLatest([
+            this.pageService.$pageSize,
+            this.pageService.$currentPage,
+            this.$favFilter,
+            this.$readFilter,
+          ]).pipe(
+            switchMap(([perPage, pageNumber, fav, read]) => {
+              const filters: Record<string, string | boolean> = {}
 
-          return this.feedService.getAllArticles({
-            pagination: {
-              perPage,
-              pageNumber,
-            },
-            filters,
-          })
+              if (read) {
+                filters['read'] = false
+              }
+
+              if (fav) {
+                filters['tags'] = favTag
+              }
+
+              return this.feedService.getAllArticles({
+                pagination: {
+                  perPage,
+                  pageNumber,
+                },
+                filters,
+              })
+            }),
+          )
         }),
       )
       .subscribe((result) => {
