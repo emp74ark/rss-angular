@@ -12,6 +12,7 @@ import { PageService } from '../../services/page-service'
 export class Paginator {
   pageService = inject(PageService, { skipSelf: true })
   totalResults = this.pageService.totalResults
+  pageSize = this.pageService.pageSize
   pageChange = output<PageEvent>()
   hidden = input<boolean>(false)
 
