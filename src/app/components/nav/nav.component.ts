@@ -25,7 +25,6 @@ import { HealthStatus } from '../health-status/health-status'
     MatIconModule,
     AsyncPipe,
     RouterLink,
-    HealthStatus,
   ],
 })
 export class NavComponent implements OnInit {
