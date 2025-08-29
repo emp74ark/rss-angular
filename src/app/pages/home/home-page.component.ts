@@ -178,6 +178,7 @@ export class HomePage implements OnInit {
       )
       .subscribe(() => {
         this.isRefreshingAll.set(false)
+        this.pageService.setCurrentPage(1)
       })
   }
 }
