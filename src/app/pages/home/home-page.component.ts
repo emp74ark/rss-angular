@@ -147,7 +147,12 @@ export class HomePage implements OnInit {
           return of(null)
         }),
       )
-      .subscribe()
+      .subscribe((result) => {
+        if (!result?.modifiedCount) {
+          return
+        }
+        this.pageService.setCurrentPage(1)
+      })
   }
 
   filterHandler(filter: 'read' | 'fav') {
