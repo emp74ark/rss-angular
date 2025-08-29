@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs'
   providedIn: 'any',
 })
 export class PageService {
-  private $$pageSize = new BehaviorSubject<number>(10)
+  private $$pageSize = new BehaviorSubject<number>(5)
   $pageSize = this.$$pageSize.asObservable()
 
   private $$currentPage = new BehaviorSubject<number>(1)
