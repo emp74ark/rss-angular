@@ -44,11 +44,11 @@ export class NavComponent implements OnInit {
   private router = inject(Router)
 
   menuItems: { title: string; icon?: string; url: string }[] = [
-    { title: 'Articles', url: '/home' },
-    { title: 'Bookmarks', url: '/bookmarks' },
-    { title: 'Subscriptions', url: '/subscriptions' },
-    { title: 'Tags', url: '/tags' },
-    { title: 'Status', url: '/status' },
+    { title: 'Articles', url: '/home', icon: 'library_books' },
+    { title: 'Bookmarks', url: '/bookmarks', icon: 'bookmark' },
+    { title: 'Subscriptions', url: '/subscriptions', icon: 'rss_feed' },
+    { title: 'Tags', url: '/tags', icon: 'tag' },
+    { title: 'Status', url: '/status', icon: 'memory' },
   ]
 
   onMenuItemClick() {

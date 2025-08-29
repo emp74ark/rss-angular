@@ -15,7 +15,10 @@
           mat-list-item
           [routerLink]="i.url"
           (click)="onMenuItemClick()"
-        >{{ i.title }}</a>
+        >
+          <mat-icon matListItemIcon>{{i.icon}}</mat-icon>
+          {{ i.title }}
+        </a>
       }
     </mat-nav-list>
 
