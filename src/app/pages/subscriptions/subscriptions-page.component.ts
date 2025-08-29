@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core'
+import { Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core'
 import { MatCardModule } from '@angular/material/card'
 import { FeedService } from '../../services/feed-service'
 import { catchError, combineLatest, of, switchMap } from 'rxjs'
@@ -17,6 +17,7 @@ import { LinkTrimPipe } from '../../pipes/link-trim-pipe'
 import { Paginator } from '../../components/paginator/paginator'
 import { PageService } from '../../services/page-service'
 import { TitleService } from '../../services/title-service'
+import { scrollUp } from '../../../utils'
 
 @Component({
   selector: 'app-subscriptions',
@@ -36,6 +37,12 @@ import { TitleService } from '../../services/title-service'
   styleUrl: './subscriptions-page.component.css',
 })
 export class SubscriptionsPage implements OnInit {
+  constructor() {
+    effect(() => {
+      scrollUp({ trigger: !!this.feeds().length })
+    })
+  }
+
   feedService = inject(FeedService)
   pageService = inject(PageService)
   readonly dialog = inject(MatDialog)
@@ -74,6 +81,7 @@ export class SubscriptionsPage implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed', result)
+      this.pageService.setCurrentPage(1)
     })
   }
 

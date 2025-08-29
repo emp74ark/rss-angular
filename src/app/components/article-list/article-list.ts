@@ -22,6 +22,7 @@ import { HttpErrorResponse } from '@angular/common/http'
 import { FeedService } from '../../services/feed-service'
 import { Tag } from '../../entities/tag/tag.types'
 import { PageService } from '../../services/page-service'
+import { scrollUp } from '../../../utils'
 
 @Component({
   selector: 'app-article-list',
@@ -49,11 +50,7 @@ import { PageService } from '../../services/page-service'
 export class ArticleList {
   constructor() {
     effect(() => {
-      if (!this.articles().length) {
-        return
-      }
-      const page = document.querySelector('.page-content')
-      page?.scroll({ top: 0, behavior: 'smooth' })
+      scrollUp({ trigger: !!this.articles().length })
     })
   }
   router = inject(Router)

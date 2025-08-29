@@ -66,6 +66,7 @@ export class TagsPage implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed', result)
+      this.pageService.setCurrentPage(1)
     })
   }
 
