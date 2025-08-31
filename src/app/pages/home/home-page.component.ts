@@ -20,6 +20,7 @@ import { Paginator } from '../../components/paginator/paginator'
 import { PageService } from '../../services/page-service'
 import { PageDisplayToggle } from '../../components/page-display-toggle/page-display-toggle'
 import { AsyncPipe } from '@angular/common'
+import { SortOrder } from '../../entities/base/base.enums'
 
 @Component({
   selector: 'app-home',
@@ -53,6 +54,7 @@ export class HomePage implements OnInit {
 
   $readFilter = new BehaviorSubject(true)
   $favFilter = new BehaviorSubject(false)
+  $dateOrder = new BehaviorSubject(SortOrder.Desc)
 
   favTagId = signal<string>('')
   userTags = signal<Tag[]>([])
@@ -91,8 +93,9 @@ export class HomePage implements OnInit {
             this.pageService.$currentPage,
             this.$favFilter,
             this.$readFilter,
+            this.$dateOrder,
           ]).pipe(
-            switchMap(([perPage, pageNumber, fav, read]) => {
+            switchMap(([perPage, pageNumber, fav, read, dateSort]) => {
               const filters: Record<string, string | boolean> = {}
 
               if (read) {
@@ -109,6 +112,9 @@ export class HomePage implements OnInit {
                   pageNumber,
                 },
                 filters,
+                sort: {
+                  date: dateSort,
+                },
               })
             }),
           )
@@ -160,7 +166,14 @@ export class HomePage implements OnInit {
       this.$readFilter.next(!this.$readFilter.value)
     } else {
       this.pageService.setCurrentPage(1)
-      this.$favFilter.next(!this.$favFilter.value)
+    }
+    this.$favFilter.next(!this.$favFilter.value)
+  }
+
+  orderHandler(param: 'date') {
+    if (param === 'date') {
+      this.$dateOrder.next(this.$dateOrder.value === SortOrder.Asc ? SortOrder.Desc : SortOrder.Asc)
+      this.pageService.setCurrentPage(1)
     }
   }
 
@@ -181,4 +194,6 @@ export class HomePage implements OnInit {
         this.pageService.setCurrentPage(1)
       })
   }
+
+  protected readonly SortOrder = SortOrder
 }

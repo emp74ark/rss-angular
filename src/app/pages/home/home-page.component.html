@@ -11,6 +11,12 @@
   <app-row-spacer/>
   <mat-button-toggle>
     <mat-icon
+      [class]="($dateOrder | async) === SortOrder.Asc ? 'highlighted' : undefined"
+      (click)="orderHandler('date')"
+      [title]="($dateOrder | async) === SortOrder.Asc ? 'Older first' : 'Newer first'"
+    >schedule
+    </mat-icon>
+    <mat-icon
       [class]="($readFilter | async) ? 'highlighted' : undefined"
       (click)="filterHandler('read')"
       [title]="($readFilter | async) ? 'Show read' : 'Show unread'"

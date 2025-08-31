@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment'
 import { Feed, FeedDTO } from '../entities/feed/feed.types'
 import { Article, ArticleDTO } from '../entities/article/article.types'
 import { Paginated, Pagination } from '../entities/base/base.types'
+import { SortOrder } from '../entities/base/base.enums'
 
 @Injectable({
   providedIn: 'root',
@@ -20,12 +21,14 @@ export class FeedService {
   getAllArticles({
     pagination,
     filters,
+    sort,
   }: {
     pagination?: Partial<Pagination>
     filters?: { tags?: string; read?: boolean }
+    sort?: { date: SortOrder }
   }) {
     return this.httpClient.get<Paginated<Article>>(`${environment.api}/article`, {
-      params: { ...pagination, ...filters },
+      params: { ...pagination, ...filters, dateSort: sort?.date || SortOrder.Desc },
     })
   }
 
