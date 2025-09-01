@@ -23,7 +23,11 @@
   } @else {
     @defer {
       @for (f of feeds(); track f._id) {
-        <mat-card>
+        <mat-card
+          class="card"
+          routerLink="/home"
+          [queryParams]="{ subscription: f._id }"
+        >
           <mat-card-header>
             <mat-card-title>{{ f.title }}</mat-card-title>
             <app-row-spacer/>

@@ -43,7 +43,10 @@
           <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
         </button>
       }
-      <h1>{{ currentTitle() }}</h1>
+      <div class="title">
+        <h1>{{ currentTitle() }}</h1>
+        <h2>{{ currentSubtitle() }}</h2>
+      </div>
     </mat-toolbar>
     <div class="page-content">
       <ng-content select="router-outlet"/>

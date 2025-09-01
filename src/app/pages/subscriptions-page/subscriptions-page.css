@@ -9,3 +9,7 @@
 :host .mat-mdc-paginator {
   background: transparent;
 }
+
+.card {
+  cursor: pointer;
+}

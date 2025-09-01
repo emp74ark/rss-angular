@@ -9,7 +9,7 @@ import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle'
 import { MatIconModule } from '@angular/material/icon'
 import { RowSpacer } from '../../components/row-spacer/row-spacer'
-import { Router } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { Article } from '../../entities/article/article.types'
 import { MatPaginatorModule } from '@angular/material/paginator'
 import { TagService } from '../../services/tag-service'
@@ -44,6 +44,7 @@ import { SortOrder } from '../../entities/base/base.enums'
 export class HomePage implements OnInit {
   feedService = inject(FeedService)
   router = inject(Router)
+  route = inject(ActivatedRoute)
   destroyRef = inject(DestroyRef)
   tagService = inject(TagService)
   titleService = inject(TitleService)
@@ -54,6 +55,7 @@ export class HomePage implements OnInit {
 
   $readFilter = new BehaviorSubject(true)
   $favFilter = new BehaviorSubject(false)
+  $subscriptionFilter = new BehaviorSubject<string | null>(null)
   $dateOrder = new BehaviorSubject(SortOrder.Desc)
 
   favTagId = signal<string>('')
@@ -93,9 +95,10 @@ export class HomePage implements OnInit {
             this.pageService.$currentPage,
             this.$favFilter,
             this.$readFilter,
+            this.$subscriptionFilter,
             this.$dateOrder,
           ]).pipe(
-            switchMap(([perPage, pageNumber, fav, read, dateSort]) => {
+            switchMap(([perPage, pageNumber, fav, read, subscription, dateSort]) => {
               const filters: Record<string, string | boolean> = {}
 
               if (read) {
@@ -104,6 +107,10 @@ export class HomePage implements OnInit {
 
               if (fav) {
                 filters['tags'] = favTag
+              }
+
+              if (subscription) {
+                filters['subscription'] = subscription
               }
 
               return this.feedService.getAllArticles({
@@ -124,9 +131,31 @@ export class HomePage implements OnInit {
         if (result) {
           this.articles.set(result.result)
           this.pageService.setTotalResults(result.total)
-          this.titleService.setTitle(`News: ${result.total} articles`)
+          this.titleService.setTitle(`Articles: ${result.total} articles`)
         } else {
-          this.titleService.setTitle('News')
+          this.titleService.setTitle('Articles')
+        }
+      })
+
+    this.route.queryParams
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        switchMap((params) => {
+          const subscriptionId: string = params['subscription']
+          if (!subscriptionId) {
+            return of(null)
+          }
+          return this.feedService.getOneSubscription({ subscriptionId })
+        }),
+        catchError((e) => {
+          console.error(e)
+          return of(null)
+        }),
+      )
+      .subscribe((feed) => {
+        if (feed) {
+          this.titleService.setSubtitle(feed.title)
+          this.$subscriptionFilter.next(feed._id)
         }
       })
   }
@@ -165,9 +194,9 @@ export class HomePage implements OnInit {
     if (filter === 'read') {
       this.$readFilter.next(!this.$readFilter.value)
     } else {
-      this.pageService.setCurrentPage(1)
+      this.$favFilter.next(!this.$favFilter.value)
     }
-    this.$favFilter.next(!this.$favFilter.value)
+    this.pageService.setCurrentPage(1)
   }
 
   orderHandler(param: 'date') {

@@ -18,6 +18,7 @@ import { Paginator } from '../../components/paginator/paginator'
 import { PageService } from '../../services/page-service'
 import { TitleService } from '../../services/title-service'
 import { scrollUp } from '../../../utils'
+import { RouterLink } from '@angular/router'
 
 @Component({
   selector: 'app-subscriptions-page',
@@ -32,6 +33,7 @@ import { scrollUp } from '../../../utils'
     MatPaginatorModule,
     LinkTrimPipe,
     Paginator,
+    RouterLink,
   ],
   templateUrl: './subscriptions-page.html',
   styleUrl: './subscriptions-page.css',
