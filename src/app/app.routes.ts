@@ -26,7 +26,7 @@ export const routes: Routes = [
   {
     path: 'subscriptions',
     loadComponent: async () => {
-      const c = await import('./pages/subscriptions/subscriptions-page.component')
+      const c = await import('./pages/subscriptions-page/subscriptions-page')
       return c.SubscriptionsPage
     },
     data: { title: 'Subscriptions' },

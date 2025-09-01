@@ -20,7 +20,7 @@ import { TitleService } from '../../services/title-service'
 import { scrollUp } from '../../../utils'
 
 @Component({
-  selector: 'app-subscriptions',
+  selector: 'app-subscriptions-page',
   imports: [
     MatCardModule,
     MatToolbarModule,
@@ -33,8 +33,8 @@ import { scrollUp } from '../../../utils'
     LinkTrimPipe,
     Paginator,
   ],
-  templateUrl: './subscriptions-page.component.html',
-  styleUrl: './subscriptions-page.component.css',
+  templateUrl: './subscriptions-page.html',
+  styleUrl: './subscriptions-page.css',
 })
 export class SubscriptionsPage implements OnInit {
   constructor() {
