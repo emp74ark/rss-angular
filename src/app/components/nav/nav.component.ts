@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, viewChild } from '@angular/core'
+import { Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { AsyncPipe } from '@angular/common'
 import { MatToolbarModule } from '@angular/material/toolbar'
@@ -10,7 +10,8 @@ import { Observable, tap } from 'rxjs'
 import { map, shareReplay } from 'rxjs/operators'
 import { EventType, Router, RouterLink } from '@angular/router'
 import { TitleService } from '../../services/title-service'
-import { toSignal } from '@angular/core/rxjs-interop'
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop'
+import { AuthService } from '../../services/auth-service'
 
 @Component({
   selector: 'app-nav',
@@ -29,6 +30,8 @@ import { toSignal } from '@angular/core/rxjs-interop'
 export class NavComponent implements OnInit {
   private breakpointObserver = inject(BreakpointObserver)
   private titleService = inject(TitleService)
+  private authService = inject(AuthService)
+  private destroyRef = inject(DestroyRef)
   private sideNav = viewChild<MatSidenav>('drawer')
 
   currentTitle = toSignal(this.titleService.$currentTitle)
@@ -48,6 +51,7 @@ export class NavComponent implements OnInit {
     { title: 'Bookmarks', url: '/bookmarks', icon: 'bookmark' },
     { title: 'Subscriptions', url: '/subscriptions', icon: 'rss_feed' },
     { title: 'Tags', url: '/tags', icon: 'tag' },
+    { title: 'User', url: '/user', icon: 'person' },
     { title: 'Status', url: '/status', icon: 'memory' },
   ]
 
@@ -55,6 +59,17 @@ export class NavComponent implements OnInit {
     if (this.isHandset()) {
       this.sideNav()?.close()
     }
+  }
+
+  onLogOut() {
+    this.authService
+      .logout()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => {
+        if (result) {
+          this.router.navigate(['/auth'])
+        }
+      })
   }
 
   ngOnInit() {

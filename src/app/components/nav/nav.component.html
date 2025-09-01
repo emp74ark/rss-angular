@@ -16,10 +16,18 @@
           [routerLink]="i.url"
           (click)="onMenuItemClick()"
         >
-          <mat-icon matListItemIcon>{{i.icon}}</mat-icon>
+          <mat-icon matListItemIcon>{{ i.icon }}</mat-icon>
           {{ i.title }}
         </a>
       }
+
+      <a
+        mat-list-item
+        (click)="onLogOut()"
+      >
+        <mat-icon matListItemIcon>logout</mat-icon>
+        Logout
+      </a>
     </mat-nav-list>
 
   </mat-sidenav>

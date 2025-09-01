@@ -1,0 +1,32 @@
+<form (ngSubmit)="onSubmit()">
+  <mat-card-content class="credentials">
+    <span class="description">
+      Signup with your password, but <strong>random username</strong> provided by the server.
+    </span>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        placeholder="Password"
+        type="password"
+        autocomplete="password"
+        [value]="formData().password"
+        (input)="inputHandler('password', $event)"
+        required
+      />
+    </mat-form-field>
+
+    @let status = (authStatus | async);
+    @if (status?.error) {
+      <mat-error>{{ status?.error }}</mat-error>
+    }
+
+    <mat-card-actions>
+      <button
+        [disabled]="!formData().password"
+        matButton
+      >Signup
+      </button>
+    </mat-card-actions>
+  </mat-card-content>
+</form>

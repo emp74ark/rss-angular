@@ -1,0 +1,10 @@
+.credentials {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.description {
+  max-width: 30ch;
+}

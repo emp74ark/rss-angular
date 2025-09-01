@@ -51,6 +51,15 @@ export const routes: Routes = [
     canMatch: [authGuard],
   },
   {
+    path: 'user',
+    loadComponent: async () => {
+      const c = await import('./pages/user-page/user-page')
+      return c.UserPage
+    },
+    data: { title: 'User' },
+    canMatch: [authGuard],
+  },
+  {
     path: 'status',
     component: StatusPage,
     data: { title: 'Status' },
