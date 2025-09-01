@@ -1,4 +1,11 @@
-import { Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core'
+import {
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+  viewChild
+} from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { AsyncPipe } from '@angular/common'
 import { MatToolbarModule } from '@angular/material/toolbar'
@@ -35,6 +42,7 @@ export class NavComponent implements OnInit {
   private sideNav = viewChild<MatSidenav>('drawer')
 
   currentTitle = toSignal(this.titleService.$currentTitle)
+  currentSubtitle = toSignal(this.titleService.$currentSubtitle)
 
   isHandset = signal<boolean>(false)
 

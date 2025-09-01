@@ -34,3 +34,15 @@ mat-sidenav-content {
 .page-content {
   overflow: auto;
 }
+
+.title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.title h2 {
+  font-size: smaller;
+}
