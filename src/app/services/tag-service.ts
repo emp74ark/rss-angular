@@ -31,6 +31,10 @@ export class TagService {
     })
   }
 
+  getOne({ name }: { name: Tag['_id'] }) {
+    return this.httpClient.get<Tag>(`${environment.api}/tag/${name}`)
+  }
+
   addOneTag({ name }: { name: string }) {
     return this.httpClient.post<Tag>(`${environment.api}/tag`, { name })
   }

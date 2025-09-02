@@ -13,7 +13,11 @@
   @defer {
     <mat-chip-set>
       @for (t of tags(); track t._id) {
-        <mat-chip-row (removed)="onRemove(t)">
+        <mat-chip-row
+          (click)="onClick(t.name)"
+          (removed)="onRemove(t)"
+          [disabled]="t.userId === 'all'"
+        >
           {{ t.name }}
           @if (t.userId !== 'all') {
             <button matChipRemove>

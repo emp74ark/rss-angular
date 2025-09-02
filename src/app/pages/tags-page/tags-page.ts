@@ -14,6 +14,7 @@ import { MatChipRemove, MatChipRow, MatChipSet } from '@angular/material/chips'
 import { Paginator } from '../../components/paginator/paginator'
 import { PageService } from '../../services/page-service'
 import { TitleService } from '../../services/title-service'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-tags-page',
@@ -36,6 +37,7 @@ export class TagsPage implements OnInit {
   destroyRef = inject(DestroyRef)
   readonly dialog = inject(MatDialog)
   titleService = inject(TitleService)
+  router = inject(Router)
 
   tags = signal<Tag[]>([])
 
@@ -85,5 +87,10 @@ export class TagsPage implements OnInit {
           this.pageService.setCurrentPage(1)
         }
       })
+  }
+
+  onClick(name: string) {
+    if (!name) return
+    this.router.navigate(['/articles'], { queryParams: { tag: name } })
   }
 }

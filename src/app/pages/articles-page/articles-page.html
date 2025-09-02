@@ -10,24 +10,34 @@
   </button>
   <app-row-spacer/>
   <mat-button-toggle>
-    <mat-icon
+    <button
+      matIconButton
       [class]="($dateOrder | async) === SortOrder.Asc ? 'highlighted' : undefined"
       (click)="orderHandler('date')"
       [title]="($dateOrder | async) === SortOrder.Asc ? 'Older first' : 'Newer first'"
-    >schedule
-    </mat-icon>
-    <mat-icon
+    >
+
+      <mat-icon>schedule</mat-icon>
+    </button>
+    <button
+      matIconButton
       [class]="($readFilter | async) ? 'highlighted' : undefined"
       (click)="filterHandler('read')"
       [title]="($readFilter | async) ? 'Show read' : 'Show unread'"
-    >{{ ($readFilter | async) ? 'mark_email_unread' : 'mark_email_read' }}
-    </mat-icon>
-    <mat-icon
-      [class]="($favFilter | async) ? 'highlighted' : undefined"
+    >
+      <mat-icon>
+        {{ ($readFilter | async) ? 'mark_email_unread' : 'mark_email_read' }}
+      </mat-icon>
+    </button>
+    <button
+      matIconButton
       (click)="filterHandler('fav')"
+      [class]="($favFilter | async) ? 'highlighted' : undefined"
       [title]="($favFilter | async) ? 'Show favorites' : 'Show all'"
-    >bookmark
-    </mat-icon>
+      [disabled]="$tagFilter | async"
+    >
+      <mat-icon>bookmark</mat-icon>
+    </button>
   </mat-button-toggle>
 </mat-toolbar-row>
 
