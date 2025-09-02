@@ -1,16 +1,21 @@
 import { Component, inject } from '@angular/core'
-import { RouterOutlet } from '@angular/router'
-import { NavComponent } from './components/nav/nav.component'
 import { AuthService } from './services/auth-service'
 import { toSignal } from '@angular/core/rxjs-interop'
+import { PrivateOutlet } from './outlet/private-outlet/private-outlet'
+import { PublicOutlet } from './outlet/public-outlet/public-outlet'
+import { NgComponentOutlet } from '@angular/common'
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavComponent],
+  imports: [NgComponentOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
   private readonly authService = inject(AuthService)
-  protected readonly authStatus = toSignal(this.authService.$authStatus)
+  private readonly authStatus = toSignal(this.authService.$authStatus)
+
+  getOutlet() {
+    return this.authStatus()?.authenticated ? PrivateOutlet : PublicOutlet
+  }
 }
