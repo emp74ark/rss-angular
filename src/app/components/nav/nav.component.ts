@@ -1,11 +1,4 @@
-import {
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-  signal,
-  viewChild
-} from '@angular/core'
+import { Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { AsyncPipe } from '@angular/common'
 import { MatToolbarModule } from '@angular/material/toolbar'
@@ -55,7 +48,7 @@ export class NavComponent implements OnInit {
   private router = inject(Router)
 
   menuItems: { title: string; icon?: string; url: string }[] = [
-    { title: 'Articles', url: '/home', icon: 'library_books' },
+    { title: 'Articles', url: '/articles', icon: 'library_books' },
     { title: 'Bookmarks', url: '/bookmarks', icon: 'bookmark' },
     { title: 'Subscriptions', url: '/subscriptions', icon: 'rss_feed' },
     { title: 'Tags', url: '/tags', icon: 'tag' },

@@ -17,7 +17,7 @@ import { TitleService } from '../../services/title-service'
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
 
 @Component({
-  selector: 'app-article',
+  selector: 'app-article-page',
   imports: [
     MatToolbarModule,
     MatProgressBarModule,
@@ -28,8 +28,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
     MatIconButton,
     MatDivider,
   ],
-  templateUrl: './article-page.component.html',
-  styleUrl: './article-page.component.css',
+  templateUrl: './article-page.html',
+  styleUrl: './article-page.css',
 })
 export class ArticlePage implements OnInit {
   feedService = inject(FeedService)

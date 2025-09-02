@@ -8,18 +8,18 @@ export const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
   { path: 'auth', component: AuthPage, data: { title: 'Authentication' } },
   {
-    path: 'home',
+    path: 'articles',
     loadComponent: async () => {
-      const c = await import('./pages/home/home-page.component')
-      return c.HomePage
+      const c = await import('./pages/articles-page/articles-page')
+      return c.ArticlesPage
     },
     canMatch: [authGuard],
   },
   {
     path: 'bookmarks',
     loadComponent: async () => {
-      const c = await import('./pages/bookmarks/bookmarks')
-      return c.Bookmarks
+      const c = await import('./pages/bookmarks-page/bookmarks-page')
+      return c.BookmarksPage
     },
     canMatch: [authGuard],
   },
@@ -35,7 +35,7 @@ export const routes: Routes = [
   {
     path: 'subscription/:subscriptionId/article/:articleId',
     loadComponent: async () => {
-      const c = await import('./pages/article-page/article-page.component')
+      const c = await import('./pages/article-page/article-page')
       return c.ArticlePage
     },
     data: { title: 'Article' },
@@ -44,7 +44,7 @@ export const routes: Routes = [
   {
     path: 'tags',
     loadComponent: async () => {
-      const c = await import('./pages/tags/tags-page.component')
+      const c = await import('./pages/tags-page/tags-page')
       return c.TagsPage
     },
     data: { title: 'Tags' },
@@ -63,6 +63,7 @@ export const routes: Routes = [
     path: 'status',
     component: StatusPage,
     data: { title: 'Status' },
+    canMatch: [authGuard],
   },
   {
     path: '**',

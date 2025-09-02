@@ -3,7 +3,7 @@ import { MatCardModule } from '@angular/material/card'
 import { FeedService } from '../../services/feed-service'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { HttpErrorResponse } from '@angular/common/http'
-import { BehaviorSubject, catchError, combineLatest, of, switchMap } from 'rxjs'
+import { BehaviorSubject, catchError, combineLatest, forkJoin, of, switchMap } from 'rxjs'
 import { MatButton, MatIconButton } from '@angular/material/button'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle'
@@ -23,7 +23,7 @@ import { AsyncPipe } from '@angular/common'
 import { SortOrder } from '../../entities/base/base.enums'
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-articles-page',
   imports: [
     MatCardModule,
     MatToolbarModule,
@@ -38,10 +38,10 @@ import { SortOrder } from '../../entities/base/base.enums'
     PageDisplayToggle,
     AsyncPipe,
   ],
-  templateUrl: './home-page.component.html',
-  styleUrl: './home-page.component.css',
+  templateUrl: './articles-page.html',
+  styleUrl: './articles-page.css',
 })
-export class HomePage implements OnInit {
+export class ArticlesPage implements OnInit {
   feedService = inject(FeedService)
   router = inject(Router)
   route = inject(ActivatedRoute)
@@ -56,6 +56,7 @@ export class HomePage implements OnInit {
   $readFilter = new BehaviorSubject(true)
   $favFilter = new BehaviorSubject(false)
   $subscriptionFilter = new BehaviorSubject<string | null>(null)
+  $tagFilter = new BehaviorSubject<string | null>(null)
   $dateOrder = new BehaviorSubject(SortOrder.Desc)
 
   favTagId = signal<string>('')
@@ -96,9 +97,10 @@ export class HomePage implements OnInit {
             this.$favFilter,
             this.$readFilter,
             this.$subscriptionFilter,
+            this.$tagFilter,
             this.$dateOrder,
           ]).pipe(
-            switchMap(([perPage, pageNumber, fav, read, subscription, dateSort]) => {
+            switchMap(([perPage, pageNumber, fav, read, subscription, tag, dateSort]) => {
               const filters: Record<string, string | boolean> = {}
 
               if (read) {
@@ -111,6 +113,10 @@ export class HomePage implements OnInit {
 
               if (subscription) {
                 filters['subscription'] = subscription
+              }
+
+              if (tag) {
+                filters['tags'] = tag
               }
 
               return this.feedService.getAllArticles({
@@ -142,20 +148,38 @@ export class HomePage implements OnInit {
         takeUntilDestroyed(this.destroyRef),
         switchMap((params) => {
           const subscriptionId: string = params['subscription']
+          const tagName: string = params['tag']
+          const tag = this.userTags().find((t) => t.name === tagName)
           if (!subscriptionId) {
-            return of(null)
+            return forkJoin([of(null), this.tagService.getOne({ name: tagName })])
+          } else {
+            return forkJoin([this.feedService.getOneSubscription({ subscriptionId }), of(null)])
           }
-          return this.feedService.getOneSubscription({ subscriptionId })
         }),
         catchError((e) => {
           console.error(e)
           return of(null)
         }),
       )
-      .subscribe((feed) => {
+      .subscribe((results) => {
+        if (!results) {
+          return
+        }
+
+        const [feed, tag] = results
+
         if (feed) {
           this.titleService.setSubtitle(feed.title)
           this.$subscriptionFilter.next(feed._id)
+          this.$tagFilter.next(null)
+        } else if (tag) {
+          this.titleService.setSubtitle(tag.name)
+          this.$subscriptionFilter.next(null)
+          this.$tagFilter.next(tag._id)
+        } else {
+          this.titleService.setSubtitle(null)
+          this.$subscriptionFilter.next(null)
+          this.$tagFilter.next(null)
         }
       })
   }

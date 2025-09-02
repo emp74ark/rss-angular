@@ -1,11 +1,1 @@
-@if (authStatus()?.authenticated) {
-  <main class="private">
-    <app-nav>
-      <router-outlet/>
-    </app-nav>
-  </main>
-} @else {
-  <main class="public">
-    <router-outlet/>
-  </main>
-}
+<ng-container *ngComponentOutlet="getOutlet()"/>
