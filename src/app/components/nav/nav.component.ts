@@ -55,7 +55,7 @@ export class NavComponent implements OnInit {
   private router = inject(Router)
 
   menuItems: { title: string; icon?: string; url: string }[] = [
-    { title: 'Articles', url: '/home', icon: 'library_books' },
+    { title: 'Articles', url: '/articles', icon: 'library_books' },
     { title: 'Bookmarks', url: '/bookmarks', icon: 'bookmark' },
     { title: 'Subscriptions', url: '/subscriptions', icon: 'rss_feed' },
     { title: 'Tags', url: '/tags', icon: 'tag' },

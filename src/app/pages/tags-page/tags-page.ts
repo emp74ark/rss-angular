@@ -16,7 +16,7 @@ import { PageService } from '../../services/page-service'
 import { TitleService } from '../../services/title-service'
 
 @Component({
-  selector: 'app-tags',
+  selector: 'app-tags-page',
   imports: [
     MatCardModule,
     MatToolbarModule,
@@ -27,8 +27,8 @@ import { TitleService } from '../../services/title-service'
     MatChipSet,
     Paginator,
   ],
-  templateUrl: './tags-page.component.html',
-  styleUrl: './tags-page.component.css',
+  templateUrl: './tags-page.html',
+  styleUrl: './tags-page.css',
 })
 export class TagsPage implements OnInit {
   tagsService = inject(TagService)

@@ -14,12 +14,12 @@ import { PageService } from '../../services/page-service'
 import { PageDisplayToggle } from '../../components/page-display-toggle/page-display-toggle'
 
 @Component({
-  selector: 'app-bookmarks',
+  selector: 'app-bookmarks-page',
   imports: [ArticleList, MatToolbarRow, Paginator, PageDisplayToggle],
-  templateUrl: './bookmarks.html',
-  styleUrl: './bookmarks.css',
+  templateUrl: './bookmarks-page.html',
+  styleUrl: './bookmarks-page.css',
 })
-export class Bookmarks implements OnInit {
+export class BookmarksPage implements OnInit {
   feedService = inject(FeedService)
   destroyRef = inject(DestroyRef)
   tagService = inject(TagService)

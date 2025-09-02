@@ -23,7 +23,7 @@ import { AsyncPipe } from '@angular/common'
 import { SortOrder } from '../../entities/base/base.enums'
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-articles-page',
   imports: [
     MatCardModule,
     MatToolbarModule,
@@ -38,10 +38,10 @@ import { SortOrder } from '../../entities/base/base.enums'
     PageDisplayToggle,
     AsyncPipe,
   ],
-  templateUrl: './home-page.component.html',
-  styleUrl: './home-page.component.css',
+  templateUrl: './articles-page.html',
+  styleUrl: './articles-page.css',
 })
-export class HomePage implements OnInit {
+export class ArticlesPage implements OnInit {
   feedService = inject(FeedService)
   router = inject(Router)
   route = inject(ActivatedRoute)

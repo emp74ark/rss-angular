@@ -25,7 +25,7 @@
       @for (f of feeds(); track f._id) {
         <mat-card
           class="card"
-          routerLink="/home"
+          routerLink="/articles"
           [queryParams]="{ subscription: f._id }"
         >
           <mat-card-header>

@@ -53,7 +53,7 @@ export class LoginForm {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result) => {
         if (result) {
-          this.router.navigate(['/home'])
+          this.router.navigate(['/articles'])
         }
       })
   }
