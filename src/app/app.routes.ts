@@ -63,6 +63,7 @@ export const routes: Routes = [
     path: 'status',
     component: StatusPage,
     data: { title: 'Status' },
+    canMatch: [authGuard],
   },
   {
     path: '**',
