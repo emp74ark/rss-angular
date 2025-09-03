@@ -28,12 +28,26 @@ export class FeedService {
     sort?: { date: SortOrder }
   }) {
     return this.httpClient.get<Paginated<Article>>(`${environment.api}/article`, {
-      params: { ...pagination, ...filters, dateSort: sort?.date || SortOrder.Desc },
+      params: {
+        ...pagination,
+        ...filters,
+        dateSort: sort?.date || SortOrder.Desc,
+      },
     })
   }
 
   getOneSubscription({ subscriptionId }: { subscriptionId: string }) {
     return this.httpClient.get<Feed>(`${environment.api}/subscription/${subscriptionId}`)
+  }
+
+  changeOneSubscription({
+    id,
+    dto,
+  }: {
+    id: string
+    dto: Partial<FeedDTO>
+  }) {
+    return this.httpClient.patch<Feed>(`${environment.api}/subscription/${id}`, dto)
   }
 
   getOneArticle({ articleId }: { articleId: string }) {
