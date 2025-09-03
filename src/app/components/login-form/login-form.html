@@ -12,6 +12,7 @@
         autocomplete="login username"
         [value]="formData().login"
         (input)="inputHandler('login', $event)"
+        [disabled]="isLoading()"
         required
         autofocus
       />
@@ -25,6 +26,7 @@
         autocomplete="password"
         [value]="formData().password"
         (input)="inputHandler('password', $event)"
+        [disabled]="isLoading()"
         required
       />
     </mat-form-field>
@@ -32,6 +34,10 @@
     @let status = (authStatus | async);
     @if (status?.error) {
       <mat-error>{{ status?.error }}</mat-error>
+    }
+
+    @if (isLoading()) {
+      <mat-progress-bar mode="query"/>
     }
 
     <mat-card-actions>

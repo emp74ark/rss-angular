@@ -5,6 +5,7 @@
   margin: 1rem 0;
 }
 
-.description {
+.description,
+mat-error {
   max-width: 30ch;
 }

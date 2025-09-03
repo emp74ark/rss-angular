@@ -1,12 +1,15 @@
-import { Component, DestroyRef, inject, model } from '@angular/core'
+import { Component, DestroyRef, inject, signal } from '@angular/core'
 import { AsyncPipe } from '@angular/common'
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatButton } from '@angular/material/button'
 import { MatCardActions, MatCardContent } from '@angular/material/card'
 import { MatError, MatFormField, MatInput, MatLabel } from '@angular/material/input'
 import { AuthService } from '../../services/auth-service'
 import { Router } from '@angular/router'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { MatIconModule } from '@angular/material/icon'
+import { MatProgressBarModule } from '@angular/material/progress-bar'
 
 @Component({
   selector: 'app-signup-form',
@@ -21,6 +24,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
     ReactiveFormsModule,
     MatFormField,
     MatError,
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatProgressBarModule,
   ],
   templateUrl: './signup-form.html',
   styleUrl: './signup-form.css',
@@ -30,28 +36,25 @@ export class SignupForm {
   router = inject(Router)
   destroyRef = inject(DestroyRef)
 
-  formData = model({
-    password: '',
+  isLoading = signal<boolean>(false)
+
+  password = new FormControl('', {
+    validators: [Validators.required, Validators.minLength(8), Validators.maxLength(30)],
   })
 
   authStatus = this.authService.$authStatus
 
-  inputHandler(field: 'password', event: Event) {
-    const { value } = event.target as HTMLInputElement
-    if (value) {
-      this.formData.update((prev) => ({
-        ...prev,
-        [field]: value,
-      }))
-    }
-  }
-
   onSubmit() {
+    if (!this.password.value) {
+      return
+    }
+    this.isLoading.set(true)
     this.authService
-      .signup(this.formData())
+      .signup({ password: this.password.value as string })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result) => {
         if (result) {
+          this.isLoading.set(false)
           this.router.navigate(['/user'])
         }
       })
