@@ -46,3 +46,7 @@ mat-sidenav-content {
 .title h2 {
   font-size: smaller;
 }
+
+.highlighted {
+  background: var(--mat-sys-secondary-container);
+}
