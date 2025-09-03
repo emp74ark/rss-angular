@@ -19,6 +19,8 @@ import { PageService } from '../../services/page-service'
 import { TitleService } from '../../services/title-service'
 import { scrollUp } from '../../../utils'
 import { RouterLink } from '@angular/router'
+import { SubscriptionEditForm } from '../../components/subscription-edit-form/subscription-edit-form'
+import { MatBadgeModule } from '@angular/material/badge'
 
 @Component({
   selector: 'app-subscriptions-page',
@@ -34,6 +36,7 @@ import { RouterLink } from '@angular/router'
     LinkTrimPipe,
     Paginator,
     RouterLink,
+    MatBadgeModule,
   ],
   templateUrl: './subscriptions-page.html',
   styleUrl: './subscriptions-page.css',
@@ -87,7 +90,8 @@ export class SubscriptionsPage implements OnInit {
     })
   }
 
-  onRefreshOne(subscriptionId: string) {
+  onRefreshOne(e: MouseEvent, subscriptionId: string) {
+    e.stopPropagation()
     this.isRefreshing.update((prev) => ({
       ...prev,
       [subscriptionId]: true,
@@ -130,7 +134,8 @@ export class SubscriptionsPage implements OnInit {
       })
   }
 
-  onRemove(id: string) {
+  onRemove(e: MouseEvent, id: string) {
+    e.stopPropagation()
     this.feedService
       .deleteOneSubscription({ subscriptionId: id })
       .pipe(
@@ -143,5 +148,17 @@ export class SubscriptionsPage implements OnInit {
       .subscribe(() => {
         this.pageService.setCurrentPage(1)
       })
+  }
+
+  onEdit(e: MouseEvent, feed: Feed) {
+    e.stopPropagation()
+    const dialogRef = this.dialog.open(SubscriptionEditForm, {
+      data: { feed },
+    })
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed', result)
+      this.pageService.setCurrentPage(1)
+    })
   }
 }
