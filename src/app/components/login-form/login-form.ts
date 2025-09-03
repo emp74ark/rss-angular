@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, model } from '@angular/core'
+import { Component, DestroyRef, inject, model, signal } from '@angular/core'
 import { AsyncPipe } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButton } from '@angular/material/button'
@@ -7,6 +7,7 @@ import { MatError, MatFormField, MatInput, MatLabel } from '@angular/material/in
 import { AuthService } from '../../services/auth-service'
 import { Router } from '@angular/router'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { MatProgressBar } from '@angular/material/progress-bar'
 
 @Component({
   selector: 'app-login-form',
@@ -21,6 +22,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
     ReactiveFormsModule,
     MatFormField,
     MatError,
+    MatProgressBar,
   ],
   templateUrl: './login-form.html',
   styleUrl: './login-form.css',
@@ -29,6 +31,8 @@ export class LoginForm {
   authService = inject(AuthService)
   router = inject(Router)
   destroyRef = inject(DestroyRef)
+
+  isLoading = signal<boolean>(false)
 
   formData = model({
     login: '',
@@ -48,11 +52,13 @@ export class LoginForm {
   }
 
   onSubmit() {
+    this.isLoading.set(true)
     this.authService
       .login(this.formData())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result) => {
         if (result) {
+          this.isLoading.set(false)
           this.router.navigate(['/articles'])
         }
       })

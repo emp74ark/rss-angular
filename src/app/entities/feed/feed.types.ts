@@ -1,5 +1,5 @@
 export interface FeedSettings {
-  enable?: boolean
+  enabled?: boolean
   loadFullText?: boolean
 }
 

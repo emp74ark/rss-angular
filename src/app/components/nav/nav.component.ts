@@ -8,7 +8,7 @@ import { MatListModule } from '@angular/material/list'
 import { MatIconModule } from '@angular/material/icon'
 import { Observable, tap } from 'rxjs'
 import { map, shareReplay } from 'rxjs/operators'
-import { EventType, Router, RouterLink } from '@angular/router'
+import { EventType, Router, RouterLink, RouterLinkActive } from '@angular/router'
 import { TitleService } from '../../services/title-service'
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop'
 import { AuthService } from '../../services/auth-service'
@@ -25,6 +25,7 @@ import { AuthService } from '../../services/auth-service'
     MatIconModule,
     AsyncPipe,
     RouterLink,
+    RouterLinkActive,
   ],
 })
 export class NavComponent implements OnInit {

@@ -13,3 +13,12 @@
 .card {
   cursor: pointer;
 }
+
+.link {
+  font-style: italic;
+  font-size: smaller;
+}
+
+.description {
+  color: var(--mat-sys-secondary);
+}
