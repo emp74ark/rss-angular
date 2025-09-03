@@ -1,4 +1,4 @@
-import { Component, DestroyRef, effect, inject, input, linkedSignal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, linkedSignal } from '@angular/core'
 import { AsyncPipe, DatePipe } from '@angular/common'
 import {
   MatCard,
@@ -46,6 +46,7 @@ import { scrollUp } from '../../../utils'
   ],
   templateUrl: './article-list.html',
   styleUrl: './article-list.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArticleList {
   constructor() {
@@ -53,10 +54,10 @@ export class ArticleList {
       scrollUp({ trigger: !!this.articles().length })
     })
   }
-  router = inject(Router)
-  feedService = inject(FeedService)
-  destroyRef = inject(DestroyRef)
-  pageService = inject(PageService, { skipSelf: true })
+  readonly router = inject(Router)
+  readonly feedService = inject(FeedService)
+  readonly destroyRef = inject(DestroyRef)
+  readonly pageService = inject(PageService, { skipSelf: true })
 
   articles = input.required<Article[]>()
   displayedArticles = linkedSignal(this.articles)

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core'
 import { MatCardModule } from '@angular/material/card'
 import { FeedService } from '../../services/feed-service'
 import { catchError, combineLatest, of, switchMap } from 'rxjs'
@@ -48,18 +48,18 @@ export class SubscriptionsPage implements OnInit {
     })
   }
 
-  feedService = inject(FeedService)
-  pageService = inject(PageService)
+  readonly feedService = inject(FeedService)
+  readonly pageService = inject(PageService)
   readonly dialog = inject(MatDialog)
-  destroyRef = inject(DestroyRef)
-  titleService = inject(TitleService)
+  readonly destroyRef = inject(DestroyRef)
+  readonly titleService = inject(TitleService)
 
   feeds = signal<Feed[]>([])
 
   isRefreshing = signal<Record<string, boolean>>({})
   isRefreshingAll = signal<boolean>(false)
 
-  ngOnInit() {
+  ngOnInit(): void {
     combineLatest([this.pageService.$pageSize, this.pageService.$currentPage])
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -81,7 +81,7 @@ export class SubscriptionsPage implements OnInit {
       })
   }
 
-  onAdd() {
+  onAdd(): void {
     const dialogRef = this.dialog.open(SubscriptionAddForm)
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -90,7 +90,7 @@ export class SubscriptionsPage implements OnInit {
     })
   }
 
-  onRefreshOne(e: MouseEvent, subscriptionId: string) {
+  onRefreshOne(e: MouseEvent, subscriptionId: string): void {
     e.stopPropagation()
     this.isRefreshing.update((prev) => ({
       ...prev,
@@ -117,7 +117,7 @@ export class SubscriptionsPage implements OnInit {
       })
   }
 
-  onRefreshAll() {
+  onRefreshAll(): void {
     this.isRefreshingAll.set(true)
     this.feedService
       .refreshAllSubscriptions()
@@ -134,7 +134,7 @@ export class SubscriptionsPage implements OnInit {
       })
   }
 
-  onRemove(e: MouseEvent, id: string) {
+  onRemove(e: MouseEvent, id: string): void {
     e.stopPropagation()
     this.feedService
       .deleteOneSubscription({ subscriptionId: id })
@@ -150,7 +150,7 @@ export class SubscriptionsPage implements OnInit {
       })
   }
 
-  onEdit(e: MouseEvent, feed: Feed) {
+  onEdit(e: MouseEvent, feed: Feed): void {
     e.stopPropagation()
     const dialogRef = this.dialog.open(SubscriptionEditForm, {
       data: { feed },

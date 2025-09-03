@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { AsyncPipe } from '@angular/common'
 import { MatToolbarModule } from '@angular/material/toolbar'
@@ -27,6 +27,7 @@ import { AuthService } from '../../services/auth-service'
     RouterLink,
     RouterLinkActive,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavComponent implements OnInit {
   private breakpointObserver = inject(BreakpointObserver)
@@ -46,7 +47,7 @@ export class NavComponent implements OnInit {
     shareReplay(),
   )
 
-  private router = inject(Router)
+  private readonly router = inject(Router)
 
   menuItems: { title: string; icon?: string; url: string }[] = [
     { title: 'Articles', url: '/articles', icon: 'library_books' },
@@ -74,12 +75,14 @@ export class NavComponent implements OnInit {
       })
   }
 
-  ngOnInit() {
-    this.router.events.subscribe((event) => {
-      if (event.type === EventType.ActivationStart) {
-        const title: string = event.snapshot.data?.['title']
-        this.titleService.setTitle(title)
-      }
-    })
+  ngOnInit(): void {
+    this.router.events
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((event) => {
+        if (event.type === EventType.ActivationStart) {
+          const title: string = event.snapshot.data?.['title']
+          this.titleService.setTitle(title)
+        }
+      })
   }
 }

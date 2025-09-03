@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core'
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInput } from '@angular/material/input'
@@ -22,27 +22,28 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
   ],
   templateUrl: './subscription-add-form.html',
   styleUrl: './subscription-add-form.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubscriptionAddForm {
-  fb = inject(NonNullableFormBuilder)
-  feedService = inject(FeedService)
-  destroyRef = inject(DestroyRef)
-  dialogRef = inject(MatDialogRef<SubscriptionAddForm>)
+  readonly fb = inject(NonNullableFormBuilder)
+  readonly feedService = inject(FeedService)
+  readonly destroyRef = inject(DestroyRef)
+  readonly dialogRef = inject(MatDialogRef<SubscriptionAddForm>)
 
-  isLoading = signal<boolean>(false)
-  errorMessage = signal<string | null>(null)
+  readonly isLoading = signal<boolean>(false)
+  readonly errorMessage = signal<string | null>(null)
 
   form = this.fb.group({
-    title: ['', Validators['required']],
+    title: ['', Validators.required],
     description: [''],
-    link: ['', Validators['required']],
+    link: ['', Validators.required],
     settings: this.fb.group({
       enabled: [true],
       loadFullText: [false],
     }),
   })
 
-  onSubmit() {
+  onSubmit(): void {
     this.isLoading.set(true)
     this.form.disable()
     this.feedService
