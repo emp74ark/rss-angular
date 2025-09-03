@@ -76,8 +76,8 @@ export class SubscriptionEditForm implements OnInit {
         description: feed.description,
         link: feed.link,
         settings: {
-          enabled: feed.settings.enabled,
-          loadFullText: feed.settings.loadFullText,
+          enabled: feed.settings?.enabled || false,
+          loadFullText: feed.settings?.loadFullText || false,
         },
       })
     }
