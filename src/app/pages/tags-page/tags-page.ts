@@ -1,45 +1,46 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core'
-import { MatCardModule } from '@angular/material/card'
+import { Component, DestroyRef, inject, linkedSignal, OnInit, signal } from '@angular/core'
 import { TagService } from '../../services/tag-service'
 import { Tag } from '../../entities/tag/tag.types'
 import { HttpErrorResponse } from '@angular/common/http'
 import { catchError, combineLatest, of, switchMap } from 'rxjs'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { MatToolbarModule } from '@angular/material/toolbar'
-import { MatIconButton } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
-import { MatDialog } from '@angular/material/dialog'
-import { TagAddForm } from '../../components/tag-add-form/tag-add-form'
-import { MatChipRemove, MatChipRow, MatChipSet } from '@angular/material/chips'
+import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips'
 import { Paginator } from '../../components/paginator/paginator'
 import { PageService } from '../../services/page-service'
 import { TitleService } from '../../services/title-service'
 import { Router } from '@angular/router'
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { COMMA, ENTER } from '@angular/cdk/keycodes'
+import { MatBottomSheet } from '@angular/material/bottom-sheet'
+import { BottomErrorSheet } from '../../components/bottom-error-sheet/bottom-error-sheet'
+import { MatDivider } from '@angular/material/divider'
 
 @Component({
   selector: 'app-tags-page',
-  imports: [
-    MatCardModule,
-    MatToolbarModule,
-    MatIconButton,
-    MatIconModule,
-    MatChipRow,
-    MatChipRemove,
-    MatChipSet,
-    Paginator,
-  ],
+  imports: [MatIconModule, Paginator, MatFormFieldModule, MatChipsModule, MatDivider],
   templateUrl: './tags-page.html',
   styleUrl: './tags-page.css',
 })
 export class TagsPage implements OnInit {
-  tagsService = inject(TagService)
-  pageService = inject(PageService)
-  destroyRef = inject(DestroyRef)
-  readonly dialog = inject(MatDialog)
-  titleService = inject(TitleService)
-  router = inject(Router)
+  private readonly tagsService = inject(TagService)
+  private readonly pageService = inject(PageService)
+  private readonly destroyRef = inject(DestroyRef)
+  private readonly titleService = inject(TitleService)
+  private readonly router = inject(Router)
+  private errorSheet = inject(MatBottomSheet)
 
-  tags = signal<Tag[]>([])
+  readonly separatorKeysCodes = [ENTER, COMMA] as const
+
+  private readonly tags = signal<Tag[]>([])
+
+  readonly userTags = linkedSignal(() => {
+    return this.tags().filter((t) => t.userId !== 'all')
+  })
+
+  readonly appTags = linkedSignal(() => {
+    return this.tags().filter((t) => t.userId === 'all')
+  })
 
   ngOnInit() {
     combineLatest([this.pageService.$pageSize, this.pageService.$currentPage])
@@ -63,13 +64,54 @@ export class TagsPage implements OnInit {
       })
   }
 
-  onAdd() {
-    const dialogRef = this.dialog.open(TagAddForm)
+  onAdd(e: MatChipInputEvent) {
+    const name = (e.value || '').trim()
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed', result)
-      this.pageService.setCurrentPage(1)
-    })
+    if (!name) {
+      return
+    }
+
+    this.tagsService
+      .addOneTag({ name })
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          console.error(error)
+          this.errorSheet.open(BottomErrorSheet, { data: { error: error.error.message } })
+          return of(null)
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.pageService.setCurrentPage(1)
+          e.chipInput.clear()
+        }
+      })
+  }
+
+  onEdit(tag: Tag, e: MatChipEditedEvent) {
+    const newName = (e.value || '').trim()
+    const currentName = tag.name
+
+    if (!newName) {
+      return
+    }
+
+    this.tagsService
+      .changeOneTag({ newName, currentName })
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          console.error(error)
+          this.errorSheet.open(BottomErrorSheet, { data: { error: error.error.message } })
+          return of(null)
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.pageService.setCurrentPage(1)
+        }
+      })
   }
 
   onRemove(tag: Tag) {
@@ -90,7 +132,9 @@ export class TagsPage implements OnInit {
   }
 
   onClick(name: string) {
-    if (!name) return
+    if (!name) {
+      return
+    }
     this.router.navigate(['/articles'], { queryParams: { tag: name } })
   }
 }

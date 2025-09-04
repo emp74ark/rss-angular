@@ -5,3 +5,7 @@
   padding: 1rem 0.5rem;
   height: calc(100% - 2rem);
 }
+
+input {
+  margin-top: 2rem;
+}
