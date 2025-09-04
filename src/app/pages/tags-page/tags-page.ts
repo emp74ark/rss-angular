@@ -62,6 +62,7 @@ export class TagsPage implements OnInit {
           this.pageService.setTotalResults(result.total)
           this.tags.set(result.result)
           this.titleService.setTitle('Tags')
+          this.titleService.setSubtitle(null)
         }
       })
   }

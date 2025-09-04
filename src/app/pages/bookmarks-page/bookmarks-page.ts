@@ -64,6 +64,7 @@ export class BookmarksPage implements OnInit {
         } else {
           this.titleService.setTitle('Bookmarks')
         }
+        this.titleService.setSubtitle(null)
       })
 
     this.tagService

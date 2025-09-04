@@ -79,6 +79,7 @@ export class SubscriptionsPage implements OnInit {
           this.feeds.set(result.result)
         }
         this.titleService.setTitle('Subscriptions')
+        this.titleService.setSubtitle(null)
       })
   }
 

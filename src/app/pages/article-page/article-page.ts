@@ -92,6 +92,7 @@ export class ArticlePage implements OnInit {
           this.fullText.set(parsed)
         }
         this.titleService.setTitle(result?.title || '')
+      this.titleService.setSubtitle(null)
       })
 
     this.tagService.$defaultTags

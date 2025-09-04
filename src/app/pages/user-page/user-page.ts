@@ -16,5 +16,6 @@ export class UserPage implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('User')
+    this.titleService.setSubtitle(null)
   }
 }
