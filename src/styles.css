@@ -47,31 +47,3 @@ mat-toolbar-row {
 .highlighted {
   color: var(--mat-sys-primary) !important;
 }
-
-@keyframes fade {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes rotate-out {
-  to {
-    transform: rotate(90deg);
-  }
-}
-
-@keyframes rotate-in {
-  from {
-    transform: rotate(-90deg);
-  }
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 300ms;
-  animation-name: fade, rotate-in;
-}

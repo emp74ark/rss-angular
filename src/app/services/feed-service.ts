@@ -10,7 +10,7 @@ import { SortOrder } from '../entities/base/base.enums'
   providedIn: 'root',
 })
 export class FeedService {
-  httpClient = inject(HttpClient)
+  readonly httpClient = inject(HttpClient)
 
   getAllSubscriptions({ pagination }: { pagination?: Partial<Pagination> }) {
     return this.httpClient.get<Paginated<Feed>>(`${environment.api}/subscription`, {

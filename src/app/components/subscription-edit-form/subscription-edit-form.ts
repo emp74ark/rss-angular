@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core'
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInput } from '@angular/material/input'
@@ -23,28 +23,29 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
   ],
   templateUrl: './subscription-edit-form.html',
   styleUrl: './subscription-edit-form.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubscriptionEditForm implements OnInit {
-  fb = inject(NonNullableFormBuilder)
-  feedService = inject(FeedService)
-  destroyRef = inject(DestroyRef)
-  dialogRef = inject(MatDialogRef<SubscriptionEditForm>)
+  private readonly fb = inject(NonNullableFormBuilder)
+  private readonly feedService = inject(FeedService)
+  private readonly destroyRef = inject(DestroyRef)
+  private readonly dialogRef = inject(MatDialogRef<SubscriptionEditForm>)
 
-  data: { feed: Feed; feedId: string } | null = inject(MAT_DIALOG_DATA)
-  isLoading = signal<boolean>(false)
-  errorMessage = signal<string | null>(null)
+  readonly data: { feed: Feed; feedId: string } | null = inject(MAT_DIALOG_DATA)
+  readonly isLoading = signal<boolean>(false)
+  readonly errorMessage = signal<string | null>(null)
 
   form = this.fb.group({
-    title: ['', Validators['required']],
+    title: ['', Validators.required],
     description: [''],
-    link: ['', Validators['required']],
+    link: ['', Validators.required],
     settings: this.fb.group({
       enabled: [false],
       loadFullText: [false],
     }),
   })
 
-  onSubmit() {
+  onSubmit(): void {
     if (!this.data?.feed._id) {
       return
     }
@@ -68,7 +69,7 @@ export class SubscriptionEditForm implements OnInit {
       })
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.data?.feed) {
       const { feed } = this.data
       this.form.patchValue({

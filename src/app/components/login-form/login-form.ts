@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, model, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, model, signal } from '@angular/core'
 import { AsyncPipe } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButton } from '@angular/material/button'
@@ -26,22 +26,23 @@ import { MatProgressBar } from '@angular/material/progress-bar'
   ],
   templateUrl: './login-form.html',
   styleUrl: './login-form.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginForm {
-  authService = inject(AuthService)
-  router = inject(Router)
-  destroyRef = inject(DestroyRef)
+  private readonly authService = inject(AuthService)
+  private readonly router = inject(Router)
+  private readonly destroyRef = inject(DestroyRef)
 
-  isLoading = signal<boolean>(false)
+  readonly isLoading = signal<boolean>(false)
 
-  formData = model({
+  readonly formData = model({
     login: '',
     password: '',
   })
 
-  authStatus = this.authService.$authStatus
+  readonly authStatus = this.authService.$authStatus
 
-  inputHandler(field: 'login' | 'password', event: Event) {
+  inputHandler(field: 'login' | 'password', event: Event): void {
     const { value } = event.target as HTMLInputElement
     if (value) {
       this.formData.update((prev) => ({
@@ -51,7 +52,7 @@ export class LoginForm {
     }
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.isLoading.set(true)
     this.authService
       .login(this.formData())

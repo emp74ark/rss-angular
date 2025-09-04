@@ -10,12 +10,12 @@ import { catchError, of } from 'rxjs'
   styleUrl: './health-status.css',
 })
 export class HealthStatus implements OnInit {
-  healthService = inject(HealthService)
-  destroyRef = inject(DestroyRef)
+  private readonly healthService = inject(HealthService)
+  private readonly destroyRef = inject(DestroyRef)
 
-  status = signal<string>('')
-  version = signal<string>('')
-  uptime = signal<string>('')
+  readonly status = signal<string>('')
+  readonly version = signal<string>('')
+  readonly uptime = signal<string>('')
 
   ngOnInit() {
     this.healthService

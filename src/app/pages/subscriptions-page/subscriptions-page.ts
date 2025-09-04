@@ -21,6 +21,7 @@ import { scrollUp } from '../../../utils'
 import { RouterLink } from '@angular/router'
 import { SubscriptionEditForm } from '../../components/subscription-edit-form/subscription-edit-form'
 import { MatBadgeModule } from '@angular/material/badge'
+import { ConfirmationDialog } from '../../components/confirmation-dialog/confirmation-dialog'
 
 @Component({
   selector: 'app-subscriptions-page',
@@ -48,18 +49,17 @@ export class SubscriptionsPage implements OnInit {
     })
   }
 
-  feedService = inject(FeedService)
-  pageService = inject(PageService)
-  readonly dialog = inject(MatDialog)
-  destroyRef = inject(DestroyRef)
-  titleService = inject(TitleService)
+  private readonly feedService = inject(FeedService)
+  private readonly pageService = inject(PageService)
+  private readonly dialog = inject(MatDialog)
+  private readonly destroyRef = inject(DestroyRef)
+  private readonly titleService = inject(TitleService)
 
-  feeds = signal<Feed[]>([])
+  readonly feeds = signal<Feed[]>([])
+  readonly isRefreshing = signal<Record<string, boolean>>({})
+  readonly isRefreshingAll = signal<boolean>(false)
 
-  isRefreshing = signal<Record<string, boolean>>({})
-  isRefreshingAll = signal<boolean>(false)
-
-  ngOnInit() {
+  ngOnInit(): void {
     combineLatest([this.pageService.$pageSize, this.pageService.$currentPage])
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -78,10 +78,11 @@ export class SubscriptionsPage implements OnInit {
           this.feeds.set(result.result)
         }
         this.titleService.setTitle('Subscriptions')
+        this.titleService.setSubtitle(null)
       })
   }
 
-  onAdd() {
+  onAdd(): void {
     const dialogRef = this.dialog.open(SubscriptionAddForm)
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -90,7 +91,7 @@ export class SubscriptionsPage implements OnInit {
     })
   }
 
-  onRefreshOne(e: MouseEvent, subscriptionId: string) {
+  onRefreshOne(e: MouseEvent, subscriptionId: string): void {
     e.stopPropagation()
     this.isRefreshing.update((prev) => ({
       ...prev,
@@ -117,7 +118,7 @@ export class SubscriptionsPage implements OnInit {
       })
   }
 
-  onRefreshAll() {
+  onRefreshAll(): void {
     this.isRefreshingAll.set(true)
     this.feedService
       .refreshAllSubscriptions()
@@ -134,23 +135,36 @@ export class SubscriptionsPage implements OnInit {
       })
   }
 
-  onRemove(e: MouseEvent, id: string) {
+  onRemove(e: MouseEvent, id: string): void {
     e.stopPropagation()
-    this.feedService
-      .deleteOneSubscription({ subscriptionId: id })
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          console.log(error)
-          return of(null)
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(() => {
-        this.pageService.setCurrentPage(1)
-      })
+
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
+      data: {
+        title: 'Delete subscription?',
+        message: 'Are you sure you want to delete this subscription?',
+        confirmButtonText: 'Delete',
+      },
+    })
+
+    dialogRef.afterClosed().subscribe((agree) => {
+      if (agree) {
+        this.feedService
+          .deleteOneSubscription({ subscriptionId: id })
+          .pipe(
+            catchError((error: HttpErrorResponse) => {
+              console.log(error)
+              return of(null)
+            }),
+            takeUntilDestroyed(this.destroyRef),
+          )
+          .subscribe(() => {
+            this.pageService.setCurrentPage(1)
+          })
+      }
+    })
   }
 
-  onEdit(e: MouseEvent, feed: Feed) {
+  onEdit(e: MouseEvent, feed: Feed): void {
     e.stopPropagation()
     const dialogRef = this.dialog.open(SubscriptionEditForm, {
       data: { feed },

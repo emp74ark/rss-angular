@@ -32,11 +32,11 @@ import { MatProgressBarModule } from '@angular/material/progress-bar'
   styleUrl: './signup-form.css',
 })
 export class SignupForm {
-  authService = inject(AuthService)
-  router = inject(Router)
-  destroyRef = inject(DestroyRef)
+  private readonly authService = inject(AuthService)
+  private readonly router = inject(Router)
+  private readonly destroyRef = inject(DestroyRef)
 
-  isLoading = signal<boolean>(false)
+  readonly isLoading = signal<boolean>(false)
 
   password = new FormControl('', {
     validators: [Validators.required, Validators.minLength(8), Validators.maxLength(30)],

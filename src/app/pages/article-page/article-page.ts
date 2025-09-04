@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core'
 import { FeedService } from '../../services/feed-service'
 import { ActivatedRoute } from '@angular/router'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
@@ -30,26 +30,23 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
   ],
   templateUrl: './article-page.html',
   styleUrl: './article-page.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArticlePage implements OnInit {
-  feedService = inject(FeedService)
-  tagService = inject(TagService)
-  route = inject(ActivatedRoute)
-  titleService = inject(TitleService)
-  destroyRef = inject(DestroyRef)
-  domSanitizer = inject(DomSanitizer)
+  private readonly feedService = inject(FeedService)
+  private readonly tagService = inject(TagService)
+  private readonly route = inject(ActivatedRoute)
+  private readonly titleService = inject(TitleService)
+  private readonly destroyRef = inject(DestroyRef)
+  private readonly domSanitizer = inject(DomSanitizer)
 
-  article = signal<Article | null>(null)
-
-  fullText = signal<SafeHtml | undefined>(undefined)
-
-  favTagId = signal<string>('')
-
-  readStatus = computed<boolean>(() => {
+  readonly article = signal<Article | null>(null)
+  readonly fullText = signal<SafeHtml | undefined>(undefined)
+  readonly favTagId = signal<string>('')
+  readonly readStatus = computed<boolean>(() => {
     return !!this.article()?.read
   })
-
-  isLoading = signal<boolean>(false)
+  readonly isLoading = signal<boolean>(false)
 
   safeHtml(html?: string): SafeHtml | undefined {
     if (!html) {
@@ -58,7 +55,7 @@ export class ArticlePage implements OnInit {
     return this.domSanitizer.bypassSecurityTrustHtml(html)
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.params
       .pipe(
         exhaustMap((params) => {
@@ -80,7 +77,7 @@ export class ArticlePage implements OnInit {
         }),
         takeUntilDestroyed(this.destroyRef),
         catchError((error: HttpErrorResponse) => {
-          console.log(error)
+          console.error(error)
           return of(null)
         }),
       )
@@ -91,14 +88,17 @@ export class ArticlePage implements OnInit {
           this.fullText.set(parsed)
         }
         this.titleService.setTitle(result?.title || '')
+      this.titleService.setSubtitle(null)
       })
 
-    this.tagService.$defaultTags.subscribe((tags) => {
-      this.favTagId.set(tags.find((t) => t.name === 'fav')?._id || '')
-    })
+    this.tagService.$defaultTags
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((tags) => {
+        this.favTagId.set(tags.find((t) => t.name === 'fav')?._id || '')
+      })
   }
 
-  onMarkAsRead() {
+  onMarkAsRead(): void {
     if (this.article() !== null) {
       this.feedService
         .changeOneArticle({
@@ -110,7 +110,7 @@ export class ArticlePage implements OnInit {
         .pipe(
           takeUntilDestroyed(this.destroyRef),
           catchError((error: HttpErrorResponse) => {
-            console.log(error)
+            console.error(error)
             return of(null)
           }),
         )
@@ -125,7 +125,7 @@ export class ArticlePage implements OnInit {
     }
   }
 
-  onAddToBookmarks() {
+  onAddToBookmarks(): void {
     const existingTag = this.article()?.tags.find((t) => t === this.favTagId())
     const tags = existingTag
       ? [...(this.article()?.tags || [])].filter((t) => t !== this.favTagId())
@@ -140,7 +140,7 @@ export class ArticlePage implements OnInit {
         .pipe(
           takeUntilDestroyed(this.destroyRef),
           catchError((error: HttpErrorResponse) => {
-            console.log(error)
+            console.error(error)
             return of(null)
           }),
         )
@@ -155,7 +155,7 @@ export class ArticlePage implements OnInit {
     }
   }
 
-  getFullText() {
+  getFullText(): void {
     const articleId = this.article()?._id
     if (!articleId) {
       return

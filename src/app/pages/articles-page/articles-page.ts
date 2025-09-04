@@ -42,27 +42,25 @@ import { SortOrder } from '../../entities/base/base.enums'
   styleUrl: './articles-page.css',
 })
 export class ArticlesPage implements OnInit {
-  feedService = inject(FeedService)
-  router = inject(Router)
-  route = inject(ActivatedRoute)
-  destroyRef = inject(DestroyRef)
-  tagService = inject(TagService)
-  titleService = inject(TitleService)
-  pageService = inject(PageService)
+  private readonly feedService = inject(FeedService)
+  private readonly router = inject(Router)
+  private readonly route = inject(ActivatedRoute)
+  private readonly destroyRef = inject(DestroyRef)
+  private readonly tagService = inject(TagService)
+  private readonly titleService = inject(TitleService)
+  private readonly pageService = inject(PageService)
 
-  articles = signal<Article[]>([])
-  articleIds = computed(() => this.articles().map(({ _id }) => _id))
+  readonly articles = signal<Article[]>([])
+  readonly articleIds = computed(() => this.articles().map(({ _id }) => _id))
+  readonly favTagId = signal<string>('')
+  readonly userTags = signal<Tag[]>([])
+  readonly isRefreshingAll = signal<boolean>(false)
 
   $readFilter = new BehaviorSubject(true)
   $favFilter = new BehaviorSubject(false)
   $subscriptionFilter = new BehaviorSubject<string | null>(null)
   $tagFilter = new BehaviorSubject<string | null>(null)
   $dateOrder = new BehaviorSubject(SortOrder.Desc)
-
-  favTagId = signal<string>('')
-  userTags = signal<Tag[]>([])
-
-  isRefreshingAll = signal<boolean>(false)
 
   ngOnInit() {
     this.tagService

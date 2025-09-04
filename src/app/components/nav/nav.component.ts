@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { AsyncPipe } from '@angular/common'
 import { MatToolbarModule } from '@angular/material/toolbar'
@@ -27,26 +27,26 @@ import { AuthService } from '../../services/auth-service'
     RouterLink,
     RouterLinkActive,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavComponent implements OnInit {
-  private breakpointObserver = inject(BreakpointObserver)
-  private titleService = inject(TitleService)
-  private authService = inject(AuthService)
-  private destroyRef = inject(DestroyRef)
-  private sideNav = viewChild<MatSidenav>('drawer')
+  private readonly breakpointObserver = inject(BreakpointObserver)
+  private readonly titleService = inject(TitleService)
+  private readonly authService = inject(AuthService)
+  private readonly destroyRef = inject(DestroyRef)
+  private readonly sideNav = viewChild<MatSidenav>('drawer')
+  private readonly router = inject(Router)
 
-  currentTitle = toSignal(this.titleService.$currentTitle)
-  currentSubtitle = toSignal(this.titleService.$currentSubtitle)
+  readonly currentTitle = toSignal(this.titleService.$currentTitle)
+  readonly currentSubtitle = toSignal(this.titleService.$currentSubtitle)
 
-  isHandset = signal<boolean>(false)
+  readonly isHandset = signal<boolean>(false)
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     tap((result) => this.isHandset.set(result.matches)),
     map((result) => result.matches),
     shareReplay(),
   )
-
-  private router = inject(Router)
 
   menuItems: { title: string; icon?: string; url: string }[] = [
     { title: 'Articles', url: '/articles', icon: 'library_books' },
@@ -74,12 +74,14 @@ export class NavComponent implements OnInit {
       })
   }
 
-  ngOnInit() {
-    this.router.events.subscribe((event) => {
-      if (event.type === EventType.ActivationStart) {
-        const title: string = event.snapshot.data?.['title']
-        this.titleService.setTitle(title)
-      }
-    })
+  ngOnInit(): void {
+    this.router.events
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((event) => {
+        if (event.type === EventType.ActivationStart) {
+          const title: string = event.snapshot.data?.['title']
+          this.titleService.setTitle(title)
+        }
+      })
   }
 }

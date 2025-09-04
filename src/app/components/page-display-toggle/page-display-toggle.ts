@@ -13,8 +13,8 @@ import { MatIconButton } from '@angular/material/button'
   styleUrl: './page-display-toggle.css',
 })
 export class PageDisplayToggle {
-  pageService = inject(PageService, { skipSelf: true })
-  display = this.pageService.$display
+  private readonly pageService = inject(PageService, { skipSelf: true })
+  readonly display = this.pageService.$display
   protected readonly PageDisplay = PageDisplay
 
   toggleDisplay(display: PageDisplay) {
