@@ -46,7 +46,11 @@
       }
       <div class="title">
         <h1>{{ currentTitle() }}</h1>
-        <h2>{{ currentSubtitle() }}</h2>
+        @if (isHandset() && currentSubtitle()) {
+          <mat-icon>filter_alt</mat-icon>
+        } @else {
+          <h2>{{ currentSubtitle() }}</h2>
+        }
       </div>
     </mat-toolbar>
     <div class="page-content">
