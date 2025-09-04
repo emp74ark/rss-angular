@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core'
+import { Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core'
 import { MatCardModule } from '@angular/material/card'
 import { FeedService } from '../../services/feed-service'
 import { catchError, combineLatest, of, switchMap } from 'rxjs'
@@ -21,6 +21,7 @@ import { scrollUp } from '../../../utils'
 import { RouterLink } from '@angular/router'
 import { SubscriptionEditForm } from '../../components/subscription-edit-form/subscription-edit-form'
 import { MatBadgeModule } from '@angular/material/badge'
+import { ConfirmationDialog } from '../../components/confirmation-dialog/confirmation-dialog'
 
 @Component({
   selector: 'app-subscriptions-page',
@@ -136,18 +137,31 @@ export class SubscriptionsPage implements OnInit {
 
   onRemove(e: MouseEvent, id: string): void {
     e.stopPropagation()
-    this.feedService
-      .deleteOneSubscription({ subscriptionId: id })
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          console.log(error)
-          return of(null)
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(() => {
-        this.pageService.setCurrentPage(1)
-      })
+
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
+      data: {
+        title: 'Delete subscription?',
+        message: 'Are you sure you want to delete this subscription?',
+        confirmButtonText: 'Delete',
+      },
+    })
+
+    dialogRef.afterClosed().subscribe((agree) => {
+      if (agree) {
+        this.feedService
+          .deleteOneSubscription({ subscriptionId: id })
+          .pipe(
+            catchError((error: HttpErrorResponse) => {
+              console.log(error)
+              return of(null)
+            }),
+            takeUntilDestroyed(this.destroyRef),
+          )
+          .subscribe(() => {
+            this.pageService.setCurrentPage(1)
+          })
+      }
+    })
   }
 
   onEdit(e: MouseEvent, feed: Feed): void {

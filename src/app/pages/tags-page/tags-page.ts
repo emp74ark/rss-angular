@@ -14,11 +14,12 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { COMMA, ENTER } from '@angular/cdk/keycodes'
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
 import { BottomErrorSheet } from '../../components/bottom-error-sheet/bottom-error-sheet'
-import { MatDivider } from '@angular/material/divider'
+import { MatDialog } from '@angular/material/dialog'
+import { ConfirmationDialog } from '../../components/confirmation-dialog/confirmation-dialog'
 
 @Component({
   selector: 'app-tags-page',
-  imports: [MatIconModule, Paginator, MatFormFieldModule, MatChipsModule, MatDivider],
+  imports: [MatIconModule, Paginator, MatFormFieldModule, MatChipsModule],
   templateUrl: './tags-page.html',
   styleUrl: './tags-page.css',
 })
@@ -28,7 +29,8 @@ export class TagsPage implements OnInit {
   private readonly destroyRef = inject(DestroyRef)
   private readonly titleService = inject(TitleService)
   private readonly router = inject(Router)
-  private errorSheet = inject(MatBottomSheet)
+  private readonly errorSheet = inject(MatBottomSheet)
+  private readonly dialog = inject(MatDialog)
 
   readonly separatorKeysCodes = [ENTER, COMMA] as const
 
@@ -115,20 +117,32 @@ export class TagsPage implements OnInit {
   }
 
   onRemove(tag: Tag) {
-    this.tagsService
-      .deleteOneTag({ name: tag.name })
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          console.error(error)
-          return of(null)
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.pageService.setCurrentPage(1)
-        }
-      })
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
+      data: {
+        title: 'Delete tag',
+        message: `Are you sure you want to delete the tag "${tag.name}"?`,
+        confirmButtonText: 'Delete',
+      },
+    })
+
+    dialogRef.afterClosed().subscribe((agree) => {
+      if (agree) {
+        this.tagsService
+          .deleteOneTag({ name: tag.name })
+          .pipe(
+            catchError((error: HttpErrorResponse) => {
+              console.error(error)
+              return of(null)
+            }),
+            takeUntilDestroyed(this.destroyRef),
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.pageService.setCurrentPage(1)
+            }
+          })
+      }
+    })
   }
 
   onClick(name: string) {
