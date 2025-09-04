@@ -58,20 +58,11 @@ mat-toolbar-row {
   }
 }
 
-@keyframes rotate-out {
-  to {
-    transform: rotate(90deg);
-  }
-}
-
-@keyframes rotate-in {
-  from {
-    transform: rotate(-90deg);
-  }
-}
-
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 300ms;
-  animation-name: fade, rotate-in;
+  animation-name: fade;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
