@@ -26,14 +26,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubscriptionEditForm implements OnInit {
-  readonly fb = inject(NonNullableFormBuilder)
-  readonly feedService = inject(FeedService)
-  readonly destroyRef = inject(DestroyRef)
-  readonly dialogRef = inject(MatDialogRef<SubscriptionEditForm>)
+  private readonly fb = inject(NonNullableFormBuilder)
+  private readonly feedService = inject(FeedService)
+  private readonly destroyRef = inject(DestroyRef)
+  private readonly dialogRef = inject(MatDialogRef<SubscriptionEditForm>)
 
-  data: { feed: Feed; feedId: string } | null = inject(MAT_DIALOG_DATA)
-  isLoading = signal<boolean>(false)
-  errorMessage = signal<string | null>(null)
+  readonly data: { feed: Feed; feedId: string } | null = inject(MAT_DIALOG_DATA)
+  readonly isLoading = signal<boolean>(false)
+  readonly errorMessage = signal<string | null>(null)
 
   form = this.fb.group({
     title: ['', Validators.required],

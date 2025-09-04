@@ -16,8 +16,9 @@ import { MatButton } from '@angular/material/button'
   styleUrl: './confirmation-dialog.css',
 })
 export class ConfirmationDialog {
-  readonly dialogRef = inject(MatDialogRef)
-  data: { title?: string; message?: string; confirmButtonText?: string } = inject(MAT_DIALOG_DATA)
+  private readonly dialogRef = inject(MatDialogRef)
+  readonly data: { title?: string; message?: string; confirmButtonText?: string } | null =
+    inject(MAT_DIALOG_DATA)
 
   onAgree() {
     this.dialogRef.close(true)

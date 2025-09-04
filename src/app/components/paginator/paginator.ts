@@ -12,9 +12,9 @@ import { AsyncPipe } from '@angular/common'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Paginator {
-  readonly pageService = inject(PageService, { skipSelf: true })
-  readonly totalResults = this.pageService.$totalResults
-  readonly pageSize = this.pageService.$pageSize
+  private readonly pageService = inject(PageService, { skipSelf: true })
+  public readonly totalResults = this.pageService.$totalResults
+  public readonly pageSize = this.pageService.$pageSize
 
   readonly pageChange = output<PageEvent>()
   readonly hidden = input<boolean>(false)

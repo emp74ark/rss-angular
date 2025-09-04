@@ -54,16 +54,16 @@ export class ArticleList {
       scrollUp({ trigger: !!this.articles().length })
     })
   }
-  readonly router = inject(Router)
-  readonly feedService = inject(FeedService)
-  readonly destroyRef = inject(DestroyRef)
-  readonly pageService = inject(PageService, { skipSelf: true })
+  private readonly router = inject(Router)
+  private readonly feedService = inject(FeedService)
+  private readonly destroyRef = inject(DestroyRef)
+  private readonly pageService = inject(PageService, { skipSelf: true })
 
-  articles = input.required<Article[]>()
-  displayedArticles = linkedSignal(this.articles)
-  isRefreshing = input<boolean>(false)
-  favTagId = input.required<string>()
-  userTags = input.required<Tag[]>()
+  readonly articles = input.required<Article[]>()
+  readonly displayedArticles = linkedSignal(this.articles)
+  readonly isRefreshing = input<boolean>(false)
+  readonly favTagId = input.required<string>()
+  readonly userTags = input.required<Tag[]>()
 
   $display = this.pageService.$display
 

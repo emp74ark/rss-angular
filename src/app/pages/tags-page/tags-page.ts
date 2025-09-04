@@ -32,14 +32,12 @@ export class TagsPage implements OnInit {
   private readonly errorSheet = inject(MatBottomSheet)
   private readonly dialog = inject(MatDialog)
 
-  readonly separatorKeysCodes = [ENTER, COMMA] as const
+  public readonly separatorKeysCodes = [ENTER, COMMA] as const
 
   private readonly tags = signal<Tag[]>([])
-
   readonly userTags = linkedSignal(() => {
     return this.tags().filter((t) => t.userId !== 'all')
   })
-
   readonly appTags = linkedSignal(() => {
     return this.tags().filter((t) => t.userId === 'all')
   })

@@ -10,8 +10,9 @@ import { TitleService } from '../../services/title-service'
   styleUrl: './user-page.css',
 })
 export class UserPage implements OnInit {
-  authService = inject(AuthService)
-  titleService = inject(TitleService)
+  private readonly authService = inject(AuthService)
+  private readonly titleService = inject(TitleService)
+
   $currentUser = this.authService.$authStatus
 
   ngOnInit() {

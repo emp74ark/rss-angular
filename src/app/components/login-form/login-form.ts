@@ -29,9 +29,9 @@ import { MatProgressBar } from '@angular/material/progress-bar'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginForm {
-  readonly authService = inject(AuthService)
-  readonly router = inject(Router)
-  readonly destroyRef = inject(DestroyRef)
+  private readonly authService = inject(AuthService)
+  private readonly router = inject(Router)
+  private readonly destroyRef = inject(DestroyRef)
 
   readonly isLoading = signal<boolean>(false)
 

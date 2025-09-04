@@ -49,16 +49,15 @@ export class SubscriptionsPage implements OnInit {
     })
   }
 
-  readonly feedService = inject(FeedService)
-  readonly pageService = inject(PageService)
-  readonly dialog = inject(MatDialog)
-  readonly destroyRef = inject(DestroyRef)
-  readonly titleService = inject(TitleService)
+  private readonly feedService = inject(FeedService)
+  private readonly pageService = inject(PageService)
+  private readonly dialog = inject(MatDialog)
+  private readonly destroyRef = inject(DestroyRef)
+  private readonly titleService = inject(TitleService)
 
-  feeds = signal<Feed[]>([])
-
-  isRefreshing = signal<Record<string, boolean>>({})
-  isRefreshingAll = signal<boolean>(false)
+  readonly feeds = signal<Feed[]>([])
+  readonly isRefreshing = signal<Record<string, boolean>>({})
+  readonly isRefreshingAll = signal<boolean>(false)
 
   ngOnInit(): void {
     combineLatest([this.pageService.$pageSize, this.pageService.$currentPage])

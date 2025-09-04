@@ -27,7 +27,7 @@ import { MatIconModule } from '@angular/material/icon'
   styleUrl: './auth-page.component.css',
 })
 export class AuthPage {
-  private bottomSheet = inject(MatBottomSheet)
+  private readonly bottomSheet = inject(MatBottomSheet)
 
   showAppHealth() {
     this.bottomSheet.open(HealthStatus)

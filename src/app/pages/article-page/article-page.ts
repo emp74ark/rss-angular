@@ -41,15 +41,11 @@ export class ArticlePage implements OnInit {
   private readonly domSanitizer = inject(DomSanitizer)
 
   readonly article = signal<Article | null>(null)
-
   readonly fullText = signal<SafeHtml | undefined>(undefined)
-
   readonly favTagId = signal<string>('')
-
   readonly readStatus = computed<boolean>(() => {
     return !!this.article()?.read
   })
-
   readonly isLoading = signal<boolean>(false)
 
   safeHtml(html?: string): SafeHtml | undefined {

@@ -20,11 +20,11 @@ import { PageDisplayToggle } from '../../components/page-display-toggle/page-dis
   styleUrl: './bookmarks-page.css',
 })
 export class BookmarksPage implements OnInit {
-  feedService = inject(FeedService)
-  destroyRef = inject(DestroyRef)
-  tagService = inject(TagService)
-  pageService = inject(PageService)
-  titleService = inject(TitleService)
+  private readonly feedService = inject(FeedService)
+  private readonly destroyRef = inject(DestroyRef)
+  private readonly tagService = inject(TagService)
+  private readonly pageService = inject(PageService)
+  private readonly titleService = inject(TitleService)
 
   articles = signal<Article[]>([])
 

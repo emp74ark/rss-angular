@@ -25,10 +25,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubscriptionAddForm {
-  readonly fb = inject(NonNullableFormBuilder)
-  readonly feedService = inject(FeedService)
-  readonly destroyRef = inject(DestroyRef)
-  readonly dialogRef = inject(MatDialogRef<SubscriptionAddForm>)
+  private readonly fb = inject(NonNullableFormBuilder)
+  private readonly feedService = inject(FeedService)
+  private readonly destroyRef = inject(DestroyRef)
+  private readonly dialogRef = inject(MatDialogRef<SubscriptionAddForm>)
 
   readonly isLoading = signal<boolean>(false)
   readonly errorMessage = signal<string | null>(null)
