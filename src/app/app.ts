@@ -1,16 +1,22 @@
-import { Component, inject } from '@angular/core'
-import { RouterOutlet } from '@angular/router'
-import { NavComponent } from './components/nav/nav.component'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { AuthService } from './services/auth-service'
 import { toSignal } from '@angular/core/rxjs-interop'
+import { PrivateOutlet } from './outlet/private-outlet/private-outlet'
+import { PublicOutlet } from './outlet/public-outlet/public-outlet'
+import { NgComponentOutlet } from '@angular/common'
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavComponent],
+  imports: [NgComponentOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
   private readonly authService = inject(AuthService)
-  protected readonly authStatus = toSignal(this.authService.$authStatus)
+  private readonly authStatus = toSignal(this.authService.$authStatus)
+
+  getOutlet(): typeof PrivateOutlet | typeof PublicOutlet {
+    return this.authStatus()?.authenticated ? PrivateOutlet : PublicOutlet
+  }
 }

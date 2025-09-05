@@ -1,0 +1,16 @@
+<mat-button-toggle>
+  <button
+    matIconButton
+    [class]="(display | async) === PageDisplay.Title ? 'highlighted' : undefined"
+    (click)="toggleDisplay(PageDisplay.Title)"
+  >
+    <mat-icon>view_day</mat-icon>
+  </button>
+  <button
+    matIconButton
+    [class]="(display | async) === PageDisplay.Short ? 'highlighted' : undefined"
+    (click)="toggleDisplay(PageDisplay.Short)"
+  >
+    <mat-icon>view_agenda</mat-icon>
+  </button>
+</mat-button-toggle>

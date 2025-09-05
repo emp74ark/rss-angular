@@ -1,6 +1,6 @@
 {
   "name": "@emp74ark/rss-angular",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Frontend for RSS Feeds client",
   "author": "emp74ark",
   "private": true,
@@ -16,12 +16,12 @@
     "test": "ng test"
   },
   "dependencies": {
-    "@angular/cdk": "~20.0.3",
+    "@angular/cdk": "^20.2.2",
     "@angular/common": "^20.0.0",
     "@angular/compiler": "^20.0.0",
     "@angular/core": "^20.0.0",
     "@angular/forms": "^20.0.0",
-    "@angular/material": "~20.0.3",
+    "@angular/material": "^20.2.2",
     "@angular/platform-browser": "^20.0.0",
     "@angular/router": "^20.0.0",
     "prettier": "^3.5.3",

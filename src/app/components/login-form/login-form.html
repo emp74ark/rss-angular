@@ -1,0 +1,51 @@
+<form (ngSubmit)="onSubmit()">
+  <mat-card-content class="credentials">
+    <span class="description">
+      Login with your existing password and login.
+    </span>
+    <mat-form-field>
+      <mat-label>Login</mat-label>
+      <input
+        matInput
+        placeholder="Login"
+        type="text"
+        autocomplete="login username"
+        [value]="formData().login"
+        (input)="inputHandler('login', $event)"
+        [disabled]="isLoading()"
+        required
+        autofocus
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        placeholder="Password"
+        type="password"
+        autocomplete="password"
+        [value]="formData().password"
+        (input)="inputHandler('password', $event)"
+        [disabled]="isLoading()"
+        required
+      />
+    </mat-form-field>
+
+    @let status = (authStatus | async);
+    @if (status?.error) {
+      <mat-error>{{ status?.error }}</mat-error>
+    }
+
+    @if (isLoading()) {
+      <mat-progress-bar mode="query"/>
+    }
+
+    <mat-card-actions>
+      <button
+        [disabled]="!formData().password || !formData().login"
+        matButton
+      >Login
+      </button>
+    </mat-card-actions>
+  </mat-card-content>
+</form>

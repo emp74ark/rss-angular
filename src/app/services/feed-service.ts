@@ -4,17 +4,16 @@ import { environment } from '../../environments/environment'
 import { Feed, FeedDTO } from '../entities/feed/feed.types'
 import { Article, ArticleDTO } from '../entities/article/article.types'
 import { Paginated, Pagination } from '../entities/base/base.types'
-import { TagService } from './tag-service'
+import { SortOrder } from '../entities/base/base.enums'
 
 @Injectable({
   providedIn: 'root',
 })
 export class FeedService {
-  httpClient = inject(HttpClient)
-  tagService = inject(TagService)
+  readonly httpClient = inject(HttpClient)
 
-  getAllSubscriptions({ pagination }: { pagination?: Partial<Pagination> }) {
-    return this.httpClient.get<Paginated<Feed>>(`${environment.api}/subscription`, {
+  getAllFeeds({ pagination }: { pagination?: Partial<Pagination> }) {
+    return this.httpClient.get<Paginated<Feed>>(`${environment.api}/feed`, {
       params: pagination,
     })
   }
@@ -22,18 +21,27 @@ export class FeedService {
   getAllArticles({
     pagination,
     filters,
+    sort,
   }: {
     pagination?: Partial<Pagination>
     filters?: { tags?: string; read?: boolean }
+    sort?: { date: SortOrder }
   }) {
-    this.tagService.getDefaultTags()
     return this.httpClient.get<Paginated<Article>>(`${environment.api}/article`, {
-      params: { ...pagination, ...filters },
+      params: {
+        ...pagination,
+        ...filters,
+        dateSort: sort?.date || SortOrder.Desc,
+      },
     })
   }
 
-  getOneSubscription({ subscriptionId }: { subscriptionId: string }) {
-    return this.httpClient.get<Feed>(`${environment.api}/subscription/${subscriptionId}`)
+  getOneFeed({ feedId }: { feedId: string }) {
+    return this.httpClient.get<Feed>(`${environment.api}/feed/${feedId}`)
+  }
+
+  changeOneFeed({ id, dto }: { id: string; dto: Partial<FeedDTO> }) {
+    return this.httpClient.patch<Feed>(`${environment.api}/feed/${id}`, dto)
   }
 
   getOneArticle({ articleId }: { articleId: string }) {
@@ -63,11 +71,23 @@ export class FeedService {
     })
   }
 
-  addOneSubscription({ subscription }: { subscription: FeedDTO }) {
-    return this.httpClient.post<FeedDTO>(`${environment.api}/subscription`, subscription)
+  addOneFeed({ feed }: { feed: FeedDTO }) {
+    return this.httpClient.post<FeedDTO>(`${environment.api}/feed`, feed)
   }
 
-  deleteOneSubscription({ subscriptionId }: { subscriptionId: string }) {
-    return this.httpClient.delete<Feed>(`${environment.api}/subscription/${subscriptionId}`)
+  deleteOneFeed({ feedId }: { feedId: string }) {
+    return this.httpClient.delete<Feed>(`${environment.api}/feed/${feedId}`)
+  }
+
+  refreshAllFeeds() {
+    return this.httpClient.get<Feed[]>(`${environment.api}/feed/refresh`)
+  }
+
+  refreshOneFeed({ feedId }: { feedId: string }) {
+    return this.httpClient.get<Feed[]>(`${environment.api}/feed/${feedId}/refresh`)
+  }
+
+  getFullText({ articleId }: { articleId: string }) {
+    return this.httpClient.get<{ fullText: string }>(`${environment.api}/article/${articleId}/full`)
   }
 }

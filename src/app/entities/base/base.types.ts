@@ -1,7 +1,7 @@
 export type Pagination = {
-  pageNumber: number;
-  perPage: number;
-};
+  pageNumber: number
+  perPage: number
+}
 
 export type Paginated<T> = {
   total: number

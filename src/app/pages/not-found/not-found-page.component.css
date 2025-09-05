@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1rem
+}
+
+.emoji {
+  font-size: 20cqw;
+  font-weight: bold;
+  color: var(--mat-sys-secondary);
+}

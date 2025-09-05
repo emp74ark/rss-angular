@@ -1,0 +1,11 @@
+<mat-toolbar-row id="view-toggle">
+  <app-page-display-toggle/>
+</mat-toolbar-row>
+
+<app-article-list
+  [articles]="articles()"
+  [favTagId]="favTagId()"
+  [userTags]="userTags()"
+/>
+
+<app-paginator [hidden]="!articles().length"/>

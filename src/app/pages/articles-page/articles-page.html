@@ -1,0 +1,73 @@
+<mat-toolbar-row id="view-toggle">
+  <app-page-display-toggle/>
+  <app-row-spacer/>
+  <button
+    matIconButton
+    (click)="onRefreshAll()"
+    [disabled]="isRefreshingAll()"
+  >
+    <mat-icon>refresh</mat-icon>
+  </button>
+  <app-row-spacer/>
+  <mat-button-toggle>
+    <button
+      matIconButton
+      [class]="($dateOrder | async) === SortOrder.Asc ? 'highlighted' : undefined"
+      (click)="orderHandler('date')"
+      [title]="($dateOrder | async) === SortOrder.Asc ? 'Older first' : 'Newer first'"
+    >
+
+      <mat-icon>schedule</mat-icon>
+    </button>
+    <button
+      matIconButton
+      [class]="($readFilter | async) ? 'highlighted' : undefined"
+      (click)="filterHandler('read')"
+      [title]="($readFilter | async) ? 'Show read' : 'Show unread'"
+    >
+      <mat-icon>
+        {{ ($readFilter | async) ? 'mark_email_unread' : 'mark_email_read' }}
+      </mat-icon>
+    </button>
+    <button
+      matIconButton
+      (click)="filterHandler('fav')"
+      [class]="($favFilter | async) ? 'highlighted' : undefined"
+      [title]="($favFilter | async) ? 'Show favorites' : 'Show all'"
+      [disabled]="$tagFilter | async"
+    >
+      <mat-icon>bookmark</mat-icon>
+    </button>
+  </mat-button-toggle>
+</mat-toolbar-row>
+
+<app-article-list
+  [articles]="articles()"
+  [isRefreshing]="isRefreshingAll()"
+  [favTagId]="favTagId()"
+  [userTags]="userTags()"
+/>
+
+<app-paginator
+  [hidden]="!articles().length"
+/>
+
+@if (articles().length) {
+
+  <mat-toolbar-row id="actions">
+    <button
+      matButton="tonal"
+      (click)="markManyAsRead({ articleIds: articleIds(), read: true })"
+    >
+      <mat-icon>check</mat-icon>
+      Skip visible
+    </button>
+    <button
+      matButton="tonal"
+      (click)="markManyAsRead({ read: true, all: true })"
+    >
+      <mat-icon>done_all</mat-icon>
+      Skip all
+    </button>
+  </mat-toolbar-row>
+}

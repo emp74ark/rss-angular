@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http'
 import { Tag } from '../entities/tag/tag.types'
 import { environment } from '../../environments/environment'
 import { Paginated, Pagination } from '../entities/base/base.types'
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, tap } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
@@ -18,15 +18,21 @@ export class TagService {
   $defaultTags = this.$$defaultTags.asObservable()
 
   getDefaultTags() {
-    return this.httpClient.get<Tag[]>(`${environment.api}/tag?default=true`).subscribe((tags) => {
-      this.$$defaultTags.next(tags)
-    })
+    return this.httpClient.get<Tag[]>(`${environment.api}/tag?default=true`).pipe(
+      tap((tags) => {
+        this.$$defaultTags.next(tags)
+      }),
+    )
   }
 
   getAllTags({ pagination }: { pagination?: Partial<Pagination> }) {
     return this.httpClient.get<Paginated<Tag>>(`${environment.api}/tag`, {
       params: pagination,
     })
+  }
+
+  getOne({ name }: { name: Tag['_id'] }) {
+    return this.httpClient.get<Tag>(`${environment.api}/tag/${name}`)
   }
 
   addOneTag({ name }: { name: string }) {

@@ -1,9 +1,0 @@
-:host {
-  --background: var(--mat-sys-primary-container);
-  --border: 0;
-}
-mat-toolbar {
-  background: var(--background);
-  border-radius: var(--border);
-  transition: border-radius 0.5s ease-in-out;
-}

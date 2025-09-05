@@ -1,0 +1,8 @@
+<ul>
+  <li>
+    Username: {{ ($currentUser | async)?.user?.login }}
+  </li>
+  <li>
+    Role: {{ ($currentUser | async)?.user?.role }}
+  </li>
+</ul>

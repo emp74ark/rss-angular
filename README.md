@@ -1,59 +1,43 @@
-# RssAngular
+# RSS reading app client
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.2.
+Client for the [RSS app](https://github.com/emp74ark/rss-nest) built with Angular 20 and Angular Material.
 
-## Development server
+## Tech stack
+- Angular 20
+- Angular Material
 
-To start a local development server, run:
+## Prerequisites
+- Node.js 20+ (Node 22 used in Dockerfile)
+- npm 9+
+- Angular CLI 20 globally installed (optional):
+  ```bash
+  npm i -g @angular/cli@20
+  ```
+- Backend: [Repository](https://github.com/emp74ark/rss-nest)
 
-```bash
-ng serve
-```
+## Getting started (local development)
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start the dev server:
+   ```bash
+   npm start
+   # or
+   ng serve
+   ```
+3. Open http://localhost:4200
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
+## Deploy
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Using docker compose: [repository](https://github.com/emp74ark/rss-deploy)
 
-```bash
-ng generate component component-name
-```
+## Project structure (high level)
+- `src/app/pages` — feature pages: auth, articles, bookmarks, feeds, tags, user, status
+- `src/app/components` — reusable components: article list, paginator, dialogs, forms
+- `src/app/services` — API services (auth, feed, tag, user, page, title)
+- `src/environments` — environment configs (`development` and `production`)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## License
+ISC (see package.json)

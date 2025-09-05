@@ -1,0 +1,47 @@
+<section class="content_layout">
+  @defer {
+    <mat-label>User tags</mat-label>
+    <mat-form-field>
+      <mat-chip-grid #chipGrid>
+        @for (t of userTags(); track t._id) {
+          <mat-chip-row
+            (click)="onClick(t.name)"
+            (removed)="onRemove(t)"
+            (edited)="onEdit(t, $event)"
+          >
+            <button matChipEdit>
+              <mat-icon>edit</mat-icon>
+            </button>
+            {{ t.name }}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        }
+      </mat-chip-grid>
+      <input
+        placeholder="New tag..."
+        [matChipInputFor]="chipGrid"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="false"
+        (matChipInputTokenEnd)="onAdd($event)"
+      />
+    </mat-form-field>
+
+    <mat-label>App tags</mat-label>
+    <mat-chip-set>
+      @for (t of appTags(); track t._id) {
+        <mat-chip-row
+          (click)="onClick(t.name)"
+          disabled
+        >
+          {{ t.name }}
+        </mat-chip-row>
+      }
+    </mat-chip-set>
+
+
+  }
+</section>
+
+<app-paginator/>

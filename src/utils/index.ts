@@ -1,0 +1,1 @@
+export { scrollUp } from './scrollUp'

@@ -1,16 +1,25 @@
-import { Component, inject, OnInit, signal } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
-import { AsyncPipe, Location } from '@angular/common'
+import { AsyncPipe } from '@angular/common'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonModule } from '@angular/material/button'
-import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav'
 import { MatListModule } from '@angular/material/list'
 import { MatIconModule } from '@angular/material/icon'
-import { Observable } from 'rxjs'
+import { Observable, tap } from 'rxjs'
 import { map, shareReplay } from 'rxjs/operators'
-import { EventType, Router, RouterLink } from '@angular/router'
+import { EventType, Router, RouterLink, RouterLinkActive } from '@angular/router'
 import { TitleService } from '../../services/title-service'
-import { toSignal } from '@angular/core/rxjs-interop'
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop'
+import { AuthService } from '../../services/auth-service'
 
 @Component({
   selector: 'app-nav',
@@ -24,34 +33,60 @@ import { toSignal } from '@angular/core/rxjs-interop'
     MatIconModule,
     AsyncPipe,
     RouterLink,
+    RouterLinkActive,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavComponent implements OnInit {
-  private breakpointObserver = inject(BreakpointObserver)
-  private titleService = inject(TitleService)
+  private readonly breakpointObserver = inject(BreakpointObserver)
+  private readonly titleService = inject(TitleService)
+  private readonly authService = inject(AuthService)
+  private readonly destroyRef = inject(DestroyRef)
+  private readonly sideNav = viewChild<MatSidenav>('drawer')
+  private readonly router = inject(Router)
 
-  currentTitle = toSignal(this.titleService.$currentTitle)
+  readonly currentTitle = toSignal(this.titleService.$currentTitle)
+  readonly currentSubtitle = toSignal(this.titleService.$currentSubtitle)
+
+  readonly isHandset = signal<boolean>(false)
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+    tap((result) => this.isHandset.set(result.matches)),
     map((result) => result.matches),
     shareReplay(),
   )
 
-  private router = inject(Router)
-  private location = inject(Location)
+  menuItems: { title: string; icon?: string; url: string }[] = [
+    { title: 'Articles', url: '/articles', icon: 'library_books' },
+    { title: 'Bookmarks', url: '/bookmarks', icon: 'bookmark' },
+    { title: 'Feeds', url: '/feeds', icon: 'rss_feed' },
+    { title: 'Tags', url: '/tags', icon: 'tag' },
+    { title: 'User', url: '/user', icon: 'person' },
+    { title: 'Status', url: '/status', icon: 'memory' },
+  ]
 
-  topLevelRoute = signal<boolean>(true)
-
-  navigateBack() {
-    this.location.back()
+  onMenuItemClick() {
+    if (this.isHandset()) {
+      this.sideNav()?.close()
+    }
   }
 
-  ngOnInit() {
-    this.router.events.subscribe((event) => {
+  onLogOut() {
+    this.authService
+      .logout()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => {
+        if (result) {
+          this.router.navigate(['/auth'])
+        }
+      })
+  }
+
+  ngOnInit(): void {
+    this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
       if (event.type === EventType.ActivationStart) {
         const title: string = event.snapshot.data?.['title']
         this.titleService.setTitle(title)
-        this.topLevelRoute.set(event.snapshot.url.length === 1)
       }
     })
   }

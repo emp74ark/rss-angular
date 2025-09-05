@@ -8,20 +8,29 @@
     [opened]="(isHandset$ | async) === false"
   >
     <mat-toolbar>Menu</mat-toolbar>
+
     <mat-nav-list>
+      @for (i of menuItems; track i.title) {
+        <a
+          mat-list-item
+          [routerLink]="i.url"
+          routerLinkActive="highlighted"
+          (click)="onMenuItemClick()"
+        >
+          <mat-icon matListItemIcon>{{ i.icon }}</mat-icon>
+          {{ i.title }}
+        </a>
+      }
+
       <a
         mat-list-item
-        routerLink="/home"
-      >Articles</a>
-      <a
-        mat-list-item
-        routerLink="/subscriptions"
-      >Subscriptions</a>
-      <a
-        mat-list-item
-        routerLink="/tags"
-      >Tags</a>
+        (click)="onLogOut()"
+      >
+        <mat-icon matListItemIcon>logout</mat-icon>
+        Logout
+      </a>
     </mat-nav-list>
+
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar class="label">
@@ -35,16 +44,17 @@
           <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
         </button>
       }
-      @if (!topLevelRoute()) {
-        <button
-          matButton
-          (click)="navigateBack()"
-        >
-          <mat-icon>arrow_back</mat-icon>
-        </button>
-      }
-      <h1>{{ currentTitle() }}</h1>
+      <div class="title">
+        <h1>{{ currentTitle() }}</h1>
+        @if (isHandset() && currentSubtitle()) {
+          <mat-icon>filter_alt</mat-icon>
+        } @else {
+          <h2>{{ currentSubtitle() }}</h2>
+        }
+      </div>
     </mat-toolbar>
-    <ng-content select="router-outlet"/>
+    <div class="page-content">
+      <ng-content select="router-outlet"/>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

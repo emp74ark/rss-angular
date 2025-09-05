@@ -1,0 +1,52 @@
+<form (ngSubmit)="onSubmit()">
+  <mat-card-content class="credentials">
+    <span class="description">
+      Signup with your password, but <strong>random username</strong> provided by the server.
+    </span>
+
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        placeholder="Password"
+        type="password"
+        autocomplete="password"
+        [formControl]="password"
+        [disabled]="isLoading()"
+      />
+    </mat-form-field>
+
+    @let status = (authStatus | async);
+    @if (status?.error) {
+      <mat-error>{{ status?.error }}</mat-error>
+    }
+
+    @if (password.invalid && (password.touched || password.dirty)) {
+      @if (password.hasError('required')) {
+        <mat-error>Password is required</mat-error>
+      }
+
+      @if (password.hasError('minlength')) {
+        <mat-error>Password must be at least 8 characters long</mat-error>
+      }
+
+      @if (password.hasError('maxlength')) {
+        <mat-error>Password must be at most 30 characters long</mat-error>
+      }
+    }
+
+    @if (isLoading()) {
+      <mat-progress-bar mode="query"/>
+    }
+
+    <mat-card-actions>
+      <button
+        [disabled]="password.invalid || isLoading()"
+        matButton
+      >
+        Signup
+      </button>
+    </mat-card-actions>
+
+  </mat-card-content>
+</form>

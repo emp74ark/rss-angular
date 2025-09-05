@@ -1,0 +1,75 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <button
+      matIconButton
+      (click)="onAdd()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+    <app-row-spacer/>
+    <button
+      matIconButton
+      (click)="onRefreshAll()"
+      [disabled]="isRefreshingAll()"
+    >
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<section class="content_layout">
+  @if (isRefreshingAll()) {
+    <mat-progress-bar mode="query"/>
+  } @else {
+    @defer {
+      @for (f of feeds(); track f._id) {
+        <mat-card
+          class="card"
+          routerLink="/articles"
+          [queryParams]="{ feed: f._id }"
+        >
+          <mat-card-header>
+            <mat-card-title>{{ f.title }}</mat-card-title>
+            <app-row-spacer/>
+            <button
+              matIconButton
+              (click)="onRemove($event, f._id)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button
+              matIconButton
+              (click)="onRefreshOne($event, f._id)"
+              [disabled]="isRefreshing()[f._id]"
+            >
+              <mat-icon>refresh</mat-icon>
+            </button>
+            <button
+              matIconButton
+              (click)="onEdit($event, f)"
+              [disabled]="isRefreshing()[f._id]"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+          </mat-card-header>
+          <mat-card-content>
+            <p
+              [title]="f.link"
+              class="link"
+            >Link: {{ f.link | linkTrim:15 }}</p>
+            <p class="description">{{ f.description }}</p>
+            <div>
+              <mat-icon [matBadge]="f.articles.length">library_books</mat-icon>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      } @empty {
+        <h2>No feeds found</h2>
+      }
+    } @loading (minimum 0.5s) {
+      <mat-progress-bar mode="query"/>
+    }
+  }
+</section>
+
+<app-paginator/>
