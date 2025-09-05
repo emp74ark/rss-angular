@@ -9,7 +9,7 @@ import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle'
 import { MatIconModule } from '@angular/material/icon'
 import { RowSpacer } from '../../components/row-spacer/row-spacer'
-import { ActivatedRoute, Router } from '@angular/router'
+import { ActivatedRoute } from '@angular/router'
 import { Article } from '../../entities/article/article.types'
 import { MatPaginatorModule } from '@angular/material/paginator'
 import { TagService } from '../../services/tag-service'
@@ -43,7 +43,6 @@ import { SortOrder } from '../../entities/base/base.enums'
 })
 export class ArticlesPage implements OnInit {
   private readonly feedService = inject(FeedService)
-  private readonly router = inject(Router)
   private readonly route = inject(ActivatedRoute)
   private readonly destroyRef = inject(DestroyRef)
   private readonly tagService = inject(TagService)
@@ -58,7 +57,7 @@ export class ArticlesPage implements OnInit {
 
   $readFilter = new BehaviorSubject(true)
   $favFilter = new BehaviorSubject(false)
-  $subscriptionFilter = new BehaviorSubject<string | null>(null)
+  $feedFilter = new BehaviorSubject<string | null>(null)
   $tagFilter = new BehaviorSubject<string | null>(null)
   $dateOrder = new BehaviorSubject(SortOrder.Desc)
 
@@ -94,11 +93,11 @@ export class ArticlesPage implements OnInit {
             this.pageService.$currentPage,
             this.$favFilter,
             this.$readFilter,
-            this.$subscriptionFilter,
+            this.$feedFilter,
             this.$tagFilter,
             this.$dateOrder,
           ]).pipe(
-            switchMap(([perPage, pageNumber, fav, read, subscription, tag, dateSort]) => {
+            switchMap(([perPage, pageNumber, fav, read, feed, tag, dateSort]) => {
               const filters: Record<string, string | boolean> = {}
 
               if (read) {
@@ -109,8 +108,8 @@ export class ArticlesPage implements OnInit {
                 filters['tags'] = favTag
               }
 
-              if (subscription) {
-                filters['subscription'] = subscription
+              if (feed) {
+                filters['feed'] = feed
               }
 
               if (tag) {
@@ -145,14 +144,17 @@ export class ArticlesPage implements OnInit {
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         switchMap((params) => {
-          const subscriptionId: string = params['subscription']
+          const feedId: string = params['feed']
           const tagName: string = params['tag']
-          const tag = this.userTags().find((t) => t.name === tagName)
-          if (!subscriptionId) {
+          if (tagName) {
             return forkJoin([of(null), this.tagService.getOne({ name: tagName })])
-          } else {
-            return forkJoin([this.feedService.getOneSubscription({ subscriptionId }), of(null)])
           }
+
+          if (feedId) {
+            return forkJoin([this.feedService.getOneFeed({ feedId }), of(null)])
+          }
+
+          return forkJoin([of(null), of(null)])
         }),
         catchError((e) => {
           console.error(e)
@@ -168,15 +170,15 @@ export class ArticlesPage implements OnInit {
 
         if (feed) {
           this.titleService.setSubtitle(feed.title)
-          this.$subscriptionFilter.next(feed._id)
+          this.$feedFilter.next(feed._id)
           this.$tagFilter.next(null)
         } else if (tag) {
           this.titleService.setSubtitle(tag.name)
-          this.$subscriptionFilter.next(null)
+          this.$feedFilter.next(null)
           this.$tagFilter.next(tag._id)
         } else {
           this.titleService.setSubtitle(null)
-          this.$subscriptionFilter.next(null)
+          this.$feedFilter.next(null)
           this.$tagFilter.next(null)
         }
       })
@@ -231,7 +233,7 @@ export class ArticlesPage implements OnInit {
   onRefreshAll() {
     this.isRefreshingAll.set(true)
     this.feedService
-      .refreshAllSubscriptions()
+      .refreshAllFeeds()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError((e) => {

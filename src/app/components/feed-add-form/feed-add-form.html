@@ -1,4 +1,4 @@
-<h2 matDialogTitle>Add new subscription</h2>
+<h2 matDialogTitle>Add new feed</h2>
 <form
   matDialogContent
   [formGroup]="form"
@@ -8,7 +8,7 @@
     <mat-label>Title</mat-label>
     <input
       matInput
-      placeholder="Subscription title"
+      placeholder="Feed title"
       type="text"
       formControlName="title"
     />
@@ -33,7 +33,6 @@
   </mat-form-field>
   <ng-container formGroupName="settings">
     <mat-slide-toggle formControlName="enabled">Enabled</mat-slide-toggle>
-    <mat-slide-toggle formControlName="loadFullText">Load full text</mat-slide-toggle>
   </ng-container>
 
   @if (errorMessage()) {

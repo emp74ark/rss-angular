@@ -26,7 +26,7 @@
         <mat-card
           class="card"
           routerLink="/articles"
-          [queryParams]="{ subscription: f._id }"
+          [queryParams]="{ feed: f._id }"
         >
           <mat-card-header>
             <mat-card-title>{{ f.title }}</mat-card-title>
@@ -53,15 +53,18 @@
             </button>
           </mat-card-header>
           <mat-card-content>
-            <p [title]="f.link" class="link">Link: {{ f.link | linkTrim:15 }}</p>
-            <p class="description">{{f.description}}</p>
+            <p
+              [title]="f.link"
+              class="link"
+            >Link: {{ f.link | linkTrim:15 }}</p>
+            <p class="description">{{ f.description }}</p>
             <div>
               <mat-icon [matBadge]="f.articles.length">library_books</mat-icon>
             </div>
           </mat-card-content>
         </mat-card>
       } @empty {
-        <h2>No subscriptions found</h2>
+        <h2>No feeds found</h2>
       }
     } @loading (minimum 0.5s) {
       <mat-progress-bar mode="query"/>

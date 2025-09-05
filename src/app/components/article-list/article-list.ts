@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, linkedSignal } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  input,
+  linkedSignal,
+} from '@angular/core'
 import { AsyncPipe, DatePipe } from '@angular/common'
 import {
   MatCard,
@@ -68,7 +76,7 @@ export class ArticleList {
   $display = this.pageService.$display
 
   async onArticleClick(article: Article) {
-    await this.router.navigate(['subscription', article.subscriptionId, 'article', article._id])
+    await this.router.navigate(['feed', article.feedId, 'article', article._id])
   }
 
   markAsRead(article: Article, event: MouseEvent) {

@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { AsyncPipe } from '@angular/common'
 import { MatToolbarModule } from '@angular/material/toolbar'
@@ -51,7 +59,7 @@ export class NavComponent implements OnInit {
   menuItems: { title: string; icon?: string; url: string }[] = [
     { title: 'Articles', url: '/articles', icon: 'library_books' },
     { title: 'Bookmarks', url: '/bookmarks', icon: 'bookmark' },
-    { title: 'Subscriptions', url: '/subscriptions', icon: 'rss_feed' },
+    { title: 'Feeds', url: '/feeds', icon: 'rss_feed' },
     { title: 'Tags', url: '/tags', icon: 'tag' },
     { title: 'User', url: '/user', icon: 'person' },
     { title: 'Status', url: '/status', icon: 'memory' },
@@ -75,13 +83,11 @@ export class NavComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.router.events
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((event) => {
-        if (event.type === EventType.ActivationStart) {
-          const title: string = event.snapshot.data?.['title']
-          this.titleService.setTitle(title)
-        }
-      })
+    this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
+      if (event.type === EventType.ActivationStart) {
+        const title: string = event.snapshot.data?.['title']
+        this.titleService.setTitle(title)
+      }
+    })
   }
 }

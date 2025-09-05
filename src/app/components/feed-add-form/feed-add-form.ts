@@ -1,18 +1,17 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core'
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInput } from '@angular/material/input'
 import { MatSlideToggle } from '@angular/material/slide-toggle'
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog'
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 import { MatButton } from '@angular/material/button'
 import { FeedService } from '../../services/feed-service'
-import { Feed } from '../../entities/feed/feed.types'
-import { HttpErrorResponse } from '@angular/common/http'
 import { catchError, of } from 'rxjs'
+import { HttpErrorResponse } from '@angular/common/http'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 
 @Component({
-  selector: 'app-subscription-edit-form',
+  selector: 'app-feed-add-form',
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -21,17 +20,16 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
     MatDialogModule,
     MatButton,
   ],
-  templateUrl: './subscription-edit-form.html',
-  styleUrl: './subscription-edit-form.css',
+  templateUrl: './feed-add-form.html',
+  styleUrl: './feed-add-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SubscriptionEditForm implements OnInit {
+export class FeedAddForm {
   private readonly fb = inject(NonNullableFormBuilder)
   private readonly feedService = inject(FeedService)
   private readonly destroyRef = inject(DestroyRef)
-  private readonly dialogRef = inject(MatDialogRef<SubscriptionEditForm>)
+  private readonly dialogRef = inject(MatDialogRef<FeedAddForm>)
 
-  readonly data: { feed: Feed; feedId: string } | null = inject(MAT_DIALOG_DATA)
   readonly isLoading = signal<boolean>(false)
   readonly errorMessage = signal<string | null>(null)
 
@@ -40,19 +38,15 @@ export class SubscriptionEditForm implements OnInit {
     description: [''],
     link: ['', Validators.required],
     settings: this.fb.group({
-      enabled: [false],
-      loadFullText: [false],
+      enabled: [true],
     }),
   })
 
   onSubmit(): void {
-    if (!this.data?.feed._id) {
-      return
-    }
     this.isLoading.set(true)
     this.form.disable()
     this.feedService
-      .changeOneSubscription({ id: this.data?.feed._id, dto: this.form.getRawValue() })
+      .addOneFeed({ feed: this.form.getRawValue() })
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.errorMessage.set(error.error.message)
@@ -67,20 +61,5 @@ export class SubscriptionEditForm implements OnInit {
           this.dialogRef.close({ result })
         }
       })
-  }
-
-  ngOnInit(): void {
-    if (this.data?.feed) {
-      const { feed } = this.data
-      this.form.patchValue({
-        title: feed.title,
-        description: feed.description,
-        link: feed.link,
-        settings: {
-          enabled: feed.settings?.enabled || false,
-          loadFullText: feed.settings?.loadFullText || false,
-        },
-      })
-    }
   }
 }

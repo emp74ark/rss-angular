@@ -11,5 +11,5 @@ export interface Article extends RssItem {
   read: boolean
   readonly fullText?: string
   readonly userId: string
-  readonly subscriptionId: string
+  readonly feedId: string
 }

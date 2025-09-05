@@ -24,16 +24,16 @@ export const routes: Routes = [
     canMatch: [authGuard],
   },
   {
-    path: 'subscriptions',
+    path: 'feeds',
     loadComponent: async () => {
-      const c = await import('./pages/subscriptions-page/subscriptions-page')
-      return c.SubscriptionsPage
+      const c = await import('./pages/feeds-page/feeds-page')
+      return c.FeedsPage
     },
-    data: { title: 'Subscriptions' },
+    data: { title: 'Feeds' },
     canMatch: [authGuard],
   },
   {
-    path: 'subscription/:subscriptionId/article/:articleId',
+    path: 'feed/:feedId/article/:articleId',
     loadComponent: async () => {
       const c = await import('./pages/article-page/article-page')
       return c.ArticlePage

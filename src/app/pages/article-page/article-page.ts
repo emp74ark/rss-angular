@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core'
 import { FeedService } from '../../services/feed-service'
 import { ActivatedRoute } from '@angular/router'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
@@ -88,14 +96,12 @@ export class ArticlePage implements OnInit {
           this.fullText.set(parsed)
         }
         this.titleService.setTitle(result?.title || '')
-      this.titleService.setSubtitle(null)
+        this.titleService.setSubtitle(null)
       })
 
-    this.tagService.$defaultTags
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((tags) => {
-        this.favTagId.set(tags.find((t) => t.name === 'fav')?._id || '')
-      })
+    this.tagService.$defaultTags.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((tags) => {
+      this.favTagId.set(tags.find((t) => t.name === 'fav')?._id || '')
+    })
   }
 
   onMarkAsRead(): void {
