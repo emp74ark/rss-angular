@@ -1,6 +1,6 @@
 {
   "name": "@emp74ark/rss-angular",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Frontend for RSS Feeds client",
   "author": "emp74ark",
   "private": true,

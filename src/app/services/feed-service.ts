@@ -12,8 +12,8 @@ import { SortOrder } from '../entities/base/base.enums'
 export class FeedService {
   readonly httpClient = inject(HttpClient)
 
-  getAllSubscriptions({ pagination }: { pagination?: Partial<Pagination> }) {
-    return this.httpClient.get<Paginated<Feed>>(`${environment.api}/subscription`, {
+  getAllFeeds({ pagination }: { pagination?: Partial<Pagination> }) {
+    return this.httpClient.get<Paginated<Feed>>(`${environment.api}/feed`, {
       params: pagination,
     })
   }
@@ -36,18 +36,12 @@ export class FeedService {
     })
   }
 
-  getOneSubscription({ subscriptionId }: { subscriptionId: string }) {
-    return this.httpClient.get<Feed>(`${environment.api}/subscription/${subscriptionId}`)
+  getOneFeed({ feedId }: { feedId: string }) {
+    return this.httpClient.get<Feed>(`${environment.api}/feed/${feedId}`)
   }
 
-  changeOneSubscription({
-    id,
-    dto,
-  }: {
-    id: string
-    dto: Partial<FeedDTO>
-  }) {
-    return this.httpClient.patch<Feed>(`${environment.api}/subscription/${id}`, dto)
+  changeOneFeed({ id, dto }: { id: string; dto: Partial<FeedDTO> }) {
+    return this.httpClient.patch<Feed>(`${environment.api}/feed/${id}`, dto)
   }
 
   getOneArticle({ articleId }: { articleId: string }) {
@@ -77,20 +71,20 @@ export class FeedService {
     })
   }
 
-  addOneSubscription({ subscription }: { subscription: FeedDTO }) {
-    return this.httpClient.post<FeedDTO>(`${environment.api}/subscription`, subscription)
+  addOneFeed({ feed }: { feed: FeedDTO }) {
+    return this.httpClient.post<FeedDTO>(`${environment.api}/feed`, feed)
   }
 
-  deleteOneSubscription({ subscriptionId }: { subscriptionId: string }) {
-    return this.httpClient.delete<Feed>(`${environment.api}/subscription/${subscriptionId}`)
+  deleteOneFeed({ feedId }: { feedId: string }) {
+    return this.httpClient.delete<Feed>(`${environment.api}/feed/${feedId}`)
   }
 
-  refreshAllSubscriptions() {
-    return this.httpClient.get<Feed[]>(`${environment.api}/subscription/refresh`)
+  refreshAllFeeds() {
+    return this.httpClient.get<Feed[]>(`${environment.api}/feed/refresh`)
   }
 
-  refreshOneSubscription({ subscriptionId }: { subscriptionId: string }) {
-    return this.httpClient.get<Feed[]>(`${environment.api}/subscription/${subscriptionId}/refresh`)
+  refreshOneFeed({ feedId }: { feedId: string }) {
+    return this.httpClient.get<Feed[]>(`${environment.api}/feed/${feedId}/refresh`)
   }
 
   getFullText({ articleId }: { articleId: string }) {

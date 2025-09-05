@@ -51,7 +51,7 @@ export class NavComponent implements OnInit {
   menuItems: { title: string; icon?: string; url: string }[] = [
     { title: 'Articles', url: '/articles', icon: 'library_books' },
     { title: 'Bookmarks', url: '/bookmarks', icon: 'bookmark' },
-    { title: 'Subscriptions', url: '/subscriptions', icon: 'rss_feed' },
+    { title: 'Feeds', url: '/feeds', icon: 'rss_feed' },
     { title: 'Tags', url: '/tags', icon: 'tag' },
     { title: 'User', url: '/user', icon: 'person' },
     { title: 'Status', url: '/status', icon: 'memory' },

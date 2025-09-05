@@ -9,7 +9,6 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatIconButton } from '@angular/material/button'
 import { RowSpacer } from '../../components/row-spacer/row-spacer'
 import { MatDialog, MatDialogModule } from '@angular/material/dialog'
-import { SubscriptionAddForm } from '../../components/subscription-add-form/subscription-add-form'
 import { Feed } from '../../entities/feed/feed.types'
 import { MatProgressBar } from '@angular/material/progress-bar'
 import { MatPaginatorModule } from '@angular/material/paginator'
@@ -19,12 +18,13 @@ import { PageService } from '../../services/page-service'
 import { TitleService } from '../../services/title-service'
 import { scrollUp } from '../../../utils'
 import { RouterLink } from '@angular/router'
-import { SubscriptionEditForm } from '../../components/subscription-edit-form/subscription-edit-form'
 import { MatBadgeModule } from '@angular/material/badge'
 import { ConfirmationDialog } from '../../components/confirmation-dialog/confirmation-dialog'
+import { FeedAddForm } from '../../components/feed-add-form/feed-add-form'
+import { FeedEditForm } from '../../components/feed-edit-form/feed-edit-form'
 
 @Component({
-  selector: 'app-subscriptions-page',
+  selector: 'app-feed-page',
   imports: [
     MatCardModule,
     MatToolbarModule,
@@ -39,10 +39,10 @@ import { ConfirmationDialog } from '../../components/confirmation-dialog/confirm
     RouterLink,
     MatBadgeModule,
   ],
-  templateUrl: './subscriptions-page.html',
-  styleUrl: './subscriptions-page.css',
+  templateUrl: './feeds-page.html',
+  styleUrl: './feeds-page.css',
 })
-export class SubscriptionsPage implements OnInit {
+export class FeedsPage implements OnInit {
   constructor() {
     effect(() => {
       scrollUp({ trigger: !!this.feeds().length })
@@ -64,7 +64,7 @@ export class SubscriptionsPage implements OnInit {
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         switchMap(([perPage, pageNumber]) => {
-          return this.feedService.getAllSubscriptions({
+          return this.feedService.getAllFeeds({
             pagination: {
               perPage,
               pageNumber,
@@ -77,13 +77,13 @@ export class SubscriptionsPage implements OnInit {
           this.pageService.setTotalResults(result.total)
           this.feeds.set(result.result)
         }
-        this.titleService.setTitle('Subscriptions')
+        this.titleService.setTitle('Feeds')
         this.titleService.setSubtitle(null)
       })
   }
 
   onAdd(): void {
-    const dialogRef = this.dialog.open(SubscriptionAddForm)
+    const dialogRef = this.dialog.open(FeedAddForm)
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed', result)
@@ -91,20 +91,20 @@ export class SubscriptionsPage implements OnInit {
     })
   }
 
-  onRefreshOne(e: MouseEvent, subscriptionId: string): void {
+  onRefreshOne(e: MouseEvent, feedId: string): void {
     e.stopPropagation()
     this.isRefreshing.update((prev) => ({
       ...prev,
-      [subscriptionId]: true,
+      [feedId]: true,
     }))
     this.feedService
-      .refreshOneSubscription({ subscriptionId })
+      .refreshOneFeed({ feedId })
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError((e) => {
           this.isRefreshing.update((prev) => ({
             ...prev,
-            [subscriptionId]: false,
+            [feedId]: false,
           }))
           console.error(e)
           return of(null)
@@ -113,7 +113,7 @@ export class SubscriptionsPage implements OnInit {
       .subscribe(() => {
         this.isRefreshing.update((prev) => ({
           ...prev,
-          [subscriptionId]: false,
+          [feedId]: false,
         }))
       })
   }
@@ -121,7 +121,7 @@ export class SubscriptionsPage implements OnInit {
   onRefreshAll(): void {
     this.isRefreshingAll.set(true)
     this.feedService
-      .refreshAllSubscriptions()
+      .refreshAllFeeds()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError((e) => {
@@ -140,8 +140,8 @@ export class SubscriptionsPage implements OnInit {
 
     const dialogRef = this.dialog.open(ConfirmationDialog, {
       data: {
-        title: 'Delete subscription?',
-        message: 'Are you sure you want to delete this subscription?',
+        title: 'Delete feed?',
+        message: 'Are you sure you want to delete this feed?',
         confirmButtonText: 'Delete',
       },
     })
@@ -149,7 +149,7 @@ export class SubscriptionsPage implements OnInit {
     dialogRef.afterClosed().subscribe((agree) => {
       if (agree) {
         this.feedService
-          .deleteOneSubscription({ subscriptionId: id })
+          .deleteOneFeed({ feedId: id })
           .pipe(
             catchError((error: HttpErrorResponse) => {
               console.log(error)
@@ -166,7 +166,7 @@ export class SubscriptionsPage implements OnInit {
 
   onEdit(e: MouseEvent, feed: Feed): void {
     e.stopPropagation()
-    const dialogRef = this.dialog.open(SubscriptionEditForm, {
+    const dialogRef = this.dialog.open(FeedEditForm, {
       data: { feed },
     })
 

@@ -68,7 +68,7 @@ export class ArticleList {
   $display = this.pageService.$display
 
   async onArticleClick(article: Article) {
-    await this.router.navigate(['subscription', article.subscriptionId, 'article', article._id])
+    await this.router.navigate(['feed', article.feedId, 'article', article._id])
   }
 
   markAsRead(article: Article, event: MouseEvent) {
