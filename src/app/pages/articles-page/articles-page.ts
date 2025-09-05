@@ -9,7 +9,7 @@ import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle'
 import { MatIconModule } from '@angular/material/icon'
 import { RowSpacer } from '../../components/row-spacer/row-spacer'
-import { ActivatedRoute, Router } from '@angular/router'
+import { ActivatedRoute } from '@angular/router'
 import { Article } from '../../entities/article/article.types'
 import { MatPaginatorModule } from '@angular/material/paginator'
 import { TagService } from '../../services/tag-service'
@@ -43,7 +43,6 @@ import { SortOrder } from '../../entities/base/base.enums'
 })
 export class ArticlesPage implements OnInit {
   private readonly feedService = inject(FeedService)
-  private readonly router = inject(Router)
   private readonly route = inject(ActivatedRoute)
   private readonly destroyRef = inject(DestroyRef)
   private readonly tagService = inject(TagService)
