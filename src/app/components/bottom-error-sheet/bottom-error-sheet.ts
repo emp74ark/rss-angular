@@ -6,7 +6,7 @@ import { MatError } from '@angular/material/form-field'
   selector: 'app-bottom-error-sheet',
   imports: [MatBottomSheetModule, MatError],
   templateUrl: './bottom-error-sheet.html',
-  styleUrl: './bottom-error-sheet.css'
+  styleUrl: './bottom-error-sheet.css',
 })
 export class BottomErrorSheet {
   readonly data: { error?: string } = inject(MAT_BOTTOM_SHEET_DATA)

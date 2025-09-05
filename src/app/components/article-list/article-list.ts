@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, linkedSignal } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  input,
+  linkedSignal,
+} from '@angular/core'
 import { AsyncPipe, DatePipe } from '@angular/common'
 import {
   MatCard,
