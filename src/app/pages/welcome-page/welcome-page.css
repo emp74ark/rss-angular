@@ -1,0 +1,15 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-block: 1rem;
+  max-width: clamp(25rem, 40vw, 40rem);
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  padding-inline: 1rem;
+  margin: 0;
+  gap: 1rem;
+}
