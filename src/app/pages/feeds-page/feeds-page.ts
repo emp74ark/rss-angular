@@ -22,6 +22,8 @@ import { MatBadgeModule } from '@angular/material/badge'
 import { ConfirmationDialog } from '../../components/confirmation-dialog/confirmation-dialog'
 import { FeedAddForm } from '../../components/feed-add-form/feed-add-form'
 import { FeedEditForm } from '../../components/feed-edit-form/feed-edit-form'
+import { MatBottomSheet } from '@angular/material/bottom-sheet'
+import { BottomErrorSheet } from '../../components/bottom-error-sheet/bottom-error-sheet'
 
 @Component({
   selector: 'app-feed-page',
@@ -54,6 +56,7 @@ export class FeedsPage implements OnInit {
   private readonly dialog = inject(MatDialog)
   private readonly destroyRef = inject(DestroyRef)
   private readonly titleService = inject(TitleService)
+  private readonly bottomError = inject(MatBottomSheet)
 
   readonly feeds = signal<Feed[]>([])
   readonly isRefreshing = signal<Record<string, boolean>>({})
@@ -106,6 +109,7 @@ export class FeedsPage implements OnInit {
             ...prev,
             [feedId]: false,
           }))
+          this.bottomError.open(BottomErrorSheet, { data: { error: e.error.message } })
           console.error(e)
           return of(null)
         }),

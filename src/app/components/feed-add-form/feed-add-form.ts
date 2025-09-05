@@ -39,7 +39,6 @@ export class FeedAddForm {
     link: ['', Validators.required],
     settings: this.fb.group({
       enabled: [true],
-      loadFullText: [false],
     }),
   })
 

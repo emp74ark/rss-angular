@@ -41,7 +41,6 @@ export class FeedEditForm implements OnInit {
     link: ['', Validators.required],
     settings: this.fb.group({
       enabled: [false],
-      loadFullText: [false],
     }),
   })
 
@@ -78,7 +77,6 @@ export class FeedEditForm implements OnInit {
         link: feed.link,
         settings: {
           enabled: feed.settings?.enabled || false,
-          loadFullText: feed.settings?.loadFullText || false,
         },
       })
     }
