@@ -1,0 +1,71 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      <h1>
+        RSS Reader
+      </h1>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="content">
+    <ul class="details">
+      <li>Do not track or store any user information.</li>
+      <li>Usernames are generated randomly.
+      </li>
+      <li>The ability to load the full article text.
+      </li>
+      <li>Auto-delete orphaned users once a month.
+      </li>
+      <li>Can be self-hosted.</li>
+    </ul>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            WebClient
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <ul>
+          <li>Angular</li>
+          <li>Angular Material</li>
+        </ul>
+        <a
+          matButton
+          href="https://github.com/emp74ark/rss-client"
+          target="_blank"
+        >
+          <mat-icon>link</mat-icon>
+          GitHub
+        </a>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Backend
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <ul>
+          <li>NestJs</li>
+          <li>MongoDB</li>
+        </ul>
+        <a
+          matButton
+          href="https://github.com/emp74ark/rss-nest"
+          target="_blank"
+        >
+          <mat-icon>link</mat-icon>
+          GitHub
+        </a>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <button
+      matFab
+      extended
+      routerLink="/auth"
+    >
+      <mat-icon>person</mat-icon>
+      Authorize
+    </button>
+  </mat-card-actions>
+</mat-card>
