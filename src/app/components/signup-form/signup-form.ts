@@ -10,6 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatIconModule } from '@angular/material/icon'
 import { MatProgressBarModule } from '@angular/material/progress-bar'
+import { catchError, of } from 'rxjs'
 
 @Component({
   selector: 'app-signup-form',
@@ -51,12 +52,18 @@ export class SignupForm {
     this.isLoading.set(true)
     this.authService
       .signup({ password: this.password.value as string })
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(() => {
+          this.isLoading.set(false)
+          return of(null)
+        }),
+      )
       .subscribe((result) => {
         if (result) {
-          this.isLoading.set(false)
           this.router.navigate(['/user'])
         }
+        this.isLoading.set(false)
       })
   }
 }
