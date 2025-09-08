@@ -14,4 +14,10 @@ export class HealthService {
       `${environment.api}/health`,
     )
   }
+
+  updateStat() {
+    return this.httpClient.get<{ status: string; version: string; uptime: string }>(
+      `${environment.api}/stats/new?source=feedz&timestamp=${Date.now()}`,
+    )
+  }
 }
