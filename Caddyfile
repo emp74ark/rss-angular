@@ -2,7 +2,7 @@
   @api path /api/*
   handle @api {
     uri strip_prefix /api
-    reverse_proxy http://rss-nest:3600
+    reverse_proxy http://feedz-api:3600
   }
 
   handle {
