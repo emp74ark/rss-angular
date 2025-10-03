@@ -23,6 +23,7 @@ import { HttpErrorResponse } from '@angular/common/http'
 import { TagService } from '../../services/tag-service'
 import { TitleService } from '../../services/title-service'
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
+import { NotificationsService } from '../../services/notifications-service'
 
 @Component({
   selector: 'app-article-page',
@@ -47,6 +48,7 @@ export class ArticlePage implements OnInit {
   private readonly titleService = inject(TitleService)
   private readonly destroyRef = inject(DestroyRef)
   private readonly domSanitizer = inject(DomSanitizer)
+  private readonly notificationsService = inject(NotificationsService)
 
   readonly article = signal<Article | null>(null)
   readonly fullText = signal<SafeHtml | undefined>(undefined)
@@ -86,6 +88,9 @@ export class ArticlePage implements OnInit {
         takeUntilDestroyed(this.destroyRef),
         catchError((error: HttpErrorResponse) => {
           console.error(error)
+          this.notificationsService.setNotification({
+            message: error.error.message,
+          })
           return of(null)
         }),
       )
@@ -117,6 +122,9 @@ export class ArticlePage implements OnInit {
           takeUntilDestroyed(this.destroyRef),
           catchError((error: HttpErrorResponse) => {
             console.error(error)
+            this.notificationsService.setNotification({
+              message: error.error.message,
+            })
             return of(null)
           }),
         )
@@ -147,6 +155,9 @@ export class ArticlePage implements OnInit {
           takeUntilDestroyed(this.destroyRef),
           catchError((error: HttpErrorResponse) => {
             console.error(error)
+            this.notificationsService.setNotification({
+              message: error.error.message,
+            })
             return of(null)
           }),
         )
@@ -171,9 +182,12 @@ export class ArticlePage implements OnInit {
       .getFullText({ articleId })
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        catchError((e) => {
-          console.error(e)
+        catchError((error) => {
+          console.error(error)
           this.isLoading.set(false)
+          this.notificationsService.setNotification({
+            message: error.error.message,
+          })
           return of(null)
         }),
       )
