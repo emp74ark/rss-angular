@@ -24,6 +24,7 @@ import { FeedAddForm } from '../../components/feed-add-form/feed-add-form'
 import { FeedEditForm } from '../../components/feed-edit-form/feed-edit-form'
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
 import { BottomErrorSheet } from '../../components/bottom-error-sheet/bottom-error-sheet'
+import { NotificationsService } from '../../services/notifications-service'
 
 @Component({
   selector: 'app-feed-page',
@@ -57,6 +58,7 @@ export class FeedsPage implements OnInit {
   private readonly destroyRef = inject(DestroyRef)
   private readonly titleService = inject(TitleService)
   private readonly bottomError = inject(MatBottomSheet)
+  private readonly notificationsService = inject(NotificationsService)
 
   readonly feeds = signal<Feed[]>([])
   readonly isRefreshing = signal<Record<string, boolean>>({})
@@ -128,9 +130,12 @@ export class FeedsPage implements OnInit {
       .refreshAllFeeds()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        catchError((e) => {
+        catchError((error) => {
           this.isRefreshingAll.set(false)
-          console.error(e)
+          console.error(error)
+          this.notificationsService.setNotification({
+            message: error.error.message,
+          })
           return of(null)
         }),
       )

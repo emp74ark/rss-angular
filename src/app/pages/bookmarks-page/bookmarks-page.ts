@@ -12,6 +12,7 @@ import { MatToolbarRow } from '@angular/material/toolbar'
 import { Paginator } from '../../components/paginator/paginator'
 import { PageService } from '../../services/page-service'
 import { PageDisplayToggle } from '../../components/page-display-toggle/page-display-toggle'
+import { NotificationsService } from '../../services/notifications-service'
 
 @Component({
   selector: 'app-bookmarks-page',
@@ -25,6 +26,7 @@ export class BookmarksPage implements OnInit {
   private readonly tagService = inject(TagService)
   private readonly pageService = inject(PageService)
   private readonly titleService = inject(TitleService)
+  private readonly notificationsService = inject(NotificationsService)
 
   articles = signal<Article[]>([])
 
@@ -73,6 +75,9 @@ export class BookmarksPage implements OnInit {
         takeUntilDestroyed(this.destroyRef),
         catchError((error: HttpErrorResponse) => {
           console.log(error)
+          this.notificationsService.setNotification({
+            message: error.error.message,
+          })
           return of(null)
         }),
       )
