@@ -16,8 +16,14 @@ export class HealthService {
   }
 
   updateStat() {
-    return this.httpClient.get<{ status: string; version: string; uptime: string }>(
-      `${environment.api}/stats/new?source=feedz&timestamp=${Date.now()}`,
+    const dataHamsterUrl = 'https://datahamster.online/api/stats/add'
+    const welcome = '02c5fa7f-f747-4b68-b808-d073e2a84268'
+    const dataHamsterParams = new URLSearchParams({
+      id: welcome,
+      timestamp: Date.now().toString(),
+    })
+    return this.httpClient.get(
+      `${dataHamsterUrl}?${dataHamsterParams.toString()}`,
     )
   }
 }

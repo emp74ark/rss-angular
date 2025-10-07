@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { HealthService } from '../../services/health-service'
 import { Subscription } from 'rxjs'
 import { environment } from '../../../environments/environment'
+import { UpdateButton } from '../../components/update-button/update-button'
 
 @Component({
   selector: 'app-welcome-page',
@@ -25,12 +26,14 @@ import { environment } from '../../../environments/environment'
     MatIconModule,
     MatFabButton,
     MatAccordion,
+    UpdateButton,
   ],
   templateUrl: './welcome-page.html',
   styleUrl: './welcome-page.css',
 })
 export class WelcomePage implements OnInit, OnDestroy {
   private readonly healthService = inject(HealthService)
+
   subscription: Subscription[] = []
 
   ngOnInit() {
