@@ -13,6 +13,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
+    "pwa": "npx http-server ./dist/rss-angular/browser",
     "test": "ng test"
   },
   "dependencies": {
