@@ -22,8 +22,6 @@ export class HealthService {
       id: welcome,
       timestamp: Date.now().toString(),
     })
-    return this.httpClient.get(
-      `${dataHamsterUrl}?${dataHamsterParams.toString()}`,
-    )
+    fetch(`${dataHamsterUrl}?${dataHamsterParams.toString()}`)
   }
 }
