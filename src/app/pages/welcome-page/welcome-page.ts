@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core'
+import { Component, inject, OnInit } from '@angular/core'
 import { MatButton, MatFabButton } from '@angular/material/button'
 import { RouterLink } from '@angular/router'
 import {
@@ -10,8 +10,6 @@ import {
 import { MatCardModule } from '@angular/material/card'
 import { MatIconModule } from '@angular/material/icon'
 import { HealthService } from '../../services/health-service'
-import { Subscription } from 'rxjs'
-import { environment } from '../../../environments/environment'
 import { UpdateButton } from '../../components/update-button/update-button'
 
 @Component({
@@ -31,18 +29,10 @@ import { UpdateButton } from '../../components/update-button/update-button'
   templateUrl: './welcome-page.html',
   styleUrl: './welcome-page.css',
 })
-export class WelcomePage implements OnInit, OnDestroy {
+export class WelcomePage implements OnInit {
   private readonly healthService = inject(HealthService)
 
-  subscription: Subscription[] = []
-
   ngOnInit() {
-    if (environment.production) {
-      this.subscription.push(this.healthService.updateStat().subscribe())
-    }
-  }
-
-  ngOnDestroy() {
-    this.subscription.forEach((sub) => sub.unsubscribe())
+    this.healthService.updateStat()
   }
 }
