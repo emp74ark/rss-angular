@@ -1,1 +1,8 @@
+<h2>Web client</h2>
+@if(updateFound$ | async){
+  <app-update-button/>
+} @else {
+  <p>You are using the latest version.</p>
+}
+<h2>Backend</h2>
 <app-health-status class="health"/>
