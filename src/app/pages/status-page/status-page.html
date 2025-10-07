@@ -1,6 +1,9 @@
 <h2>Web client</h2>
-@if(updateFound$ | async){
-  <app-update-button/>
+@if (updateFound$ | async) {
+  <p>
+    Update your app to the newer version:
+    <app-update-button/>
+  </p>
 } @else {
   <p>You are using the latest version.</p>
 }
