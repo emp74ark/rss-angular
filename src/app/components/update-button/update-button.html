@@ -1,5 +1,19 @@
 @if (updateFound$ | async) {
-  <button matIconButton (click)="updateHandler()">
-    <mat-icon>update</mat-icon>
-  </button>
+  @if (withLabel()) {
+    <button
+      matButton="filled"
+      (click)="updateHandler()"
+    >
+      Update your app
+      <mat-icon>update</mat-icon>
+    </button>
+  } @else {
+    <button
+      matIconButton
+      (click)="updateHandler()"
+      [title]="'Current version: ' + (currentVersion$ | async) + '\nNew version: ' + (nextVersion$ | async)"
+    >
+      <mat-icon>update</mat-icon>
+    </button>
+  }
 }

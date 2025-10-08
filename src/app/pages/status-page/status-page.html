@@ -1,11 +1,16 @@
 <h2>Web client</h2>
 @if (updateFound$ | async) {
   <p>
-    Update your app to the newer version:
-    <app-update-button/>
+    A new version of the web client is available.
   </p>
+  <ul>
+    <li>Current version hash: {{ currentVersion$ | async }}</li>
+    <li>Next version hash: {{ nextVersion$ | async }}</li>
+  </ul>
+  <app-update-button [withLabel]="true"/>
 } @else {
   <p>You are using the latest version.</p>
+  <p>Current version hash: {{ currentVersion$ | async }}</p>
 }
 <h2>Backend</h2>
 <app-health-status class="health"/>

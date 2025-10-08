@@ -1,6 +1,6 @@
 import { ApplicationRef, inject, Injectable } from '@angular/core'
-import { SwUpdate } from '@angular/service-worker'
-import { BehaviorSubject, concat, first, interval } from 'rxjs'
+import { SwUpdate, VersionReadyEvent } from '@angular/service-worker'
+import { BehaviorSubject, concat, filter, first, interval } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
@@ -11,9 +11,12 @@ export class AppUpdate {
 
   updateFound = new BehaviorSubject<boolean>(false)
 
+  currentVersion = new BehaviorSubject<string>('')
+  nextVersion = new BehaviorSubject<string>('')
+
   constructor() {
     const appIsStable$ = this.appRef.isStable.pipe(first((isStable) => isStable))
-    const schedule$ = interval(6 * 60 * 60 * 1000) // 6h
+    const schedule$ = interval(20000)
     const scheduledEvent$ = concat(appIsStable$, schedule$)
 
     scheduledEvent$.subscribe(async () => {
@@ -25,6 +28,14 @@ export class AppUpdate {
         console.error('Failed to check for updates:', err)
       }
     })
+
+    this.swu.versionUpdates
+      .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
+      .subscribe((evt) => {
+        this.currentVersion.next(evt.currentVersion.hash)
+        this.nextVersion.next(evt.latestVersion.hash)
+        this.updateFound.next(true)
+      })
   }
 
   reloadApp() {

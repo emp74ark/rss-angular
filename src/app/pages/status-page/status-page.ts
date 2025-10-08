@@ -16,6 +16,8 @@ export class StatusPage implements OnInit {
   private readonly appUpdates = inject(AppUpdate)
 
   updateFound$ = this.appUpdates.updateFound
+  currentVersion$ = this.appUpdates.currentVersion
+  nextVersion$ = this.appUpdates.nextVersion
 
   ngOnInit() {
     this.titleService.setTitle('User')
