@@ -16,6 +16,7 @@ export const authGuard: CanMatchFn = (route, segments) => {
   const destroyRef = inject(DestroyRef)
 
   if (savedUserId) {
+    console.debug('AuthGuard: user found in local storage')
     return userService.getUser().pipe(
       takeUntilDestroyed(destroyRef),
       catchError((error: HttpErrorResponse) => {
