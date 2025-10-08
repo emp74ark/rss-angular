@@ -4,10 +4,16 @@ import { authGuard } from './guards/auth-guard'
 import { AuthPage } from './pages/auth-page/auth-page.component'
 import { StatusPage } from './pages/status-page/status-page'
 import { WelcomePage } from './pages/welcome-page/welcome-page'
+import { publicGuard } from './guards/public-guard'
 
 export const routes: Routes = [
-  { path: '', component: WelcomePage, pathMatch: 'full' },
-  { path: 'auth', component: AuthPage, data: { title: 'Authentication' } },
+  { path: '', component: WelcomePage, pathMatch: 'full', canActivate: [publicGuard] },
+  {
+    path: 'auth',
+    component: AuthPage,
+    data: { title: 'Authentication' },
+    canActivate: [publicGuard],
+  },
   {
     path: 'articles',
     loadComponent: async () => {
