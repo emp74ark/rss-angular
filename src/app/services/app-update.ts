@@ -1,6 +1,7 @@
 import { ApplicationRef, inject, Injectable } from '@angular/core'
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker'
 import { BehaviorSubject, concat, filter, first, interval } from 'rxjs'
+import { environment } from '../../environments/environment'
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,9 @@ export class AppUpdate {
 
     scheduledEvent$.subscribe(async () => {
       try {
+        if (!environment.production) {
+          return
+        }
         console.info(`[${new Date().toLocaleString()}] Checking for updates...`)
         const updateFound = await this.swu.checkForUpdate()
         this.updateFound.next(updateFound)
