@@ -21,6 +21,7 @@ import { PageService } from '../../services/page-service'
 import { PageDisplayToggle } from '../../components/page-display-toggle/page-display-toggle'
 import { AsyncPipe } from '@angular/common'
 import { SortOrder } from '../../entities/base/base.enums'
+import { NotificationsService } from '../../services/notifications-service'
 
 @Component({
   selector: 'app-articles-page',
@@ -48,6 +49,7 @@ export class ArticlesPage implements OnInit {
   private readonly tagService = inject(TagService)
   private readonly titleService = inject(TitleService)
   private readonly pageService = inject(PageService)
+  private readonly notificationsService = inject(NotificationsService)
 
   readonly articles = signal<Article[]>([])
   readonly articleIds = computed(() => this.articles().map(({ _id }) => _id))
@@ -68,6 +70,9 @@ export class ArticlesPage implements OnInit {
         takeUntilDestroyed(this.destroyRef),
         catchError((error: HttpErrorResponse) => {
           console.log(error)
+          this.notificationsService.setNotification({
+            message: error.error.message,
+          })
           return of(null)
         }),
       )
@@ -203,6 +208,9 @@ export class ArticlesPage implements OnInit {
         takeUntilDestroyed(this.destroyRef),
         catchError((error: HttpErrorResponse) => {
           console.log(error)
+          this.notificationsService.setNotification({
+            message: error.error.message,
+          })
           return of(null)
         }),
       )
@@ -236,9 +244,12 @@ export class ArticlesPage implements OnInit {
       .refreshAllFeeds()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        catchError((e) => {
+        catchError((error) => {
           this.isRefreshingAll.set(false)
-          console.error(e)
+          console.error(error)
+          this.notificationsService.setNotification({
+            message: error.error.message,
+          })
           return of(null)
         }),
       )

@@ -14,4 +14,14 @@ export class HealthService {
       `${environment.api}/health`,
     )
   }
+
+  updateStat() {
+    const dataHamsterUrl = 'https://datahamster.online/api/stats/add'
+    const welcome = '02c5fa7f-f747-4b68-b808-d073e2a84268'
+    const dataHamsterParams = new URLSearchParams({
+      id: welcome,
+      timestamp: Date.now().toString(),
+    })
+    fetch(`${dataHamsterUrl}?${dataHamsterParams.toString()}`)
+  }
 }

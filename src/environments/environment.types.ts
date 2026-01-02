@@ -1,3 +1,4 @@
 export interface Environment {
-  api: string
+  production: boolean;
+  api: string;
 }

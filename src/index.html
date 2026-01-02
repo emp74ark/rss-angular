@@ -1,6 +1,16 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <meta
+    name="theme-color"
+    content="#faf9fd"
+    media="(prefers-color-scheme: light)"
+  >
+  <meta
+    name="theme-color"
+    content="#101414"
+    media="(prefers-color-scheme: dark)"
+  >
   <meta charset="utf-8"/>
   <title>News</title>
   <base href="/"/>
@@ -14,15 +24,20 @@
     href="favicon.ico"
   />
   <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap"
     rel="stylesheet"
   />
   <link
     href="https://fonts.googleapis.com/icon?family=Material+Icons"
     rel="stylesheet"
   />
+  <link
+    rel="manifest"
+    href="manifest.webmanifest"
+  >
 </head>
 <body class="mat-typography">
 <app-root></app-root>
+<noscript>Please enable JavaScript to continue using this application.</noscript>
 </body>
 </html>

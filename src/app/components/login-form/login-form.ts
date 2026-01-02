@@ -15,6 +15,7 @@ import { AuthService } from '../../services/auth-service'
 import { Router } from '@angular/router'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { MatProgressBar } from '@angular/material/progress-bar'
+import { catchError, of } from 'rxjs'
 
 @Component({
   selector: 'app-login-form',
@@ -63,12 +64,18 @@ export class LoginForm {
     this.isLoading.set(true)
     this.authService
       .login(this.formData())
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(() => {
+          this.isLoading.set(false)
+          return of(null)
+        }),
+      )
       .subscribe((result) => {
         if (result) {
-          this.isLoading.set(false)
           this.router.navigate(['/articles'])
         }
+        this.isLoading.set(false)
       })
   }
 }
